@@ -35,6 +35,10 @@ def setup_styles(doc, template, update_existing=True):
             spec["bold"],
         )
         style.font.color.rgb = RGBColor.from_string(spec["color"])
+        if template.get("cleanup", {}).get("italic"):
+            style.font.italic = False
+        if template.get("cleanup", {}).get("underline"):
+            style.font.underline = False
         style.element.get_or_add_rPr().get_or_add_rFonts().set(
             qn("w:eastAsia"), spec["font"]
         )

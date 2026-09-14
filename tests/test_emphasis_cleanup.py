@@ -97,6 +97,10 @@ class EmphasisCleanupTests(unittest.TestCase):
             original = source.read_bytes()
             template = load_template('master')
             template['cleanup'] = dict(bold=True, italic=True, underline=True)
+            doc.styles['Heading 1'].font.italic = True
+            doc.styles['Heading 1'].font.underline = True
+            doc.save(source)
+            original = source.read_bytes()
             result = run(source, template)
             self.assertTrue(result['integrity']['passed'])
             self.assertEqual(source.read_bytes(), original)
@@ -106,6 +110,8 @@ class EmphasisCleanupTests(unittest.TestCase):
             heading = next(p for p in out.paragraphs if p.style.name == 'Heading 1').runs[0]
             self.assertTrue(heading.bold)
             self.assertFalse(heading.italic or heading.underline)
+            self.assertFalse(out.styles['Heading 1'].font.italic)
+            self.assertFalse(out.styles['Heading 1'].font.underline)
             self.assertTrue(out.tables[0].cell(0, 0).paragraphs[0].runs[0].bold)
             self.assertFalse(out.tables[0].cell(1, 0).paragraphs[0].runs[0].bold)
             self.assertEqual(etree.tostring(next(out.element.iter(qn('m:oMath')))), expected_math)
