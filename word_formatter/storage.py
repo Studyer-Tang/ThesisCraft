@@ -1,8 +1,24 @@
 """Transactional saves with an explicit no-clobber default."""
 
 import os
+import shutil
 from pathlib import Path
 import tempfile
+
+
+def publish_file(source, output, overwrite=False):
+    """Publish exact bytes atomically, including from another drive's temp folder."""
+    output = Path(output).resolve()
+    fd, temporary = tempfile.mkstemp(prefix=".wfp-", dir=output.parent)
+    os.close(fd)
+    try:
+        shutil.copyfile(source, temporary)
+        if overwrite:
+            os.replace(temporary, output)
+        else:
+            os.link(temporary, output)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
 
 
 def ensure_distinct_paths(source, output):

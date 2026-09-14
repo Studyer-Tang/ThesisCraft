@@ -18,6 +18,27 @@ SAFE_FIELDS = {
     "SECTIONPAGES",
 }
 
+OFFICE_TIMEOUT_SECONDS = 600
+
+
+def close_office(doc, app, report):
+    """Attempt both releases, even when the document's COM server has failed."""
+    errors = []
+    if doc is not None:
+        try:
+            doc.Close(False)
+        except Exception as exc:
+            errors.append(f"关闭临时文档失败：{exc}")
+    if app is not None:
+        try:
+            app.Quit()
+        except Exception as exc:
+            errors.append(f"退出排版辅助实例失败：{exc}")
+    if errors:
+        report["cleanup_errors"] = errors
+        report["success"] = False
+        report.setdefault("error", "；".join(errors))
+
 
 def update_fields(document):
     count, errors = 0, []
@@ -52,13 +73,18 @@ def finalize(path, host="word", pdf=False):
     command += [str(path), "--host", host, "--report", str(report)]
     if pdf:
         command.append("--pdf")
-    result = subprocess.run(
-        command,
-        timeout=180,
-        capture_output=True,
-        text=True,
-        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-    )
+    try:
+        result = subprocess.run(
+            command,
+            timeout=OFFICE_TIMEOUT_SECONDS,
+            capture_output=True,
+            text=True,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+    except subprocess.TimeoutExpired:
+        return dict(host=host, success=False, error=
+                    "文档较大或 Office 未响应，自动更新等待超过 10 分钟。"
+                    "排版副本已保留，可打开副本后手动更新目录与交叉引用。")
     if report.exists():
         return json.loads(report.read_text(encoding="utf-8"))
     raise RuntimeError("Office 处理失败：" + result.stderr[-800:])
@@ -109,10 +135,8 @@ def main(argv=None):
     except Exception as exc:
         report["error"] = str(exc)
     finally:
-        if doc is not None:
-            doc.Close(False)
-        if app is not None:
-            app.Quit()
+        close_office(doc, app, report)
+        doc, app = None, None
         if "pythoncom" in locals():
             pythoncom.CoUninitialize()
         Path(args.report).write_text(

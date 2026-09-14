@@ -2,7 +2,6 @@
 
 from datetime import datetime
 import hashlib
-import os
 from pathlib import Path
 import re
 import shutil
@@ -13,7 +12,7 @@ import uuid
 from docx import Document
 
 from ..jobs import unique_path
-from ..storage import save_document
+from ..storage import save_document, publish_file
 from .templates import validate_template, STYLE_NAMES
 from .audit import audit, inventory, compare_inventory, write_report
 from .layout import (
@@ -180,7 +179,12 @@ def run(
                 from .office_io import finalize
 
                 # Office works on a separate staging copy; a failed update never damages the formatted output.
-                with tempfile.TemporaryDirectory(prefix=".thesiscraft-", dir=parent) as temporary:
+                # A timed-out Office server may retain its file lock after the worker
+                # exits. Cleanup must never turn an already saved document into a
+                # failed job. Keep those intermediates in the OS temp folder.
+                with tempfile.TemporaryDirectory(
+                    prefix="thesiscraft-office-", ignore_cleanup_errors=True
+                ) as temporary:
                     stage = Path(temporary) / "office-stage.docx"
                     shutil.copy2(destination, stage)
                     try:
@@ -193,6 +197,13 @@ def run(
                                 s for s in checked["lost_categories"] if s.startswith("/")
                             ]
                             host_inventory = inventory(Document(stage))
+                            # Office rewrites equation/revision XML, so byte hashes
+                            # differ legitimately; disappearing objects do not.
+                            for tag, label in (("m:oMath", "公式"),
+                                               ("w:ins", "插入修订"),
+                                               ("w:del", "删除修订")):
+                                if sum(host_inventory[tag].values()) < sum(before[tag].values()):
+                                    binaries_lost.append(label)
                             if set(before["bookmarks"]) - set(host_inventory["bookmarks"]):
                                 binaries_lost.append("原有书签")
                             original_manager_fields = [
@@ -210,10 +221,10 @@ def run(
                                     "Office 更新后嵌入对象发生变化："
                                     + ", ".join(binaries_lost)
                                 )
-                            stage.replace(destination)
+                            publish_file(stage, destination, overwrite=True)
                             if office.get("pdf"):
                                 pdf_path = destination.with_suffix(".pdf")
-                                os.link(office["pdf"], pdf_path)
+                                publish_file(office["pdf"], pdf_path)
                                 office["pdf"] = str(pdf_path)
                                 from .documents import inspect_pdf
 
@@ -233,7 +244,9 @@ def run(
                             success=False, error=str(exc), pdf=None
                         )
                         report["warnings"].append(
-                            dict(code="office-update", index=-1, message=str(exc))
+                            dict(code="office-update", index=-1, message=
+                                 "排版副本已生成；目录、交叉引用自动更新未完成，可在 Word/WPS 中更新域。"
+                                 + str(exc))
                         )
             elif pdf:
                 report["warnings"].append(
