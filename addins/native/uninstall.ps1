@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $classId = '{F93F581A-74C6-4728-9406-392B6873CA1C}'
 $progId = 'StudyTang.ThesisCraft'
 foreach ($view in @([Microsoft.Win32.RegistryView]::Registry64,[Microsoft.Win32.RegistryView]::Registry32)) {

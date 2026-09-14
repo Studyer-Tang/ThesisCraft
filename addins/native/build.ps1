@@ -1,4 +1,4 @@
-param([string]$OutputDirectory = (Join-Path $PSScriptRoot 'bin'))
+﻿param([string]$OutputDirectory = (Join-Path $PSScriptRoot 'bin'))
 $ErrorActionPreference = 'Stop'
 foreach ($arch in @('x86_64','i686')) {
     & cargo build --locked --release --manifest-path (Join-Path $PSScriptRoot 'Cargo.toml') --target "$arch-pc-windows-msvc"
