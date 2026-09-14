@@ -78,7 +78,7 @@ def main():
         APP_NAME+'（学研排版） '+__version__+'\n作者：Study-Tang\n\n'
         'Paper-Studio.cmd：论文工作台\nDesktop.cmd：通用桌面版\nWord-Plugin.cmd：打开 Word 学研排版操作窗口\nWPS-Plugin.cmd：打开 WPS 学研排版操作窗口\n\n'
         '先打开并保存文档，再启动插件。在操作窗口核对文档名，点击“论文设置 / 检查”或“通用文档排版”。\n'
-        '输出存放在原文件旁，已有同名文件自动增加序号；原件不覆盖。\n'
+        '保存位置默认与原文件相同；可选择文件夹或恢复默认。已有同名文件自动增加序号；原件不覆盖。\n'
         '在桌面版调整参数并“保存为默认”，插件下次排版使用同一配置。\n'
         'Windows 本机 Word 16.0 和 WPS 12.1.0.28043 已通过按钮、排版和打开结果测试。\n'
         'Install-Native-Addin.cmd：安装原生功能区入口，之后正常启动 Word/WPS 自动出现“学研排版”。\n'

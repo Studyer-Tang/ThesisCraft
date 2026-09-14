@@ -190,7 +190,7 @@ def sha256(path: Path) -> str:
 def write_checksums(paths: list[Path]) -> Path:
     RELEASE_DIR.mkdir(exist_ok=True)
     checksum_file = RELEASE_DIR / f"{APP_BINARY_BASENAME}.v{__version__}.SHA256SUMS.txt"
-    paths = [path for path in paths if path.name != checksum_file.name]
+    paths = [path for path in paths if path.is_file() and path.name != checksum_file.name]
     lines = [f"{sha256(path)}  {path.name}" for path in sorted(paths)]
     checksum_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"checksums: {checksum_file}")

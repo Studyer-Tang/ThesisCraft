@@ -166,6 +166,13 @@ class FormatterView:
         )
 
     def create_widgets(self):
+        from .ui_common import OutputFolder
+        header = ttk.Frame(self.master, padding=(20, 14, 20, 4))
+        header.pack(fill='x')
+        ttk.Label(header, text='通用文档排版', style='Title.TLabel').pack(side='left')
+        ttk.Label(header, text='批量整理 · 生成新副本', style='Muted.TLabel').pack(side='right')
+        self.output = OutputFolder(self.master, source=lambda: next(iter(self.file_listbox.get(0, tk.END)), None))
+        self.output.pack(side='bottom', fill='x', padx=20, pady=12)
         main_pane = ttk.PanedWindow(self.master, orient=tk.HORIZONTAL)
         main_pane.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         self.main_pane = main_pane
@@ -260,7 +267,7 @@ class FormatterView:
         self.start_btn = ttk.Button(
             left_action_frame,
             text="开始排版",
-            style="Success.TButton",
+            style="Primary.TButton",
             command=self.start_processing,
         )
         self.start_btn.pack(fill=tk.X, ipady=8)
@@ -275,7 +282,7 @@ class FormatterView:
             progress_frame, textvariable=self.progress_text_var, foreground="grey"
         ).pack(anchor=tk.W)
 
-        log_frame = ttk.LabelFrame(left_frame, text="调试日志")
+        log_frame = ttk.LabelFrame(left_frame, text="处理记录")
         log_frame.pack(fill=tk.BOTH, expand=True, pady=(5, 0))
         self.debug_text = scrolledtext.ScrolledText(
             log_frame, height=10, state="disabled", wrap=tk.WORD

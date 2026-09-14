@@ -23,7 +23,9 @@ log = logging.getLogger(__name__)
 
 
 class OfficeToolbar:
-    def __init__(self, application, host, notify=None, allow_panel_fallback=False, dialog_parent=None):
+    def __init__(self, application, host, notify=None, allow_panel_fallback=False, dialog_parent=None, output_getter=None):
+        self.output_getter = output_getter or (lambda: None)
+        self.progress_text = ""
         self.application = application
         self.host = host
         self.events = queue.Queue()
@@ -108,10 +110,11 @@ class OfficeToolbar:
                 else {}
             )
             config["preprocess_office"] = False
-            jobs = build_jobs([source])
+            jobs = build_jobs([source], self.output_getter())
         except Exception as exc:
             self.notify(str(exc))
             return
+        self.progress_text = ''
         self.busy = True
         self.buttons[0].Enabled = False
         self.buttons[0].Caption = "正在排版，请稍候…"
@@ -138,6 +141,9 @@ class OfficeToolbar:
         try:
             kind, payload = self.events.get_nowait()
         except queue.Empty:
+            return
+        if kind == "progress":
+            self.progress_text = payload
             return
         self.busy = False
         try:
@@ -193,7 +199,11 @@ class OfficeToolbar:
         try:
             source = self.saved_source()
             from .academic.plugin import launch
-            launch(['--academic', str(source), '--host', self.host])
+            args = ['--academic', str(source), '--host', self.host]
+            folder = self.output_getter()
+            if folder:
+                args += ['--output-dir', folder]
+            launch(args)
         except Exception as exc:
             self.notify(str(exc))
 
@@ -204,11 +214,13 @@ class OfficeToolbar:
             source = self.saved_source()
             from .academic.templates import load_template
             template = load_template()
+            folder = self.output_getter()
             if export_only:
                 template['enabled'] = []
         except Exception as exc:
             self.notify(str(exc))
             return
+        self.progress_text = ''
         self.busy = True
         for button in self.buttons:
             button.Enabled = False
@@ -216,7 +228,8 @@ class OfficeToolbar:
         def work():
             try:
                 from .academic.workflow import run
-                result = run(source, template, reference_path=template['reference_library'] or None, host=self.host, pdf=pdf)
+                result = run(source, template, output_dir=folder, reference_path=template['reference_library'] or None, host=self.host, pdf=pdf,
+                             progress=lambda text: self.events.put(('progress', text)))
                 self.events.put(('academic', result))
             except Exception as exc:
                 self.events.put(('error', str(exc)))
@@ -284,37 +297,62 @@ class OfficePanel:
         self.root, self.host, self.toolbar = root, host, None
         self.closing = False
         self.last_probe = 0
+        from .ui_common import apply_theme, OutputFolder
+        apply_theme(root)
         label = 'Word' if host == 'word' else 'WPS'
         root.title(f'ThesisCraft · {label}')
-        root.geometry('620x290')
-        root.minsize(560, 280)
+        root.geometry('680x530')
+        root.minsize(620, 520)
         root.attributes('-topmost', True)
-        frame = ttk.Frame(root, padding=16)
+        self.was_busy = False
+        frame = ttk.Frame(root, padding=24)
         frame.pack(fill='both', expand=True)
-        ttk.Label(frame, text='学研排版', font=('Microsoft YaHei', 18, 'bold')).pack(anchor='w')
+        header = ttk.Frame(frame)
+        header.pack(fill='x')
+        ttk.Label(header, text='学研排版', style='Title.TLabel').pack(side='left')
+        ttk.Label(header, text=label + '  /  ' + __version__, style='Muted.TLabel').pack(side='right')
         self.status = tk.StringVar(value='正在连接当前文档…')
-        ttk.Label(frame, textvariable=self.status, wraplength=580).pack(anchor='w', pady=(4, 10))
+        ttk.Label(frame, textvariable=self.status, wraplength=610, style='Muted.TLabel').pack(anchor='w', pady=(6, 18))
+        self.output = OutputFolder(frame, source=lambda: self.toolbar.saved_source() if self.toolbar else None)
+        self.output.pack(fill='x', pady=(0, 18))
+        primary = ttk.Frame(frame)
+        primary.pack(fill='x')
+        self.action_buttons = []
+        for caption, method, style in [
+            ('快速论文排版', 'format_thesis', 'Primary.TButton'),
+            ('论文设置与检查', 'open_academic', 'TButton'),
+        ]:
+            button = ttk.Button(primary, text=caption, style=style, command=lambda m=method: self.invoke(m))
+            button.pack(side='left', fill='x', expand=True, padx=(0, 6), ipady=5)
+            self.action_buttons.append(button)
+        ttk.Label(frame, text='更多工具', style='Muted.TLabel').pack(anchor='w', pady=(20, 6))
         grid = ttk.Frame(frame)
         grid.pack(fill='x')
-        self.action_buttons = []
         for index, (caption, method) in enumerate([
-            ('论文设置 / 检查', 'open_academic'), ('快速论文排版', 'format_thesis'),
             ('插入编号 / 引用', 'insert_academic'), ('更新目录与引用', 'update_academic'),
-            ('导出论文 PDF', 'export_academic'), ('通用文档排版', 'format_current'),
+            ('导出 PDF', 'export_academic'), ('通用文档排版', 'format_current'),
         ]):
             button = ttk.Button(grid, text=caption, command=lambda m=method: self.invoke(m))
-            button.grid(row=index // 3, column=index % 3, padx=3, pady=4, sticky='ew')
+            button.grid(row=index // 2, column=index % 2, padx=(0, 6), pady=4, sticky='ew')
             self.action_buttons.append(button)
-        for column in range(3):
+        for column in range(2):
             grid.columnconfigure(column, weight=1)
+        track = ttk.Frame(frame, height=4)
+        track.pack(fill='x', pady=(16, 8))
+        track.pack_propagate(False)
+        self.progress = ttk.Progressbar(track, mode='indeterminate')
+        self.progress.pack(fill='both', expand=True)
+        self.result_text = tk.StringVar(value='排版生成新副本，原文档保留。')
+        ttk.Label(frame, textvariable=self.result_text, style='Muted.TLabel', wraplength=610).pack(anchor='w')
         bottom = ttk.Frame(frame)
-        bottom.pack(fill='x', pady=(12, 0))
-        self.connect_button = ttk.Button(bottom, text='连接当前文档', command=self.connect)
+        bottom.pack(side='bottom', fill='x', pady=(14, 0))
+        self.connect_button = ttk.Button(bottom, text='重新连接', command=self.connect)
         self.connect_button.pack(side='left')
         self.pin = tk.BooleanVar(value=True)
-        ttk.Checkbutton(bottom, text='保持置顶', variable=self.pin,
+        ttk.Checkbutton(bottom, text='置顶', variable=self.pin,
                         command=lambda: root.attributes('-topmost', self.pin.get())).pack(side='left', padx=12)
-        ttk.Button(bottom, text='关闭插件', command=self.close).pack(side='right')
+        self.folder_button = ttk.Button(bottom, text='打开结果文件夹', command=self.open_result_folder, state='disabled')
+        self.folder_button.pack(side='right')
         root.protocol('WM_DELETE_WINDOW', self.close)
         self.connect()
         root.after(80, self.tick)
@@ -334,7 +372,7 @@ class OfficePanel:
         try:
             application = connect_application(self.host)
             self.toolbar = OfficeToolbar(application, self.host, self.notify,
-                                         allow_panel_fallback=True, dialog_parent=self.root)
+                                         allow_panel_fallback=True, dialog_parent=self.root, output_getter=self.output.get)
             self.status.set('已连接：' + str(application.ActiveDocument.Name))
         except Exception as exc:
             if self.toolbar:
@@ -348,7 +386,30 @@ class OfficePanel:
         enabled = self.toolbar is not None and not self.toolbar.busy
         for button in self.action_buttons:
             button.configure(state='normal' if enabled else 'disabled')
-        self.connect_button.configure(state='disabled' if self.toolbar and self.toolbar.busy else 'normal')
+        busy = bool(self.toolbar and self.toolbar.busy)
+        self.connect_button.configure(state='disabled' if busy else 'normal')
+        self.output.set_busy(busy)
+        if busy != self.was_busy:
+            self.progress.start(14) if busy else self.progress.stop()
+            self.was_busy = busy
+        if busy:
+            self.result_text.set(self.toolbar.progress_text or '正在生成排版副本…')
+        elif self.toolbar and self.toolbar.last_result:
+            result = self.toolbar.last_result
+            path = result.get('output') if isinstance(result, dict) else next(iter(result.outputs), None)
+            if path:
+                self.result_text.set('已保存：' + Path(path).name)
+                self.folder_button.configure(state='normal')
+
+    def open_result_folder(self):
+        from .ui_common import open_folder
+        result = self.toolbar.last_result if self.toolbar else None
+        path = result.get('output') if isinstance(result, dict) else next(iter(result.outputs), None) if result else None
+        if path:
+            try:
+                open_folder(Path(path).parent)
+            except Exception as exc:
+                self.notify(str(exc))
 
     def invoke(self, method):
         if not self.toolbar or self.toolbar.busy:
@@ -363,6 +424,11 @@ class OfficePanel:
         import pythoncom
         from .office_connection import is_busy_error
         if self.closing:
+            return
+        # Native folder dialogs run a nested message loop. Avoid querying COM
+        # inside it, where Office can temporarily reject otherwise valid calls.
+        if self.output.choosing:
+            self.root.after(80, self.tick)
             return
         pythoncom.PumpWaitingMessages()
         toolbar = self.toolbar

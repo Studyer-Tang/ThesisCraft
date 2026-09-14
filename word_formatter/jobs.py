@@ -74,7 +74,7 @@ def unique_path(path, seen, overwrite=False):
     return candidate
 
 
-def build_jobs(input_paths, output_arg=None, recursive=True, overwrite=False):
+def build_jobs(input_paths, output_arg=None, recursive=True, overwrite=False, beside_sources=False):
     inputs = [Path(p).expanduser().resolve() for p in input_paths]
     if not inputs:
         raise ValueError("请提供输入文件或目录。")
@@ -108,7 +108,9 @@ def build_jobs(input_paths, output_arg=None, recursive=True, overwrite=False):
     seen, jobs = set(), []
     for record in records:
         path = unique_path(
-            output_dir / formatted_relative_path(record.relative), seen, overwrite
+            record.source.with_name(f"{record.source.stem}_formatted.docx")
+            if beside_sources and output_arg is None
+            else output_dir / formatted_relative_path(record.relative), seen, overwrite
         )
         for source in inputs:
             if source.is_file():

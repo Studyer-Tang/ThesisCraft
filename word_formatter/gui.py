@@ -4,6 +4,7 @@
 import json
 import logging
 import os
+from pathlib import Path
 import queue
 import sys
 import subprocess
@@ -118,6 +119,8 @@ from .gui_view import FormatterView, UNIT_DISPLAY_TO_CONFIG
 
 class WordFormatterGUI(FormatterView):
     def __init__(self, master):
+        from .ui_common import apply_theme
+        apply_theme(master)
         self.master = master
         self.dnd_available = TKDND_AVAILABLE
         self.dnd_files = DND_FILES
@@ -685,17 +688,24 @@ class WordFormatterGUI(FormatterView):
                     "警告", "文件列表为空，请先添加文件！", parent=self.master
                 )
                 return
-            output_dir = filedialog.askdirectory(
-                title="请选择一个文件夹用于存放处理后的文件"
-            )
-            if not output_dir:
+            try:
+                output_dir = self.output.get()
+            except ValueError as exc:
+                messagebox.showerror("保存位置不可用", str(exc), parent=self.master)
                 return
         elif active_tab_index == 1:
             text_content = self.direct_text_input.get("1.0", tk.END).strip()
             if not text_content:
                 messagebox.showwarning("警告", "文本框内容为空！", parent=self.master)
                 return
+            try:
+                output_dir = self.output.get()
+            except ValueError as exc:
+                messagebox.showerror("保存位置不可用", str(exc), parent=self.master)
+                return
             output_path = filedialog.asksaveasfilename(
+                parent=self.master,
+                initialdir=output_dir or str(Path.home()),
                 defaultextension=".docx",
                 filetypes=[("Word Document", "*.docx")],
                 initialfile="formatted_document.docx",
@@ -706,6 +716,7 @@ class WordFormatterGUI(FormatterView):
         self._clear_debug_log()
         self.cancel_event.clear()
         self.is_processing = True
+        self.output.set_busy(True)
         self.start_btn.config(state="disabled", text="排版中，请稍候...")
         self._set_progress(0, "开始处理...")
 
@@ -742,7 +753,7 @@ class WordFormatterGUI(FormatterView):
         self.worker_thread.start()
 
     def _process_files(self, processor, file_list, output_dir):
-        jobs = build_jobs(file_list, output_dir)
+        jobs = build_jobs(file_list, output_dir, beside_sources=output_dir is None)
 
         def completed(index, total, job, state, detail):
             self._set_progress(
@@ -797,6 +808,7 @@ class WordFormatterGUI(FormatterView):
                     pass
 
     def _restore_after_processing(self):
+        self.output.set_busy(False)
         self.is_processing = False
         if self.close_pending:
             self.master.destroy()

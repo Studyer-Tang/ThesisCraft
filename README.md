@@ -6,7 +6,7 @@
 
 ## Windows 快速开始
 
-1. 在发布页下载 `ThesisCraft.v4.0.4.Windows-portable.zip`，解压到固定文件夹，无需安装 Python。
+1. 在发布页下载 `ThesisCraft.v4.0.5.Windows-portable.zip`，解压到固定文件夹，无需安装 Python。
 2. 双击 `Paper-Studio.cmd` 打开论文工作台，选择论文和模板，先检查，再生成排版副本。
 3. 在 Word 或 WPS 中检查生成的文档；需要目录与引用更新、PDF 时，选择对应的 Office 宿主。
 
@@ -103,3 +103,9 @@ Windows 构建：安装 `requirements-build.txt` 后执行 `python packaging/bui
 ## 开源许可
 
 项目代码采用 [MIT](LICENSE)。[第三方许可文件](THIRD-PARTY-NOTICES.md)。
+
+### 保存位置与界面
+
+4.0.5 的 Word/WPS 面板、论文工作台和通用桌面版均提供“保存位置”。默认与原文件相同，点击“选择文件夹…”可更改，“恢复默认”回到原稿旁；本次窗口内保留选择，下次独立打开恢复默认。插件进入论文设置会带入所选文件夹。批量文件默认分别存放在各自原稿旁。同名结果自动递增，不覆盖原稿；正常排版仍只生成新 DOCX。
+
+界面使用简洁配色，突出主要排版按钮，模板操作收进“模板管理”，较长设置页可滚动，保存位置与操作区固定在底部。结果生成后可直接打开结果文件夹。
