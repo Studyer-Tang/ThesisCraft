@@ -57,18 +57,20 @@ def set_autostart(enabled):
         launch(["--office-watch"])
 
 
-def insert_dialog(application):
+def insert_dialog(application, parent=None):
     """A compact modal chooser; Office owns the actual selected document and undo action."""
     from ..gui import _create_root
     import tkinter as tk
     from tkinter import ttk, messagebox
 
-    root, _ = _create_root()
+    root = tk.Toplevel(parent) if parent is not None else _create_root()[0]
+    if parent is not None:
+        root.transient(parent)
     root.title("插入编号与引用 · 学研排版")
     root.geometry("610x340")
-    kind = tk.StringVar(value="图片题注")
-    key = tk.StringVar()
-    text = tk.StringVar()
+    kind = tk.StringVar(master=root, value="图片题注")
+    key = tk.StringVar(master=root)
+    text = tk.StringVar(master=root)
     ttk.Label(root, text="在 Word/WPS 中先将光标放到目标位置。", padding=12).pack(
         anchor="w"
     )
@@ -98,7 +100,7 @@ def insert_dialog(application):
         for bm in application.ActiveDocument.Bookmarks:
             if bm.Name.startswith("PS_"):
                 targets.append((str(bm.Range.Text)[:65], str(bm.Name)))
-    chosen = tk.StringVar()
+    chosen = tk.StringVar(master=root)
     labels = [f"{i + 1}. {t[0]}" for i, t in enumerate(targets)]
     ttk.Combobox(
         root, textvariable=chosen, values=labels, width=65, state="readonly"
@@ -152,13 +154,17 @@ def insert_dialog(application):
     ttk.Button(root, text="插入到当前光标位置", command=insert).pack(
         anchor="w", padx=12, pady=8
     )
-    root.mainloop()
+    if parent is not None:
+        parent.wait_window(root)
+    else:
+        root.mainloop()
 
 
 def watch():
     if os.name != "nt":
         return 1
-    import pythoncom, win32com.client, win32event, win32api, winerror
+    import pythoncom, win32event, win32api, winerror
+    from ..office_connection import connect_application
 
     mutex = win32event.CreateMutex(None, False, "Local\\StudyTangPaperStudioWatcher")
     if win32api.GetLastError() == winerror.ERROR_ALREADY_EXISTS:
@@ -175,15 +181,10 @@ def watch():
     connected = set()
     try:
         while marker.exists():
-            for host, program in [
-                ("word", "Word.Application"),
-                ("wps", "KWPS.Application"),
-            ]:
+            for host in ('word', 'wps'):
                 try:
-                    app = win32com.client.GetActiveObject(program)
-                    if not app.Documents.Count:
-                        continue
-                    identity = (host, str(app.Hwnd))
+                    app = connect_application(host)
+                    identity = (host, str(app.ActiveWindow.Hwnd))
                     if identity not in connected:
                         launch(["--office", host])
                         connected.add(identity)

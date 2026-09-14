@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import logging
 import os
 from pathlib import Path
 import queue
@@ -9,6 +10,7 @@ import subprocess
 import sys
 import threading
 import time
+from types import SimpleNamespace
 
 from .config import normalize_config
 from .engine import WordProcessor
@@ -17,11 +19,11 @@ from .service import run_jobs
 from .storage import user_config_path
 from .version import __version__
 
+log = logging.getLogger(__name__)
+
 
 class OfficeToolbar:
-    def __init__(self, application, host, notify=None):
-        import win32com.client
-
+    def __init__(self, application, host, notify=None, allow_panel_fallback=False, dialog_parent=None):
         self.application = application
         self.host = host
         self.events = queue.Queue()
@@ -30,12 +32,22 @@ class OfficeToolbar:
         self.closed = False
         self.last_result = None
         self.notify = notify or self._notify
-        self.bar = application.CommandBars.Add(
-            Name=f"学研排版 {os.getpid()}", Position=1, Temporary=True
-        )
+        self.dialog_parent = dialog_parent
+        self.bar = None
         self.buttons = []
         self.handlers = []
-        for caption, action in (
+        try:
+            self._attach_buttons()
+        except Exception:
+            self.close()
+            if not allow_panel_fallback:
+                raise
+            log.exception('Office toolbar unavailable; using the companion panel')
+            self.buttons = [SimpleNamespace(Enabled=True, Caption=caption)
+                            for caption, _ in self.actions()]
+
+    def actions(self):
+        return (
             ("排版为新副本", self.format_current),
             ("快速论文排版", self.format_thesis),
             ("论文设置 / 检查", self.open_academic),
@@ -45,7 +57,15 @@ class OfficeToolbar:
             ("排版设置 / 桌面版", self.open_settings),
             ("关于 Study-Tang", self.about),
             ("关闭排版插件", self.request_close),
-        ):
+        )
+
+    def _attach_buttons(self):
+        import win32com.client
+
+        self.bar = self.application.CommandBars.Add(
+            Name=f"学研排版 {os.getpid()}", Position=1, Temporary=True
+        )
+        for caption, action in self.actions():
             button = self.bar.Controls.Add(Type=1, Temporary=True)
             button = win32com.client.CastTo(button, "_CommandBarButton")
             button.Caption = caption
@@ -207,7 +227,7 @@ class OfficeToolbar:
     def insert_academic(self):
         if not self.busy:
             from .academic.plugin import insert_dialog
-            insert_dialog(self.application)
+            insert_dialog(self.application, parent=self.dialog_parent)
 
     def update_academic(self):
         try:
@@ -235,13 +255,145 @@ class OfficeToolbar:
     def close(self):
         if self.worker and self.worker.is_alive():
             self.worker.join()
-        for handler in self.handlers:
-            handler.close()
-        self.handlers.clear()
+        handlers, self.handlers = self.handlers, []
+        for handler in handlers:
+            try:
+                handler.close()
+            except Exception:
+                # Word may have exited before COM event unsubscription runs.
+                # Cleanup must neither abort remaining cleanup nor mask errors.
+                log.debug('Office event source disconnected during cleanup', exc_info=True)
+        bar, self.bar = self.bar, None
+        self.buttons.clear()
         try:
-            self.bar.Delete()
+            if bar is not None:
+                bar.Delete()
         except Exception:
-            pass
+            log.debug('Office toolbar already disconnected', exc_info=True)
+
+
+class OfficePanel:
+    """Visible actions when an Office version hides legacy CommandBars."""
+
+    def __init__(self, root, host):
+        import tkinter as tk
+        from tkinter import ttk
+
+        self.root, self.host, self.toolbar = root, host, None
+        self.closing = False
+        self.last_probe = 0
+        label = 'Word' if host == 'word' else 'WPS'
+        root.title(f'ThesisCraft · {label}')
+        root.geometry('620x290')
+        root.minsize(560, 280)
+        root.attributes('-topmost', True)
+        frame = ttk.Frame(root, padding=16)
+        frame.pack(fill='both', expand=True)
+        ttk.Label(frame, text='学研排版', font=('Microsoft YaHei', 18, 'bold')).pack(anchor='w')
+        self.status = tk.StringVar(value='正在连接当前文档…')
+        ttk.Label(frame, textvariable=self.status, wraplength=580).pack(anchor='w', pady=(4, 10))
+        grid = ttk.Frame(frame)
+        grid.pack(fill='x')
+        self.action_buttons = []
+        for index, (caption, method) in enumerate([
+            ('论文设置 / 检查', 'open_academic'), ('快速论文排版', 'format_thesis'),
+            ('插入编号 / 引用', 'insert_academic'), ('更新目录与引用', 'update_academic'),
+            ('导出论文 PDF', 'export_academic'), ('通用文档排版', 'format_current'),
+        ]):
+            button = ttk.Button(grid, text=caption, command=lambda m=method: self.invoke(m))
+            button.grid(row=index // 3, column=index % 3, padx=3, pady=4, sticky='ew')
+            self.action_buttons.append(button)
+        for column in range(3):
+            grid.columnconfigure(column, weight=1)
+        bottom = ttk.Frame(frame)
+        bottom.pack(fill='x', pady=(12, 0))
+        self.connect_button = ttk.Button(bottom, text='连接当前文档', command=self.connect)
+        self.connect_button.pack(side='left')
+        self.pin = tk.BooleanVar(value=True)
+        ttk.Checkbutton(bottom, text='保持置顶', variable=self.pin,
+                        command=lambda: root.attributes('-topmost', self.pin.get())).pack(side='left', padx=12)
+        ttk.Button(bottom, text='关闭插件', command=self.close).pack(side='right')
+        root.protocol('WM_DELETE_WINDOW', self.close)
+        self.connect()
+        root.after(80, self.tick)
+
+    def notify(self, message):
+        from tkinter import messagebox
+        messagebox.showinfo('学研排版', message, parent=self.root)
+
+    def connect(self):
+        from .office_connection import connect_application
+        if self.toolbar and self.toolbar.busy:
+            self.status.set('正在处理文档，请等待完成后再切换。')
+            return
+        if self.toolbar:
+            self.toolbar.close()
+            self.toolbar = None
+        try:
+            application = connect_application(self.host)
+            self.toolbar = OfficeToolbar(application, self.host, self.notify,
+                                         allow_panel_fallback=True, dialog_parent=self.root)
+            self.status.set('已连接：' + str(application.ActiveDocument.Name))
+        except Exception as exc:
+            if self.toolbar:
+                self.toolbar.close()
+                self.toolbar = None
+            self.status.set(str(exc))
+            log.exception('Unable to connect Office document')
+        self.update_buttons()
+
+    def update_buttons(self):
+        enabled = self.toolbar is not None and not self.toolbar.busy
+        for button in self.action_buttons:
+            button.configure(state='normal' if enabled else 'disabled')
+        self.connect_button.configure(state='disabled' if self.toolbar and self.toolbar.busy else 'normal')
+
+    def invoke(self, method):
+        if not self.toolbar or self.toolbar.busy:
+            return
+        try:
+            getattr(self.toolbar, method)()
+        except Exception as exc:
+            self.notify(str(exc))
+        self.update_buttons()
+
+    def tick(self):
+        import pythoncom
+        from .office_connection import is_busy_error
+        if self.closing:
+            return
+        pythoncom.PumpWaitingMessages()
+        toolbar = self.toolbar
+        if toolbar:
+            toolbar.poll()
+            if toolbar.closed:
+                self.close()
+                return
+            if time.monotonic() - self.last_probe > 0.75:
+                self.last_probe = time.monotonic()
+                try:
+                    name = str(toolbar.application.ActiveDocument.Name)
+                    self.status.set(('正在处理：' if toolbar.busy else '已连接：') + name)
+                except Exception as exc:
+                    if is_busy_error(exc):
+                        self.status.set('Word/WPS 正忙，请完成对话框操作后继续。')
+                    elif toolbar.busy:
+                        self.status.set('文档窗口已关闭，正在等待当前排版任务完成。')
+                    else:
+                        toolbar.close()
+                        self.toolbar = None
+                        self.status.set('文档连接已断开。打开文档后，点击“连接当前文档”。')
+            self.update_buttons()
+        self.root.after(80, self.tick)
+
+    def close(self):
+        if self.toolbar and self.toolbar.busy:
+            self.notify('正在处理文档，请等待完成后再关闭插件。')
+            return
+        self.closing = True
+        if self.toolbar:
+            self.toolbar.close()
+        self.root.destroy()
 
 
 def main(argv=None):
@@ -252,7 +404,6 @@ def main(argv=None):
         parser.error("此插件入口需要 Windows；桌面版和 CLI 支持其他平台。")
     import pythoncom
     import win32api
-    import win32com.client
     import win32event
     import winerror
 
@@ -260,40 +411,41 @@ def main(argv=None):
         None, False, "Local\\StudyTangWordFormatter_" + args.host
     )
     if win32api.GetLastError() == winerror.ERROR_ALREADY_EXISTS:
-        OfficeToolbar._notify("此 Office 插件已启动，请查看现有排版工具栏。")
+        import win32gui
+        label = 'Word' if args.host == 'word' else 'WPS'
+        hwnd = win32gui.FindWindow(None, f'ThesisCraft · {label}')
+        if hwnd:
+            win32gui.ShowWindow(hwnd, 9)
+            try:
+                win32gui.SetForegroundWindow(hwnd)
+            except Exception:
+                win32gui.FlashWindow(hwnd, True)
+        else:
+            OfficeToolbar._notify("插件已在运行。若有旧版错误提示，请先关闭提示，再重新启动插件。")
         win32api.CloseHandle(mutex)
         return 0
     pythoncom.CoInitialize()
-    toolbar = None
+    folder = user_config_path().parent
+    folder.mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(filename=str(folder / 'office-plugin.log'), encoding='utf-8', level=logging.INFO)
+    panel = None
     try:
-        program = "Word.Application" if args.host == "word" else "KWPS.Application"
-        try:
-            application = win32com.client.GetActiveObject(program)
-        except pythoncom.com_error:
-            application = win32com.client.DispatchEx(program)
-        application.Visible = True
-        if application.Documents.Count == 0:
-            application.Documents.Add()
-        toolbar = OfficeToolbar(application, args.host)
-        while not toolbar.closed:
-            if pythoncom.PumpWaitingMessages():
-                break
-            toolbar.poll()
-            try:
-                application.Name
-            except pythoncom.com_error:
-                break
-            time.sleep(0.05)
+        from .gui import _create_root
+        root, _ = _create_root()
+        panel = OfficePanel(root, args.host)
+        root.mainloop()
     except Exception as exc:
         OfficeToolbar._notify(
             "无法启动插件，请确认已安装桌面版 Word/WPS：\n" + str(exc)
         )
         return 1
     finally:
-        if toolbar:
-            toolbar.close()
-        pythoncom.CoUninitialize()
-        win32api.CloseHandle(mutex)
+        try:
+            if panel and panel.toolbar:
+                panel.toolbar.close()
+        finally:
+            pythoncom.CoUninitialize()
+            win32api.CloseHandle(mutex)
     return 0
 
 

@@ -5,6 +5,7 @@ import tempfile
 import unittest
 
 from word_formatter.academic.plugin import command
+from word_formatter.version import __version__
 
 
 class EntryTests(unittest.TestCase):
@@ -18,4 +19,4 @@ class EntryTests(unittest.TestCase):
                 [sys.executable, '-m', 'word_formatter', '--version'],
                 cwd=cwd, capture_output=True, text=True, check=True,
             )
-        self.assertEqual(result.stdout.strip(), '4.0.0')
+        self.assertEqual(result.stdout.strip(), __version__)
