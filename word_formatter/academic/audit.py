@@ -224,6 +224,8 @@ def audit(doc, template):
             "存在文本框，保留其内容与独立布局，需在打印预览确认。",
             group="content",
         )
+    if next(doc.element.iter(qn('wp:anchor')), None) is not None:
+        issue('floating-images', '浮动图片保留原有锚点、环绕与位置，请在打印预览检查遮挡。', group='figures')
     for index, shape in enumerate(doc.inline_shapes):
         if shape.width.cm > template["figures"]["max_width_cm"] + 0.01:
             issue(

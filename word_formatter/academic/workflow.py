@@ -119,11 +119,6 @@ def run(
 
                 continue_tables(doc, template, report["changes"], report["warnings"])
                 landscape_tables(doc, template)
-            if "figures" in groups:
-                count = format_images(doc, template)
-                report["changes"].append(
-                    dict(index=-1, action=f"等比缩小 {count} 张超宽图片")
-                )
             if "references" in groups and reference_path:
                 apply_references(
                     doc,
@@ -151,6 +146,11 @@ def run(
                     if p._p in kinds
                 }
                 paginate(doc, scan(doc, final_overrides), template, report["changes"])
+            if "figures" in groups:
+                count = format_images(doc, template)
+                report["changes"].append(
+                    dict(index=-1, action=f"按页面与单元格等比缩小 {count} 张图片，调整独立图片与题注间距")
+                )
             from .xmlutil import normalize_order
 
             normalize_order(doc)

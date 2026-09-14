@@ -243,7 +243,9 @@ def number_captions(doc, items, template, changes, warnings):
         )
         if template["figures"]["keep_caption"]:
             if token == "fig" and item.index:
-                paragraphs[item.index - 1].paragraph_format.keep_with_next = True
+                prior = paragraphs[item.index - 1]
+                if next(prior._p.iter(qn('w:drawing')), None) is not None:
+                    prior.paragraph_format.keep_with_next = True
             elif token == "table":
                 p.paragraph_format.keep_with_next = True
     return targets

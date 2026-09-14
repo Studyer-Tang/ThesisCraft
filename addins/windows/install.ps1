@@ -1,8 +1,10 @@
 ﻿param(
     [Parameter(Mandatory=$true)][string]$PythonPath,
-    [ValidateSet('Both','Word','WPS')][string]$Target = 'Both'
+    [ValidateSet('Both','Word','WPS')][string]$Target = 'Both',
+    [switch]$Experimental
 )
 $ErrorActionPreference = 'Stop'
+if (-not $Experimental) { throw '旧 .NET DLL 已停止推荐：普通启动可触发 CLR 崩溃。请使用 addins/native/install.ps1。仅隔离开发机研究可传 -Experimental。' }
 $projectPath = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $pythonExe = (Resolve-Path -LiteralPath $PythonPath).Path
 & $pythonExe -c 'import docx, tkinter'

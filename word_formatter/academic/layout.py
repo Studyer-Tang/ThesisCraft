@@ -479,14 +479,9 @@ def format_tables(doc, template):
 
 
 def format_images(doc, template):
-    limit = Cm(template["figures"]["max_width_cm"])
-    resized = 0
-    for shape in doc.inline_shapes:
-        if shape.width > limit:
-            ratio = limit / shape.width
-            shape.height, shape.width = round(shape.height * ratio), limit
-            resized += 1
-    return resized
+    from .figures import format_images as fit_images
+
+    return fit_images(doc, template)
 
 
 def format_notes(doc, template):

@@ -17,3 +17,5 @@ release/
 *.egg-info/
 .ruff_cache/
 addins/windows/dist/
+addins/native/target/
+addins/native/bin/

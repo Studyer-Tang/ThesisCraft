@@ -26,3 +26,10 @@ jobs:
       - uses: actions/checkout@v4
       - shell: powershell
         run: ./addins/windows/build.ps1
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: i686-pc-windows-msvc
+      - run: cargo test --locked --manifest-path addins/native/Cargo.toml
+      - run: cargo test --locked --manifest-path addins/native/Cargo.toml --target i686-pc-windows-msvc
+      - shell: powershell
+        run: ./addins/native/build.ps1

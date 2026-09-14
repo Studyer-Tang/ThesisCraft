@@ -2,6 +2,7 @@
 from pathlib import Path
 from importlib.metadata import distribution
 import shutil
+import subprocess
 import sys
 import zipfile
 
@@ -36,6 +37,13 @@ def copy_dependency_notices(output):
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, destination)
     (notices / 'VERSIONS.txt').write_text('\n'.join(versions) + '\n', encoding='utf-8')
+    rust_root = Path(subprocess.check_output(['rustc', '--print', 'sysroot'], text=True).strip())
+    rust_notices = rust_root/'share/doc/rust'
+    destination = notices/'rust-standard-library'
+    destination.mkdir(exist_ok=True)
+    shutil.copy2(rust_notices/'COPYRIGHT-library.html', destination/'COPYRIGHT-library.html')
+    shutil.copytree(rust_notices/'licenses', destination/'licenses', dirs_exist_ok=True)
+    (destination/'VERSION.txt').write_text(subprocess.check_output(['rustc', '--version'], text=True), encoding='utf-8')
 
 
 def main():
@@ -48,6 +56,18 @@ def main():
     output = ROOT/'release'/name
     output.mkdir(parents=True,exist_ok=True)
     shutil.copy2(executable,output/f'{name}.exe')
+    native = output/'Native-Addin'
+    native.mkdir(exist_ok=True)
+    for script in ('install.ps1', 'uninstall.ps1'):
+        shutil.copy2(ROOT/'addins/native'/script, native/script)
+    for arch in ('x86_64','i686'):
+        target = native/'bin'/arch
+        target.mkdir(parents=True,exist_ok=True)
+        shutil.copy2(ROOT/'addins/native/bin'/arch/'ThesisCraft.Addin.dll', target/'ThesisCraft.Addin.dll')
+    (output/'Install-Native-Addin.cmd').write_text(
+        f'@echo off\ncd /d "%~dp0"\nstart "" "%~dp0{name}.exe" --install-native\n', encoding='ascii')
+    (output/'Uninstall-Native-Addin.cmd').write_text(
+        f'@echo off\ncd /d "%~dp0"\nstart "" "%~dp0{name}.exe" --uninstall-native\n',encoding='ascii')
     for filename, arguments in [('Paper-Studio.cmd','--academic'),('Desktop.cmd',''),('Word-Plugin.cmd','--office word'),('WPS-Plugin.cmd','--office wps')]:
         (output/filename).write_text(f'@echo off\ncd /d "%~dp0"\nstart "" "{name}.exe" {arguments}\n',encoding='ascii')
     shutil.copy2(ROOT/'LICENSE',output/'LICENSE')
@@ -61,7 +81,9 @@ def main():
         '输出存放在原文件旁，已有同名文件自动增加序号；原件不覆盖。\n'
         '在桌面版调整参数并“保存为默认”，插件下次排版使用同一配置。\n'
         'Windows 本机 Word 16.0 和 WPS 12.1.0.28043 已通过按钮、排版和打开结果测试。\n'
-        '当前是外部 COM 插件，带独立操作窗口；可在论文工作台中启用登录后自动连接。无需开启宏或注册 DLL。\n'
+        'Install-Native-Addin.cmd：安装原生功能区入口，之后正常启动 Word/WPS 自动出现“学研排版”。\n'
+        'Uninstall-Native-Addin.cmd：卸载原生入口。只注册当前用户，无需管理员或开启宏。\n'
+        '也可继续使用免注册的 Word-Plugin.cmd / WPS-Plugin.cmd 外部操作面板。\n'
         '可执行程序自带运行环境，插件仍需电脑已安装桌面版 Word/WPS。\n',encoding='utf-8-sig')
     archive = ROOT/'release'/f'{name}.Windows-portable.zip'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as bundle:

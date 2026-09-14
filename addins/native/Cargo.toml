@@ -1,0 +1,15 @@
+[package]
+name = "thesiscraft-addin"
+version = "4.0.4"
+edition = "2021"
+authors = ["Study-Tang"]
+license = "MIT"
+description = "Native Word/WPS ribbon bridge for ThesisCraft"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+panic = "abort"
+strip = true
+lto = true

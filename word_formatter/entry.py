@@ -13,6 +13,9 @@ def main(argv=None):
     if sys.stderr is None:
         sys.stderr = open(os.devnull, 'w', encoding='utf-8')
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] in ('--install-native', '--uninstall-native'):
+        from word_formatter.native_install import main as native_main
+        return native_main(remove=argv[0] == '--uninstall-native')
     if argv and argv[0] == '--academic':
         from word_formatter.academic.gui import main as academic_main
         return academic_main(argv[1:])

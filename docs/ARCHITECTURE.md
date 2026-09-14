@@ -26,7 +26,8 @@
 - `storage.py`：原件路径保护、临时文件完成后发布输出、用户配置位置。
 - `gui.py`、`gui_view.py`：界面控制器与控件视图分离。
 - `office_toolbar.py`：通过 Windows COM 按钮事件接入 Word/WPS；工作线程处理文件，宿主线程打开结果。
-- `office.py` 与 `addins/windows/FormatterAddin.cs`：实验性的标准 COM DLL 接口。
+- `addins/native`：32/64 位原生 Rust COM DLL，仅提供功能区并启动独立排版面板；`native_install.py` 负责当前用户注册。没有 CLR 依赖。
+- `office.py` 与 `addins/windows/FormatterAddin.cs`：保留的历史实验接口，不作为推荐安装入口。
 
 `wfp.py`、`wfp_cli.py`、`wfp_core.py` 等入口共享内部模块。业务代码只维护 `word_formatter` 一份，独立 Skill 由 `packaging/build_skill.py` 生成。
 
@@ -39,7 +40,7 @@
 5. 未知配置和无效类型会尽早报错，不再静默接受字符串布尔值或错误数值。
 6. CLI：0 表示全部成功，1 表示失败，2 表示部分跳过/取消。`--json` 可获取结构化摘要。
 7. GUI 默认配置存储在用户配置目录。Windows 路径为 `%APPDATA%/Study-Tang/ThesisCraft/config.json`。旧启动目录的 `default_config.json` 仍可迁移；CLI 保留当前目录 `wfp_config.json` 的优先级。
-8. 插件工具栏需要主动启动，当前不自动加载到所有 Office 实例。
+8. 安装原生入口后，正常启动的 Word/WPS 自动加载功能区。自动化模式启动的宿主可跳过第三方加载项，不能据此判定原生入口加载失败；真实验收使用正常启动。免注册的外部入口仍需启动或启用登录后自动连接。
 
 ## 输出安全
 

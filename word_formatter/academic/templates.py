@@ -169,7 +169,8 @@ def base_template(degree="master"):
             landscape_wide=False,
             rows_per_part=0,
         ),
-        figures=dict(max_width_cm=14.5, min_dpi=150, keep_caption=True),
+        figures=dict(max_width_cm=14.5, max_height_cm=0, min_dpi=150,
+                     keep_caption=True, center=True, before_pt=6, after_pt=0),
         contents=dict(toc=True, figures=True, tables=True, depth=3),
         references=dict(
             style="gb7714-numeric", hanging_cm=0.75, superscript=False, csl_path=""
@@ -312,6 +313,8 @@ def validate_template(data):
         raise ValueError("页眉线宽应为 0–6 磅。")
     if (
         not 1 <= result["figures"]["max_width_cm"] <= 40
+        or not 0 <= result["figures"]["max_height_cm"] <= 55
+        or any(not 0 <= result["figures"][key] <= 72 for key in ('before_pt', 'after_pt'))
         or not 36 <= result["figures"]["min_dpi"] <= 1200
     ):
         raise ValueError("图片宽度或清晰度阈值不正确。")
