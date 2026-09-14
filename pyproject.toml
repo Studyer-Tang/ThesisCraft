@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thesiscraft"
+version = "4.0.0"
+description = "ThesisCraft: local document formatting for desktop, CLI, Word and WPS"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Study-Tang"}]
+dependencies = ["python-docx>=1.1.0,<2", "docxcompose>=1.4,<2", "bibtexparser>=1.4,<2", "pypdf>=5,<7", "citeproc-py>=0.9,<1"]
+
+[project.optional-dependencies]
+desktop = ["tkinterdnd2>=0.4.2,<1"]
+windows = ["pywin32>=306; platform_system == 'Windows'"]
+build = ["pyinstaller>=6,<7", "build>=1,<2"]
+dev = ["ruff>=0.11,<1"]
+
+[project.urls]
+Homepage = "https://github.com/Studyer-Tang/ThesisCraft"
+Issues = "https://github.com/Studyer-Tang/ThesisCraft/issues"
+
+[project.scripts]
+thesiscraft = "word_formatter.cli:main"
+paper-studio = "word_formatter.cli:main"
+wfp = "word_formatter.cli:main"
+
+[project.gui-scripts]
+thesiscraft-desktop = "word_formatter.academic.gui:main"
+paper-studio-desktop = "word_formatter.academic.gui:main"
+wfp-desktop = "word_formatter.gui:main"
+
+[tool.setuptools.packages.find]
+include = ["word_formatter*"]
+
+[tool.setuptools.package-data]
+"word_formatter.academic" = ["styles/*.csl", "styles/*.md"]
+
+[tool.ruff.lint]
+select = ["F"]

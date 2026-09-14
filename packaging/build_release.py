@@ -1,0 +1,470 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Build release artifacts for ThesisCraft.
+
+Run this script on the target operating system. PyInstaller does not
+cross-compile Windows, macOS, and Linux binaries from one host.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import os
+from pathlib import Path
+import platform
+import shutil
+import stat
+import subprocess
+import sys
+import textwrap
+import urllib.request
+import venv
+
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from wfp_version import APP_BINARY_BASENAME, __version__  # noqa: E402
+
+
+RELEASE_DIR = ROOT / "release"
+BUILD_ROOT = ROOT / "build" / "release"
+PYINSTALLER_NAME = APP_BINARY_BASENAME
+APPIMAGE_ICON_NAME = "thesiscraft"
+
+
+
+def run(
+    cmd: list[str],
+    cwd: Path | None = None,
+    env: dict[str, str] | None = None,
+) -> None:
+    printable = " ".join(str(part) for part in cmd)
+    print(f"+ {printable}")
+    subprocess.run(cmd, cwd=str(cwd or ROOT), check=True, env=env)
+
+
+def python_stdout(py: Path, code: str) -> str:
+    return subprocess.check_output([str(py), "-c", code], text=True).strip()
+
+
+def module_file(py: Path, module: str) -> Path:
+    return Path(
+        python_stdout(
+            py,
+            (
+                "import importlib.util, pathlib; "
+                f"spec = importlib.util.find_spec({module!r}); "
+                "print(pathlib.Path(spec.origin).resolve())"
+            ),
+        )
+    )
+
+
+def host_key() -> str:
+    system = platform.system().lower() or "unknown"
+    machine = platform.machine().lower() or "unknown"
+    return f"{system}-{machine}"
+
+
+def venv_python(venv_dir: Path) -> Path:
+    if os.name == "nt":
+        return venv_dir / "Scripts" / "python.exe"
+    return venv_dir / "bin" / "python"
+
+
+def prepare_clean_venv(target: str, reuse: bool = False) -> Path:
+    venv_dir = ROOT / f".venv-build-{target}-{host_key()}"
+    if venv_dir.exists() and not reuse:
+        shutil.rmtree(venv_dir)
+    if not venv_dir.exists():
+        venv.EnvBuilder(with_pip=True).create(venv_dir)
+
+    py = venv_python(venv_dir)
+    run([str(py), "-m", "pip", "install", "--upgrade", "pip"])
+    run([str(py), "-m", "pip", "install", "-r", str(ROOT / "requirements-build.txt")])
+    return py
+
+
+def ensure_tk_available(py: Path) -> None:
+    probe = "import tkinter; print(tkinter.TkVersion)"
+    try:
+        subprocess.run([str(py), "-c", probe], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    except subprocess.CalledProcessError as exc:
+        detail = (exc.stderr or exc.stdout or "").strip()
+        raise SystemExit(
+            "Tkinter is required for the GUI build, but this Python environment cannot import it. "
+            "Install Tk support for the target Python, or run this script with a Python that includes Tk. "
+            f"Details: {detail}"
+        ) from exc
+
+
+def windows_tcl_tk_build_env(py: Path) -> dict[str, str]:
+    base_prefix = Path(python_stdout(py, "import sys; print(sys.base_prefix)"))
+    patchlevel = python_stdout(
+        py,
+        "import tkinter; print(tkinter.Tcl().eval('info patchlevel'))",
+    )
+    version_dir = ".".join(patchlevel.split(".")[:2])
+    candidates = [
+        (
+            base_prefix / "lib" / f"tcl{version_dir}",
+            base_prefix / "lib" / f"tk{version_dir}",
+        ),
+        (
+            base_prefix / "tcl" / f"tcl{version_dir}",
+            base_prefix / "tcl" / f"tk{version_dir}",
+        ),
+        (
+            base_prefix / "Library" / "lib" / f"tcl{version_dir}",
+            base_prefix / "Library" / "lib" / f"tk{version_dir}",
+        ),
+    ]
+    for tcl_library, tk_library in candidates:
+        init_tcl = tcl_library / "init.tcl"
+        tk_tcl = tk_library / "tk.tcl"
+        if not init_tcl.exists() or not tk_tcl.exists():
+            continue
+        init_text = init_tcl.read_text(encoding="utf-8", errors="ignore")
+        tk_text = tk_tcl.read_text(encoding="utf-8", errors="ignore")
+        tcl_matches = any(
+            "package require -exact Tcl" in line and patchlevel in line
+            for line in init_text.splitlines()
+        )
+        tk_matches = any(
+            "package require -exact Tk" in line and patchlevel in line
+            for line in tk_text.splitlines()
+        )
+        if tcl_matches and tk_matches:
+            env = os.environ.copy()
+            env["TCL_LIBRARY"] = str(tcl_library)
+            env["TK_LIBRARY"] = str(tk_library)
+            print(
+                f"Windows Tcl/Tk build data: {patchlevel} "
+                f"({tcl_library}, {tk_library})"
+            )
+            return env
+
+    raise SystemExit(
+        "Could not find Tcl/Tk script data matching the _tkinter runtime "
+        f"version {patchlevel} under {base_prefix}."
+    )
+
+
+def pyinstaller_base(py: Path, target: str) -> list[str]:
+    target_build = BUILD_ROOT / target
+    return [
+        str(py),
+        "-m",
+        "PyInstaller",
+        "--noconfirm",
+        "--clean",
+        "--distpath",
+        str(target_build / "dist"),
+        "--workpath",
+        str(target_build / "work"),
+        "--specpath",
+        str(target_build / "spec"),
+        "--collect-all",
+        "tkinterdnd2",
+        "--collect-data",
+        "docx",
+        "--collect-data", "word_formatter",
+        "--collect-data", "citeproc",
+        "--collect-data", "docxcompose",
+        "--collect-data", "babel",
+        "--add-data",
+        f"{module_file(py, 'docx.parts')}{os.pathsep}docx/parts",
+    ]
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def write_checksums(paths: list[Path]) -> Path:
+    RELEASE_DIR.mkdir(exist_ok=True)
+    checksum_file = RELEASE_DIR / f"{APP_BINARY_BASENAME}.v{__version__}.SHA256SUMS.txt"
+    paths = [path for path in paths if path.name != checksum_file.name]
+    lines = [f"{sha256(path)}  {path.name}" for path in sorted(paths)]
+    checksum_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"checksums: {checksum_file}")
+    return checksum_file
+
+
+def require_host(expected_system: str, force: bool) -> None:
+    if force:
+        return
+    actual = platform.system()
+    if actual != expected_system:
+        raise SystemExit(
+            f"This target must be built on {expected_system}; current host is {actual}. "
+            "Use --force only when you know the environment is compatible."
+        )
+
+
+def copy_python_docx_templates_for_macos(py: Path, app_path: Path) -> None:
+    source = Path(
+        python_stdout(
+            py,
+            "from pathlib import Path; import docx; print(Path(docx.__file__).resolve().parent / 'templates')",
+        )
+    )
+    if not source.is_dir():
+        raise SystemExit(f"Missing python-docx templates directory: {source}")
+
+    target = app_path / "Contents" / "Frameworks" / "docx" / "templates"
+    if target.exists():
+        shutil.rmtree(target)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(source, target)
+    (app_path / "Contents" / "Frameworks" / "docx" / "parts").mkdir(parents=True, exist_ok=True)
+    print(f"copied python-docx templates: {source} -> {target}")
+
+
+def build_macos(args: argparse.Namespace) -> Path:
+    require_host("Darwin", args.force)
+    py = prepare_clean_venv("macos", reuse=args.reuse_venv)
+    ensure_tk_available(py)
+    dist_dir = BUILD_ROOT / "macos" / "dist"
+    run(
+        pyinstaller_base(py, "macos")
+        + [
+            "--windowed",
+            "--name",
+            PYINSTALLER_NAME,
+            "--osx-bundle-identifier",
+            "com.studytang.thesiscraft",
+            str(ROOT / "wfp.py"),
+        ]
+    )
+
+    app_path = dist_dir / f"{PYINSTALLER_NAME}.app"
+    if not app_path.exists():
+        raise SystemExit(f"Missing app bundle: {app_path}")
+    copy_python_docx_templates_for_macos(py, app_path)
+
+    arch = args.arch or platform.machine()
+    artifact = RELEASE_DIR / f"{APP_BINARY_BASENAME}.v{__version__}.macOS-{arch}.app.zip"
+    RELEASE_DIR.mkdir(exist_ok=True)
+    if artifact.exists():
+        artifact.unlink()
+
+    ditto = shutil.which("ditto")
+    if ditto:
+        run([ditto, "-c", "-k", "--sequesterRsrc", "--keepParent", app_path.name, str(artifact)], cwd=dist_dir)
+    else:
+        shutil.make_archive(str(artifact.with_suffix("")), "zip", root_dir=dist_dir, base_dir=app_path.name)
+    print(f"artifact: {artifact}")
+    return artifact
+
+
+def build_windows(args: argparse.Namespace) -> Path:
+    require_host("Windows", args.force)
+    py = prepare_clean_venv("windows", reuse=args.reuse_venv)
+    ensure_tk_available(py)
+    build_env = windows_tcl_tk_build_env(py)
+    exe_name = f"{APP_BINARY_BASENAME}.v{__version__}"
+    dist_dir = BUILD_ROOT / "windows" / "dist"
+    run(
+        pyinstaller_base(py, "windows")
+        + [
+            "--onefile",
+            "--windowed",
+            "--name",
+            exe_name,
+            str(ROOT / "wfp.py"),
+        ],
+        env=build_env,
+    )
+
+    built = dist_dir / f"{exe_name}.exe"
+    artifact = RELEASE_DIR / f"{exe_name}.exe"
+    RELEASE_DIR.mkdir(exist_ok=True)
+    shutil.copy2(built, artifact)
+    print(f"artifact: {artifact}")
+    return artifact
+
+
+def appimage_svg() -> str:
+    return textwrap.dedent(
+        """\
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+          <rect x="16" y="8" width="96" height="112" rx="10" fill="#2563eb"/>
+          <rect x="32" y="30" width="64" height="8" fill="#ffffff"/>
+          <rect x="32" y="50" width="64" height="8" fill="#ffffff"/>
+          <rect x="32" y="70" width="46" height="8" fill="#ffffff"/>
+          <path d="M88 90l16 16 22-30" fill="none" stroke="#16a34a" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        """
+    )
+
+
+def prepare_appdir(binary: Path, appdir: Path) -> None:
+    if appdir.exists():
+        shutil.rmtree(appdir)
+    (appdir / "usr" / "bin").mkdir(parents=True)
+    (appdir / "usr" / "share" / "applications").mkdir(parents=True)
+    (appdir / "usr" / "share" / "icons" / "hicolor" / "scalable" / "apps").mkdir(parents=True)
+
+    target_binary = appdir / "usr" / "bin" / PYINSTALLER_NAME
+    shutil.copy2(binary, target_binary)
+    target_binary.chmod(target_binary.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+    app_run = appdir / "AppRun"
+    app_run.write_text(
+        "#!/bin/sh\n"
+        'HERE="$(dirname "$(readlink -f "$0")")"\n'
+        f'exec "$HERE/usr/bin/{PYINSTALLER_NAME}" "$@"\n',
+        encoding="utf-8",
+    )
+    app_run.chmod(app_run.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+    desktop = appdir / f"{APPIMAGE_ICON_NAME}.desktop"
+    desktop.write_text(
+        "[Desktop Entry]\n"
+        "Type=Application\n"
+        "Name=ThesisCraft\n"
+        f"Exec={PYINSTALLER_NAME}\n"
+        f"Icon={APPIMAGE_ICON_NAME}\n"
+        "Categories=Office;WordProcessor;\n"
+        "Terminal=false\n",
+        encoding="utf-8",
+    )
+    shutil.copy2(desktop, appdir / "usr" / "share" / "applications" / desktop.name)
+
+    icon = appdir / "usr" / "share" / "icons" / "hicolor" / "scalable" / "apps" / f"{APPIMAGE_ICON_NAME}.svg"
+    icon.write_text(appimage_svg(), encoding="utf-8")
+    shutil.copy2(icon, appdir / f"{APPIMAGE_ICON_NAME}.svg")
+    shutil.copy2(icon, appdir / ".DirIcon")
+
+
+def build_linux_desktop(
+    args: argparse.Namespace,
+    *,
+    target: str,
+    artifact_label: str,
+) -> Path:
+    require_host("Linux", args.force)
+    py = prepare_clean_venv(target, reuse=args.reuse_venv)
+    ensure_tk_available(py)
+    dist_dir = BUILD_ROOT / target / "dist"
+    run(
+        pyinstaller_base(py, target)
+        + [
+            "--onefile",
+            "--name",
+            PYINSTALLER_NAME,
+            str(ROOT / "wfp.py"),
+        ]
+    )
+
+    built = dist_dir / PYINSTALLER_NAME
+    if not built.exists():
+        raise SystemExit(f"Missing Linux binary: {built}")
+
+    arch = args.arch or platform.machine()
+    appdir = BUILD_ROOT / target / "AppDir"
+    prepare_appdir(built, appdir)
+
+    appimagetool = args.appimagetool or shutil.which("appimagetool")
+    artifact_base = RELEASE_DIR / f"{APP_BINARY_BASENAME}.v{__version__}.{artifact_label}.{arch}"
+    raw_artifact = artifact_base
+    if args.no_appimage or args.also_raw:
+        RELEASE_DIR.mkdir(exist_ok=True)
+        shutil.copy2(built, raw_artifact)
+        raw_artifact.chmod(raw_artifact.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        print(f"artifact: {raw_artifact}")
+    if args.no_appimage:
+        return raw_artifact
+    if not appimagetool:
+        raise SystemExit("appimagetool not found. Install it or pass --appimagetool, or use --no-appimage.")
+
+    artifact = artifact_base.with_name(f"{artifact_base.name}.AppImage")
+    RELEASE_DIR.mkdir(exist_ok=True)
+    env = os.environ.copy()
+    env.setdefault("ARCH", arch)
+    print(f"+ {appimagetool} {appdir} {artifact}")
+    subprocess.run([appimagetool, str(appdir), str(artifact)], cwd=str(ROOT), env=env, check=True)
+    artifact.chmod(artifact.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    print(f"artifact: {artifact}")
+    return artifact
+
+
+def build_kylin(args: argparse.Namespace) -> Path:
+    return build_linux_desktop(args, target="kylin", artifact_label="Kylin-V10")
+
+
+def build_uos(args: argparse.Namespace) -> Path:
+    return build_linux_desktop(args, target="uos", artifact_label="UOS-V20")
+
+
+def download_reused_assets(args: argparse.Namespace) -> list[Path]:
+    raise SystemExit("旧二进制重命名发布已停用。请从当前源码构建对应平台产物。")
+
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Build ThesisCraft release artifacts.")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    def add_build_options(build_parser: argparse.ArgumentParser) -> None:
+        build_parser.add_argument("--reuse-venv", action="store_true", help="Reuse the clean build venv if it already exists.")
+        build_parser.add_argument("--force", action="store_true", help="Skip host OS checks.")
+        build_parser.add_argument("--arch", help="Override artifact architecture label.")
+
+    mac = subparsers.add_parser("macos", help="Build macOS .app.zip on macOS.")
+    add_build_options(mac)
+    mac.set_defaults(func=build_macos)
+
+    win = subparsers.add_parser("windows", help="Build Windows .exe on Windows.")
+    add_build_options(win)
+    win.set_defaults(func=build_windows)
+
+    def add_linux_build_options(build_parser: argparse.ArgumentParser) -> None:
+        add_build_options(build_parser)
+        build_parser.add_argument("--appimagetool", help="Path to appimagetool.")
+        build_parser.add_argument(
+            "--no-appimage",
+            action="store_true",
+            help="Emit only the PyInstaller Linux binary without wrapping AppImage.",
+        )
+        build_parser.add_argument(
+            "--also-raw",
+            action="store_true",
+            help="Emit the raw PyInstaller Linux binary in addition to the AppImage.",
+        )
+
+    kylin = subparsers.add_parser("kylin", help="Build Kylin/Linux AppImage on Linux/Kylin.")
+    add_linux_build_options(kylin)
+    kylin.set_defaults(func=build_kylin)
+
+    uos = subparsers.add_parser("uos", help="Build UnionTech UOS AppImage on UOS/Linux.")
+    add_linux_build_options(uos)
+    uos.set_defaults(func=build_uos)
+
+    reused = subparsers.add_parser("reused-assets", help="Download reusable Windows/Kylin assets and rename them for the current version.")
+    reused.add_argument("--overwrite", action="store_true", help="Overwrite existing files in release/.")
+    reused.set_defaults(func=download_reused_assets)
+
+    checksums = subparsers.add_parser("checksums", help="Write SHA256SUMS for release artifacts.")
+    checksums.set_defaults(func=lambda _args: list(RELEASE_DIR.glob(f"{APP_BINARY_BASENAME}.v{__version__}*")))
+
+    args = parser.parse_args(argv)
+    result = args.func(args)
+    artifacts = result if isinstance(result, list) else [result]
+    artifacts = [path for path in artifacts if isinstance(path, Path) and path.exists()]
+    if artifacts and args.command != "checksums":
+        write_checksums(list(RELEASE_DIR.glob(f"{APP_BINARY_BASENAME}.v{__version__}*")))
+    elif args.command == "checksums":
+        write_checksums(artifacts)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
