@@ -78,6 +78,17 @@ def run(
     try:
         step("正在检查文档结构和对象完整性…")
         if not check_only:
+            from .cleanup import clear_source_emphasis
+
+            cleaned = clear_source_emphasis(doc, template["cleanup"])
+            if cleaned:
+                # Selected emphasis changes inside tracked insertions are intentional;
+                # establish the preservation baseline after only that explicit edit.
+                before = inventory(doc)
+                labels = {"bold": "加粗", "italic": "斜体", "underline": "下划线"}
+                report["changes"].append(dict(index=-1, action="全文清理原有"
+                    + "、".join(labels[k] for k, v in template["cleanup"].items() if v)
+                    + "，再应用所选模板；原生公式保留"))
             groups = set(template["enabled"])
             if groups:
                 setup_styles(doc, template, update_existing="styles" in groups)

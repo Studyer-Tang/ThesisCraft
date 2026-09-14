@@ -212,6 +212,15 @@ class AcademicWindow:
             ttk.Checkbutton(main, text=title, variable=self.group_vars[key]).grid(
                 row=row // 2, column=row % 2, sticky="w", padx=25, pady=8
             )
+        cleanup_box = ttk.LabelFrame(main, text="清理原文格式（全文）", padding=10)
+        cleanup_box.grid(row=4, column=0, columnspan=2, sticky="ew", pady=10)
+        for i, (key, label) in enumerate((("bold", "清理原有加粗"),
+                                         ("italic", "清理原有斜体"),
+                                         ("underline", "清理原有下划线"))):
+            self.control(cleanup_box, self.vars, "cleanup." + key, label,
+                         self.template["cleanup"][key], 0, i * 2)
+        ttk.Label(cleanup_box, text="先清理，再按上方勾选的范围应用模板。覆盖正文、表格、页眉页脚和注释；原生公式保留。",
+                  wraplength=920).grid(row=1, column=0, columnspan=6, sticky="w", padx=8, pady=6)
         info = ttk.LabelFrame(main, text="学校和模板版本", padding=10)
         info.grid(row=5, column=0, columnspan=2, sticky="ew", pady=10)
         for i, (key, label) in enumerate(

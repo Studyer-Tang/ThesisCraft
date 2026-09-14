@@ -105,6 +105,8 @@ def apply_style(paragraph, key, template):
         ):
             original_bold = run.bold
             set_font(run, spec)
+            if template.get("cleanup", {}).get("bold"):
+                run.font.cs_bold = spec["bold"]
             if key in ("body", "abstract", "abstract_en") and original_bold:
                 run.bold = True
         depth = max(0, depth - sum(n.get(qn("w:fldCharType")) == "end" for n in flags))

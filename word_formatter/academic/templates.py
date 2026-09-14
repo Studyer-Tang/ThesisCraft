@@ -128,6 +128,7 @@ def base_template(degree="master"):
         sources=[],
         scope="通用预设，须按学校和院系当年规范调整。",
         styles=styles,
+        cleanup=dict(bold=False, italic=False, underline=False),
         page=dict(
             top=2.5,
             bottom=2.5,
