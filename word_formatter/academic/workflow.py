@@ -2,16 +2,19 @@
 
 from datetime import datetime
 import hashlib
+import os
 from pathlib import Path
 import re
 import shutil
 import time
+import tempfile
 import uuid
 
 from docx import Document
 
+from ..jobs import unique_path
 from ..storage import save_document
-from .templates import validate_template, save_template, STYLE_NAMES
+from .templates import validate_template, STYLE_NAMES
 from .audit import audit, inventory, compare_inventory, write_report
 from .layout import (
     setup_styles,
@@ -48,11 +51,12 @@ def run(
     before_issues, items = audit(doc, template)
     parent = Path(output_dir).resolve() if output_dir else source.parent
     safe_stem = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", source.stem)[:70]
-    directory = (
-        parent
-        / f"{safe_stem}_学研排版_{datetime.now():%Y%m%d_%H%M%S}_{uuid.uuid4().hex[:6]}"
-    )
-    directory.mkdir(parents=True, exist_ok=False)
+    directory = parent
+    if check_only:
+        directory = parent / f"{safe_stem}_检查_{datetime.now():%Y%m%d_%H%M%S}_{uuid.uuid4().hex[:6]}"
+        directory.mkdir(parents=True, exist_ok=False)
+    else:
+        parent.mkdir(parents=True, exist_ok=True)
     report = dict(
         source=str(source),
         source_sha256=digest,
@@ -62,9 +66,9 @@ def run(
         structure=[i.to_dict() for i in items],
         changes=[],
         output=None,
+        report=None,
         warnings=[],
     )
-    save_template(template, directory / "使用的模板.json")
 
     def step(message):
         if cancel and cancel.is_set():
@@ -158,68 +162,79 @@ def run(
                     + ", ".join(report["integrity"]["lost_categories"])
                 )
             step("正在保存排版副本…")
-            destination = directory / f"{safe_stem}_排版.docx"
-            save_document(doc, destination)
+            base = directory / f"{safe_stem}_排版.docx"
+            seen = set()
+            while True:
+                destination = unique_path(base, seen)
+                if pdf and destination.with_suffix('.pdf').exists():
+                    continue
+                try:
+                    save_document(doc, destination)
+                    break
+                except FileExistsError:
+                    # Another job may publish the same name after planning.
+                    continue
             report["output"] = str(destination)
             if host:
                 step("正在更新目录与交叉引用" + ("并导出 PDF…" if pdf else "…"))
                 from .office_io import finalize
 
                 # Office works on a separate staging copy; a failed update never damages the formatted output.
-                stage = directory / "office-stage.docx"
-                shutil.copy2(destination, stage)
-                try:
-                    office = finalize(stage, host, pdf)
-                    report["office"] = office
-                    if office.get("success"):
-                        checked = compare_inventory(before, inventory(Document(stage)))
-                        # Office legitimately rewrites XML; binary media loss is still unacceptable.
-                        binaries_lost = [
-                            s for s in checked["lost_categories"] if s.startswith("/")
-                        ]
-                        host_inventory = inventory(Document(stage))
-                        if set(before["bookmarks"]) - set(host_inventory["bookmarks"]):
-                            binaries_lost.append("原有书签")
-                        original_manager_fields = [
-                            c.strip()
-                            for c in before["field_codes"]
-                            if "ADDIN" in c.upper()
-                        ]
-                        if any(
-                            c not in {v.strip() for v in host_inventory["field_codes"]}
-                            for c in original_manager_fields
-                        ):
-                            binaries_lost.append("文献管理器域")
-                        if binaries_lost:
-                            raise RuntimeError(
-                                "Office 更新后嵌入对象发生变化："
-                                + ", ".join(binaries_lost)
-                            )
-                        stage.replace(destination)
-                        if office.get("pdf"):
-                            pdf_path = destination.with_suffix(".pdf")
-                            Path(office["pdf"]).replace(pdf_path)
-                            office["pdf"] = str(pdf_path)
-                            from .documents import inspect_pdf
+                with tempfile.TemporaryDirectory(prefix=".thesiscraft-", dir=parent) as temporary:
+                    stage = Path(temporary) / "office-stage.docx"
+                    shutil.copy2(destination, stage)
+                    try:
+                        office = finalize(stage, host, pdf)
+                        report["office"] = office
+                        if office.get("success"):
+                            checked = compare_inventory(before, inventory(Document(stage)))
+                            # Office legitimately rewrites XML; binary media loss is still unacceptable.
+                            binaries_lost = [
+                                s for s in checked["lost_categories"] if s.startswith("/")
+                            ]
+                            host_inventory = inventory(Document(stage))
+                            if set(before["bookmarks"]) - set(host_inventory["bookmarks"]):
+                                binaries_lost.append("原有书签")
+                            original_manager_fields = [
+                                c.strip()
+                                for c in before["field_codes"]
+                                if "ADDIN" in c.upper()
+                            ]
+                            if any(
+                                c not in {v.strip() for v in host_inventory["field_codes"]}
+                                for c in original_manager_fields
+                            ):
+                                binaries_lost.append("文献管理器域")
+                            if binaries_lost:
+                                raise RuntimeError(
+                                    "Office 更新后嵌入对象发生变化："
+                                    + ", ".join(binaries_lost)
+                                )
+                            stage.replace(destination)
+                            if office.get("pdf"):
+                                pdf_path = destination.with_suffix(".pdf")
+                                os.link(office["pdf"], pdf_path)
+                                office["pdf"] = str(pdf_path)
+                                from .documents import inspect_pdf
 
-                            office["pdf_check"] = inspect_pdf(pdf_path)
-                        doc = Document(destination)
-                    else:
-                        report["warnings"].append(
-                            dict(
-                                code="office-update",
-                                index=-1,
-                                message="Office 更新未完成，已保留未更新的排版副本："
-                                + str(office.get("error", office.get("errors"))),
+                                office["pdf_check"] = inspect_pdf(pdf_path)
+                            doc = Document(destination)
+                        else:
+                            report["warnings"].append(
+                                dict(
+                                    code="office-update",
+                                    index=-1,
+                                    message="Office 更新未完成，已保留未更新的排版副本："
+                                    + str(office.get("error", office.get("errors"))),
+                                )
                             )
+                    except Exception as exc:
+                        report.setdefault("office", {}).update(
+                            success=False, error=str(exc), pdf=None
                         )
-                except Exception as exc:
-                    report.setdefault("office", {}).update(
-                        success=False, error=str(exc), pdf=None
-                    )
-                    report["warnings"].append(
-                        dict(code="office-update", index=-1, message=str(exc))
-                    )
+                        report["warnings"].append(
+                            dict(code="office-update", index=-1, message=str(exc))
+                        )
             elif pdf:
                 report["warnings"].append(
                     dict(
@@ -244,12 +259,14 @@ def run(
                 )
             report["after_issues"].extend(report["warnings"])
         report["duration_seconds"] = round(time.monotonic() - started, 2)
-        report["report"] = str(directory / "检查报告.html")
-        write_report(directory, report)
-        step("检查报告已生成。")
+        if check_only:
+            report["report"] = str(directory / "检查报告.html")
+            write_report(directory, report)
+        step("检查报告已生成。" if check_only else "排版副本已生成。")
         return report
     except Exception as exc:
         report["error"] = str(exc)
         report["duration_seconds"] = round(time.monotonic() - started, 2)
-        write_report(directory, report)
+        if check_only:
+            write_report(directory, report)
         raise

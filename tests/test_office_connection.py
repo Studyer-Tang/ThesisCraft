@@ -73,6 +73,19 @@ class OfficeConnectionTests(unittest.TestCase):
 
 
 class OfficeCleanupTests(unittest.TestCase):
+    def test_academic_result_opens_document_without_report_browser(self):
+        app, notify = Mock(), Mock()
+        with patch.object(OfficeToolbar, '_attach_buttons'):
+            toolbar = OfficeToolbar(app, 'word', notify)
+        toolbar.buttons = [SimpleNamespace(Enabled=False, Caption='busy')]
+        payload = {'output': str(Path('result.docx').resolve()), 'report': None, 'warnings': []}
+        toolbar.events.put(('academic', payload))
+        with patch('webbrowser.open') as browser:
+            toolbar.poll()
+        app.Documents.Open.assert_called_once_with(payload['output'])
+        browser.assert_not_called()
+        notify.assert_not_called()
+
     def test_unadvise_failure_does_not_abort_remaining_cleanup(self):
         with patch.object(OfficeToolbar, '_attach_buttons'):
             toolbar = OfficeToolbar(None, 'word')

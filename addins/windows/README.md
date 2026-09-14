@@ -2,7 +2,7 @@
 
 # Word / WPS 插件
 
-作者：Study-Tang。版本：4.0.1。
+作者：Study-Tang。版本：4.0.2。
 
 ## 推荐：已验证的工具栏插件
 
@@ -11,7 +11,7 @@
 - `start-word-plugin.cmd`：启动 Word 工具栏插件。
 - `start-wps-plugin.cmd`：启动 WPS 工具栏插件。
 
-存在 `dist/ThesisCraft.v4.0.1.exe` 时使用打包程序；否则使用项目 `.venv` 中的 Python。启动后出现独立的“学研排版”操作窗口，上方显示连接的文档名称；兼容工具栏也会尽可能出现在 Office 的加载项区域。无需到功能区里寻找按钮。
+存在 `dist/ThesisCraft.v4.0.2.exe` 时使用打包程序；否则使用项目 `.venv` 中的 Python。启动后出现独立的“学研排版”操作窗口，上方显示连接的文档名称；兼容工具栏也会尽可能出现在 Office 的加载项区域。无需到功能区里寻找按钮。
 
 使用方法：
 

@@ -368,7 +368,7 @@ class AcademicWindow:
         ttk.Button(footer, text="取消", command=self.cancel.set).pack(
             side="left", padx=3
         )
-        ttk.Button(footer, text="打开检查报告", command=self.open_report).pack(
+        ttk.Button(footer, text="打开结果", command=self.open_report).pack(
             side="right"
         )
         self.progress = ttk.Progressbar(outer, mode="indeterminate")
@@ -739,15 +739,26 @@ class AcademicWindow:
                     self.error(payload)
                 else:
                     self.report = payload
-                    self.status.set("完成：" + payload["report"])
+                    self.status.set("完成：" + (payload.get("output") or payload["report"]))
                     self.open_report()
+                    if payload.get('output') and payload.get('warnings'):
+                        messagebox.showwarning('副本已生成，请注意', '\n'.join(
+                            str(item['message']) for item in payload['warnings'][:3]), parent=self.root)
         except queue.Empty:
             pass
         self.root.after(120, self.poll)
 
     def open_report(self):
         if self.report:
-            webbrowser.open(Path(self.report["report"]).as_uri())
+            output = self.report.get('output')
+            if output:
+                from .plugin import open_document
+                try:
+                    open_document(output, {"Word": "word", "WPS": "wps"}.get(self.host.get()))
+                except Exception as exc:
+                    self.status.set('副本已保存：' + output + '；自动打开失败：' + str(exc))
+            elif self.report.get('report'):
+                webbrowser.open(Path(self.report['report']).as_uri())
 
     def merge(self):
         paths = filedialog.askopenfilenames(

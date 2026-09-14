@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from docx import Document
 from docx.oxml import OxmlElement
@@ -93,7 +94,45 @@ class AcademicTests(unittest.TestCase):
         self.assertIn("SEQ PSfig", codes)
         self.assertIn("REF PS_", codes)
         self.assertIn("TOC", codes)
-        self.assertTrue(Path(result["report"]).exists())
+        self.assertIsNone(result["report"])
+        self.assertEqual({self.source, Path(result['output'])}, set(self.root.iterdir()))
+
+    def test_host_intermediates_are_removed_on_success_and_failure(self):
+        for success in (True, False):
+            def finalize(stage, host, pdf):
+                stage.with_suffix('.office.json').write_text('{}', encoding='utf-8')
+                stage.with_suffix('.pdf').write_bytes(b'partial temporary file')
+                if not success:
+                    raise RuntimeError('Office unavailable')
+                return {'success': True}
+            before = set(self.root.iterdir())
+            with patch('word_formatter.academic.office_io.finalize', side_effect=finalize):
+                result = run(self.source, self.template, host='word')
+            self.assertEqual({Path(result['output'])}, set(self.root.iterdir()) - before)
+            self.assertIsNone(result['report'])
+            self.assertEqual(not success, bool(result['warnings']))
+
+    def test_format_failure_does_not_leave_reports_or_templates(self):
+        with patch('word_formatter.academic.workflow.setup_styles', side_effect=RuntimeError('failed')):
+            with self.assertRaisesRegex(RuntimeError, 'failed'):
+                run(self.source, self.template)
+        self.assertEqual({self.source}, set(self.root.iterdir()))
+
+    def test_pdf_is_explicit_and_does_not_overwrite_existing_pdf(self):
+        existing_pdf = self.root / 'source_排版.pdf'
+        existing_pdf.write_bytes(b'existing PDF')
+        def finalize(stage, host, pdf):
+            self.assertTrue(pdf)
+            pdf_path = stage.with_suffix('.pdf')
+            pdf_path.write_bytes(b'test PDF')
+            return {'success': True, 'pdf': str(pdf_path)}
+        with patch('word_formatter.academic.office_io.finalize', side_effect=finalize), \
+                patch('word_formatter.academic.documents.inspect_pdf', return_value={}):
+            result = run(self.source, self.template, host='word', pdf=True)
+        self.assertEqual(b'existing PDF', existing_pdf.read_bytes())
+        self.assertEqual('source_排版_2.docx', Path(result['output']).name)
+        self.assertEqual({self.source, existing_pdf, Path(result['output']),
+                          Path(result['office']['pdf'])}, set(self.root.iterdir()))
 
     def test_check_only_does_not_write_docx(self):
         result = run(self.source, self.template, check_only=True)

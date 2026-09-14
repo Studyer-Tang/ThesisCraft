@@ -22,6 +22,25 @@ def launch(arguments):
     )
 
 
+def open_document(path, host=None):
+    """Open the finished document in the selected host, or the system default."""
+    path = str(Path(path).resolve())
+    if os.name == 'nt':
+        if host:
+            import win32com.client
+            from ..office_connection import connect_application
+            try:
+                app = connect_application(host)
+            except RuntimeError:
+                app = win32com.client.DispatchEx('Word.Application' if host == 'word' else 'KWPS.Application')
+            app.Visible = True
+            app.Documents.Open(path)
+        else:
+            os.startfile(path)
+    else:
+        subprocess.Popen(['open' if sys.platform == 'darwin' else 'xdg-open', path])
+
+
 def set_autostart(enabled):
     if os.name != "nt":
         raise RuntimeError("自动连接插件仅支持 Windows。")

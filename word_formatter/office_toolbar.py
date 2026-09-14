@@ -152,8 +152,10 @@ class OfficeToolbar:
                 self.last_result = payload
                 if payload.get('output'):
                     self.application.Documents.Open(payload['output'])
-                import webbrowser
-                webbrowser.open(Path(payload['report']).as_uri())
+                warnings = payload.get('warnings', [])
+                if warnings:
+                    self.notify('副本已生成。请注意：\n' + '\n'.join(
+                        str(item['message']) for item in warnings[:3]))
                 return
             self.last_result = payload
             if payload.outputs:
