@@ -1,7 +1,7 @@
 """Real Word styles, multilevel lists, section pagination and academic objects."""
 
 from docx.enum.style import WD_STYLE_TYPE
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING
 from docx.enum.section import WD_SECTION_START, WD_ORIENT
 from docx.oxml.ns import qn
 from docx.shared import Pt, Cm, RGBColor
@@ -72,6 +72,13 @@ def apply_style(paragraph, key, template):
     fmt.line_spacing = (
         Pt(spec["spacing"]) if spec["spacing_unit"] == "pt" else float(spec["spacing"])
     )
+    # Exact line height clips inline pictures and tall equations even though
+    # their XML/media survive. Keep the requested spacing as a minimum instead.
+    if spec["spacing_unit"] == "pt" and any(
+        next(paragraph._p.iter(qn(tag)), None) is not None
+        for tag in ('wp:inline', 'w:object', 'w:pict', 'm:oMath')
+    ):
+        fmt.line_spacing_rule = WD_LINE_SPACING.AT_LEAST
     fmt.first_line_indent = Pt(spec["indent"] * spec["size"])
     fmt.left_indent = None
     fmt.right_indent = None
@@ -500,8 +507,10 @@ def format_notes(doc, template):
         if key is None:
             continue
         from lxml import etree
+        from docx.oxml import parse_xml
 
-        root = etree.fromstring(part.blob)
+        # Paragraph expects python-docx's typed CT_P nodes, not plain lxml nodes.
+        root = parse_xml(part.blob)
         spec = template["styles"][key]
         for note in root:
             if int(note.get(qn("w:id"), "-1")) <= 0:

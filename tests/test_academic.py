@@ -118,6 +118,49 @@ class AcademicTests(unittest.TestCase):
                 run(self.source, self.template)
         self.assertEqual({self.source}, set(self.root.iterdir()))
 
+    def test_native_footnotes_and_endnotes_are_formatted_and_preserved(self):
+        from docx.opc.part import Part
+        from docx.opc.packuri import PackURI
+        from lxml import etree
+        doc = Document(self.source)
+        namespace = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        for kind in ('footnote', 'endnote'):
+            xml = (f'<w:{kind}s xmlns:w="{namespace}">'
+                   f'<w:{kind} w:id="1"><w:p><w:r><w:{kind}Ref/></w:r>'
+                   f'<w:r><w:t>保留的{kind}内容</w:t></w:r></w:p></w:{kind}></w:{kind}s>')
+            part = Part(PackURI(f'/word/{kind}s.xml'),
+                        f'application/vnd.openxmlformats-officedocument.wordprocessingml.{kind}s+xml',
+                        xml.encode('utf-8'), doc.part.package)
+            doc.part.relate_to(part, f'http://schemas.openxmlformats.org/officeDocument/2006/relationships/{kind}s')
+            note_run = doc.paragraphs[6].add_run()
+            ref = OxmlElement(f'w:{kind}Reference'); ref.set(qn('w:id'), '1'); note_run._r.append(ref)
+        doc.save(self.source)
+        result = run(self.source, self.template)
+        output = Document(result['output'])
+        for kind in ('footnote', 'endnote'):
+            part = next(p for p in output.part.package.parts if str(p.partname) == f'/word/{kind}s.xml')
+            root = etree.fromstring(part.blob)
+            self.assertIn(f'保留的{kind}内容', ''.join(root.itertext()))
+            self.assertEqual(['1'], [n.get(qn('w:id')) for n in output.element.iter(qn(f'w:{kind}Reference'))])
+            self.assertEqual('PS'+kind, next(root.iter(qn('w:pStyle'))).get(qn('w:val')))
+
+    def test_exact_body_spacing_does_not_clip_images_or_equations(self):
+        import base64
+        import io
+        from docx.enum.text import WD_LINE_SPACING
+        png = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aX1cAAAAASUVORK5CYII=')
+        doc = Document(self.source)
+        doc.add_paragraph().add_run().add_picture(io.BytesIO(png))
+        doc.save(self.source)
+        self.template['styles']['equation'].update(spacing_unit='pt', spacing=20)
+        result = run(self.source, self.template)
+        output = Document(result['output'])
+        for paragraph in output.paragraphs:
+            if next(paragraph._p.iter(qn('wp:inline')), None) is not None or next(paragraph._p.iter(qn('m:oMath')), None) is not None:
+                self.assertEqual(WD_LINE_SPACING.AT_LEAST, paragraph.paragraph_format.line_spacing_rule)
+        body = next(p for p in output.paragraphs if p.text.startswith('第二章正文'))
+        self.assertEqual(WD_LINE_SPACING.EXACTLY, body.paragraph_format.line_spacing_rule)
+
     def test_pdf_is_explicit_and_does_not_overwrite_existing_pdf(self):
         existing_pdf = self.root / 'source_排版.pdf'
         existing_pdf.write_bytes(b'existing PDF')

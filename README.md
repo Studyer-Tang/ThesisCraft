@@ -6,7 +6,7 @@
 
 ## Windows 快速开始
 
-1. 在发布页下载 `ThesisCraft.v4.0.2.Windows-portable.zip`，解压到固定文件夹，无需安装 Python。
+1. 在发布页下载 `ThesisCraft.v4.0.3.Windows-portable.zip`，解压到固定文件夹，无需安装 Python。
 2. 双击 `Paper-Studio.cmd` 打开论文工作台，选择论文和模板，先检查，再生成排版副本。
 3. 在 Word 或 WPS 中检查生成的文档；需要目录与引用更新、PDF 时，选择对应的 Office 宿主。
 

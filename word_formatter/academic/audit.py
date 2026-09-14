@@ -212,7 +212,7 @@ def audit(doc, template):
             severity="info",
             group="references",
         )
-    if any(doc.element.iter(qn("w:ins"))) or any(doc.element.iter(qn("w:del"))):
+    if next(doc.element.iter(qn("w:ins")), None) is not None or next(doc.element.iter(qn("w:del")), None) is not None:
         issue(
             "revisions",
             "存在修订记录，排版保留修订；交稿前需自行处理。",
