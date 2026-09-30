@@ -115,8 +115,9 @@ class OfficeRecoveryTests(unittest.TestCase):
                 self.assertTrue(result['warnings'])
                 self.assertIn('锁定测试正文。',
                     [p.text for p in Document(result['output']).paragraphs])
-                self.assertEqual(set(Path(directory).iterdir()),
-                                 {source, Path(result['output'])})
+                # Windows TEMP may use an 8.3 alias while workflow output is resolved.
+                self.assertEqual({path.resolve() for path in Path(directory).iterdir()},
+                                 {source.resolve(), Path(result['output']).resolve()})
                 self.assertNotEqual(stages[0].parent.parent, source.parent)
         finally:
             for handle in handles:

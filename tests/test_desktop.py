@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import sys
 import tempfile
+import time
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
@@ -77,5 +78,32 @@ class DesktopWindowTests(unittest.TestCase):
                 if sys.platform != "win32":
                     self.assertEqual(window.host.get(), "稍后手动更新")
                     self.assertFalse(window.pdf.get())
+                # Exercise the queue/poll completion path used by real button clicks.
+                from docx import Document
+
+                source = Path(folder) / "含空格的论文 test.docx"
+                document = Document()
+                document.add_heading("第1章 绪论", 1)
+                document.add_paragraph("桌面工作流测试。")
+                document.save(source)
+                original = source.read_bytes()
+                window.source.set(str(source))
+                for check_only in (True, False):
+                    window.report = None
+                    window.process(check_only)
+                    deadline = time.monotonic() + 10
+                    while window.report is None and time.monotonic() < deadline:
+                        root.update()
+                        time.sleep(0.01)
+                    self.assertIsNotNone(window.report)
+                    self.assertEqual(source.read_bytes(), original)
+                    path = (
+                        window.report["report"]
+                        if check_only
+                        else window.report["output"]
+                    )
+                    self.assertTrue(Path(path).is_file())
+                    self.assertFalse(window.busy_states)
+                    self.assertIn("完成", window.status.get())
             finally:
                 root.destroy()

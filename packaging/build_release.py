@@ -220,6 +220,7 @@ def require_host(expected_system: str, force: bool) -> None:
 def smoke_test(executable: Path, target: str) -> None:
     """Validate resources and UI in the frozen process, not the build interpreter."""
     report = BUILD_ROOT / target / "self-check.json"
+    report.unlink(missing_ok=True)
     result = subprocess.run([str(executable), "--self-check", str(report)],
                             cwd=BUILD_ROOT, timeout=120)
     if result.returncode or not report.exists():
