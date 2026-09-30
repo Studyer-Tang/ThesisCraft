@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -168,6 +169,23 @@ class CatalogTests(unittest.TestCase):
 )
 class CatalogWindowTests(unittest.TestCase):
     def test_search_empty_state_and_apply_to_existing_paper(self):
+        # Keep one Tk root per process, just as the desktop app does. macOS Tk 8
+        # can retain Cocoa event state after destroying and recreating Tk roots.
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "unittest",
+                "tests.test_catalog.CatalogWindowTests.exercise_window",
+            ],
+            cwd=Path(__file__).resolve().parents[1],
+            capture_output=True,
+            text=True,
+            timeout=45,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def exercise_window(self):
         import tkinter as tk
         from word_formatter.academic.catalog_dialog import CatalogDialog
         from word_formatter.academic.gui import AcademicWindow
