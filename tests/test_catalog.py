@@ -199,4 +199,6 @@ class CatalogWindowTests(unittest.TestCase):
                 self.assertFalse(app.collect()["page"]["set_margins"])
                 self.assertEqual(app.collect()["school"], "复旦大学")
             finally:
+                poll_id = app._poll_id
                 root.destroy()
+                self.assertNotIn(poll_id, root.tk.call("after", "info"))

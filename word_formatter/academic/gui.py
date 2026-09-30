@@ -174,7 +174,8 @@ class AcademicWindow:
         self.scroll_canvases = {}
         self._build()
         self.refresh()
-        self.root.after(120, self.poll)
+        self._poll_id = self.root.after(120, self.poll)
+        self.root.bind("<Destroy>", self.stop_polling, add=True)
         self.root.protocol("WM_DELETE_WINDOW", self.close)
         self.root.bind("<MouseWheel>", self.scroll_active_tab)
         self.root.bind("<Button-4>", self.scroll_active_tab)
@@ -938,6 +939,7 @@ class AcademicWindow:
         self.worker.start()
 
     def poll(self):
+        self._poll_id = None
         try:
             while True:
                 kind, payload = self.events.get_nowait()
@@ -982,7 +984,12 @@ class AcademicWindow:
         if self.closing and not (self.worker and self.worker.is_alive()):
             self.root.destroy()
             return
-        self.root.after(120, self.poll)
+        self._poll_id = self.root.after(120, self.poll)
+
+    def stop_polling(self, event):
+        if event.widget is self.root and self._poll_id is not None:
+            self.root.after_cancel(self._poll_id)
+            self._poll_id = None
 
     def open_result_folder(self):
         if self.report:
