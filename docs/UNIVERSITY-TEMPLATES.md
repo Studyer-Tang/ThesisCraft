@@ -1,13 +1,13 @@
 # 高校规范库
 
-收录核对日期：2026-09-30。首批 11 所高校、20 个条目；资料包括 11 份下载的 PDF/DOC/DOCX 原件和 3 份网页文本快照。北大、清华、上交、复旦优先；海外覆盖 MIT、Stanford、Oxford、Cambridge。所列年份是规范版本或来源页发布信息，不将旧指南自动改称“2026 版”。
+收录核对日期：2026-09-30。首批 11 所高校、20 个条目；保留 14 项官方来源记录。4.2.1 起不再随包分发许可未确认的原件和网页全文快照。北大、清华、上交、复旦优先；海外覆盖 MIT、Stanford、Oxford、Cambridge。所列年份是规范版本或来源页发布信息，不将旧指南自动改称“2026 版”。
 
 ## 桌面使用
 
 1. 首页点击“高校模板库”，搜索学校、英文缩写或院系，按课程/本科/硕士/博士筛选。
 2. 阅读自动覆盖范围和人工核对事项。“使用排版设置”立即载入已确认规则，再检查当前 DOCX 并生成排版副本。
-3. 有 DOCX 的条目可“复制官方 Word 样稿”，字节不改写；其他条目提供可编辑起草骨架，不能替代正式封面。
-4. “保存原始资料包”导出 ZIP，含 `template.json`、`sources.json`、原始资料和权利说明，离线可用。旧式 DOC 需在 Word/WPS 另存为 DOCX 后进入排版流程。
+3. 全部条目可新建起草 DOCX，不能替代正式封面。有官方 DOCX 的条目可从官网自行下载，再“导入官方 DOCX”校验并原样复制。
+4. “导出配置与来源”保存 ZIP，含 `template.json`、`sources.json` 和权利说明，不含原件。旧式 DOC 需在 Word/WPS 另存为 DOCX 后进入排版流程。
 
 原文未量化的边距（如复旦）保留原稿。部分规范仅应用正文及已核对样式；高级设置 → 字体与段落可勾选“排版时应用当前样式”。海外骨架采用英文，课程骨架不插入中文学位论文专用声明。目录使用 Word 原生域，需在 Word/WPS 中更新。字体需在本机可用，分页以实际提交软件的打印预览为准。
 
@@ -16,17 +16,17 @@
 | ID | 学校 / 院系 | 类型 | 版本 | 新建方式 |
 | --- | --- | --- | --- | --- |
 | `pku-master-2014` | 北京大学 | 硕士 | 2014 | 生成起草 DOCX |
-| `pku-philosophy-master-2026` | 北京大学 / 哲学系（宗教学系） | 硕士 | 2026-07 | 复制原始 DOCX |
+| `pku-philosophy-master-2026` | 北京大学 / 哲学系（宗教学系） | 硕士 | 2026-07 | 生成 / 导入本地 DOCX |
 | `tsinghua-master-2025` | 清华大学 | 硕士 | 2025-03 | 生成起草 DOCX |
-| `sjtu-master` | 上海交通大学 | 硕士 | 2025指南/2024样稿 | 复制原始 DOCX |
+| `sjtu-master` | 上海交通大学 | 硕士 | 2025指南/2024样稿 | 生成 / 导入本地 DOCX |
 | `fudan-master-2026` | 复旦大学 | 硕士 | 2026-06 | 生成起草 DOCX |
 | `pku-doctor-2014` | 北京大学 | 博士 | 2014 | 生成起草 DOCX |
-| `pku-philosophy-doctor-2026` | 北京大学 / 哲学系（宗教学系） | 博士 | 2026-07 | 复制原始 DOCX |
+| `pku-philosophy-doctor-2026` | 北京大学 / 哲学系（宗教学系） | 博士 | 2026-07 | 生成 / 导入本地 DOCX |
 | `tsinghua-doctor-2025` | 清华大学 | 博士 | 2025-03 | 生成起草 DOCX |
-| `sjtu-doctor` | 上海交通大学 | 博士 | 2025指南/2024样稿 | 复制原始 DOCX |
+| `sjtu-doctor` | 上海交通大学 | 博士 | 2025指南/2024样稿 | 生成 / 导入本地 DOCX |
 | `fudan-doctor-2026` | 复旦大学 | 博士 | 2026-06 | 生成起草 DOCX |
-| `seu-bachelor-2025` | 东南大学 | 本科 | 2025-03 | 复制原始 DOCX |
-| `sysu-mpa-course` | 中山大学 / MPA | 课程论文 | 2025发布 | 复制原始 DOCX |
+| `seu-bachelor-2025` | 东南大学 | 本科 | 2025-03 | 生成 / 导入本地 DOCX |
+| `sysu-mpa-course` | 中山大学 / MPA | 课程论文 | 2025发布 | 生成 / 导入本地 DOCX |
 | `sbs-course` | 上海商学院 / 研究生 | 课程论文 | 2025发布 | 生成起草 DOCX |
 | `mit-bachelor` | MIT 麻省理工学院 | 本科 | 2026网页快照 | 生成起草 DOCX |
 | `mit-master` | MIT 麻省理工学院 | 硕士 | 2026网页快照 | 生成起草 DOCX |
@@ -57,14 +57,14 @@
 
 上海交通大学排版字号另对照 [2025-11-24 研究生院文字指南](https://www.gs.sjtu.edu.cn/post/detail/Z3MzNDA0)，页面尺寸来自官方 Word 参考样稿。MIT 2022–2023 PDF 仅作历史附件，现行网页的事实规则另行记录。复旦 2026-06 规范要求最新版参考文献标准，本条目不启用旧版国标文献转换。
 
-每份文件的 SHA-256、字节数、下载 URL 和收录日期保存在 [index.json](../word_formatter/academic/catalog_data/index.json)。原件未转换；网页文本快照标为 `web-text-snapshot`，不视为校方提供的排版模板。所有人工检查事项亦随 JSON 模板导出，并写入检查报告。
+每份文件的 SHA-256、字节数、下载 URL 和收录日期保存在 [index.json](../word_formatter/academic/catalog_data/index.json)。摘要对应此前核对版本；这些元数据不意味着当前捆绑了原件。网页来源不视为校方提供的 Word 模板。所有人工检查事项亦随 JSON 模板导出，并写入检查报告。
 
 ## 命令行
 
 ```sh
 thesiscraft thesis templates --search 清华 --category master
 thesiscraft thesis format -i paper.docx --template tsinghua-master-2025
-thesiscraft thesis new --template sjtu-master --original -o sjtu-draft.docx
+thesiscraft thesis new --template sjtu-master --original downloaded-school.docx -o sjtu-draft.docx
 thesiscraft thesis new --template stanford-doctor -o draft.docx
 thesiscraft thesis template-bundle --template fudan-master-2026 -o fudan-sources.zip
 ```
@@ -75,6 +75,6 @@ CLI 新建与导出默认拒绝覆盖已有文件。界面使用系统保存对�
 
 数据与实现分开：`catalog_data/index.json` 保存来源及相对通用模板的参数差异，`catalog.py` 负责搜索、校验和原子导出。新增规范需确认官方域名、文件格式、版本、适用学位/院系和具体规则定位；不抓取学生论文来替代校规。下载后记录原始文件 SHA-256，将未覆盖项目写入 `manual_checks`，仅启用证据支持的排版范围。网页更新不能仅按抓取年份覆盖旧规则。
 
-测试验证所有资料的 SHA-256、Word 原样复制、生成骨架、Letter 纸型、未选择样式/页眉分节保留，以及空搜索和 GUI 应用；冻结发行包再运行校规库自检，确认资源已包含。
+测试验证离线配置、用户本地 Word 样稿校验与原样复制、生成骨架、Letter 纸型、未选择样式/页眉分节保留，以及空搜索和 GUI 应用；冻结发行包再运行校规库自检，确认不依赖网络且不捆绑原件。
 
 [资料权利说明](../word_formatter/academic/catalog_data/NOTICE.md)。项目不声称这些预设已经各高校认可或可以免于最终格式检查。

@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from wfp_version import APP_BINARY_BASENAME, __version__  # noqa: E402
+from signing import check_configuration, make_dmg, notarize_app, sign_windows  # noqa: E402
 
 
 RELEASE_DIR = ROOT / "release"
@@ -165,6 +166,7 @@ def pyinstaller_base(py: Path, target: str) -> list[str]:
         "PyInstaller",
         "--noconfirm",
         "--clean",
+        "--noupx",
         "--distpath",
         str(target_build / "dist"),
         "--workpath",
@@ -231,8 +233,10 @@ def smoke_test(executable: Path, target: str) -> None:
     print(json.dumps(data, ensure_ascii=False))
 
 
-def build_macos(args: argparse.Namespace) -> Path:
+def build_macos(args: argparse.Namespace) -> list[Path]:
     require_host("Darwin", args.force)
+    if args.signed:
+        check_configuration("macos")
     py = prepare_clean_venv("macos", reuse=args.reuse_venv)
     ensure_tk_available(py)
     dist_dir = BUILD_ROOT / "macos" / "dist"
@@ -244,8 +248,9 @@ def build_macos(args: argparse.Namespace) -> Path:
             PYINSTALLER_NAME,
             "--osx-bundle-identifier",
             "com.studytang.thesiscraft",
-            str(ROOT / "wfp.py"),
         ]
+        + (["--codesign-identity", os.environ["APPLE_SIGNING_IDENTITY"]] if args.signed else [])
+        + [str(ROOT / "wfp.py")]
     )
 
     app_path = dist_dir / f"{PYINSTALLER_NAME}.app"
@@ -268,21 +273,31 @@ def build_macos(args: argparse.Namespace) -> Path:
         run([ditto, "-c", "-k", "--sequesterRsrc", "--keepParent", app_path.name, str(artifact)], cwd=dist_dir)
     else:
         shutil.make_archive(str(artifact.with_suffix("")), "zip", root_dir=dist_dir, base_dir=app_path.name)
+    if args.signed:
+        notarize_app(app_path, artifact)
+        artifact.unlink()
+        run(["ditto", "-c", "-k", "--sequesterRsrc", "--keepParent", str(app_path), str(artifact)])
+    dmg = artifact.with_name(artifact.name.replace(".app.zip", ".dmg"))
+    make_dmg(app_path, dmg, args.signed)
     print(f"artifact: {artifact}")
-    return artifact
+    return [artifact, dmg]
 
 
-def build_windows(args: argparse.Namespace) -> Path:
+def build_windows(args: argparse.Namespace) -> list[Path]:
     require_host("Windows", args.force)
+    if platform.machine().lower() not in ("amd64", "x86_64"):
+        raise SystemExit("This Windows package targets x64; native ARM64 is not yet validated.")
+    if args.signed:
+        check_configuration("windows")
     py = prepare_clean_venv("windows", reuse=args.reuse_venv)
     ensure_tk_available(py)
     build_env = windows_tcl_tk_build_env(py)
-    exe_name = f"{APP_BINARY_BASENAME}.v{__version__}"
+    exe_name = APP_BINARY_BASENAME
     dist_dir = BUILD_ROOT / "windows" / "dist"
     run(
         pyinstaller_base(py, "windows")
         + [
-            "--onefile",
+            "--onedir",
             "--windowed",
             "--name",
             exe_name,
@@ -291,13 +306,27 @@ def build_windows(args: argparse.Namespace) -> Path:
         env=build_env,
     )
 
-    built = dist_dir / f"{exe_name}.exe"
-    artifact = RELEASE_DIR / f"{exe_name}.exe"
+    app_dir = dist_dir / exe_name
+    built = app_dir / f"{exe_name}.exe"
     RELEASE_DIR.mkdir(exist_ok=True)
-    shutil.copy2(built, artifact)
-    smoke_test(artifact, "windows")
+    if args.signed:
+        sign_windows(built)
+    smoke_test(built, "windows")
+    artifact = Path(shutil.make_archive(
+        str(RELEASE_DIR / f"{APP_BINARY_BASENAME}.v{__version__}.Windows-x64.portable"),
+        "zip", root_dir=dist_dir, base_dir=exe_name))
+    compiler = shutil.which("iscc") or str(Path(os.environ.get("ProgramFiles(x86)", "C:/Program Files (x86)")) / "Inno Setup 6/ISCC.exe")
+    options = [f"/DVersion={__version__}"]
+    if args.signed:
+        # Inno signs both installer and uninstaller through the same provider.
+        options += ["/DSignedBuild", "/Spublisher=" + subprocess.list2cmdline(
+            [sys.executable, str(ROOT / "packaging/sign_file.py")]) + " $f"]
+    run([compiler, *options, str(ROOT / "packaging/windows.iss")])
+    installer = RELEASE_DIR / f"{APP_BINARY_BASENAME}.v{__version__}.Windows-x64.Setup.exe"
+    if args.signed:
+        run([os.environ.get("SIGNTOOL", "signtool"), "verify", "/pa", str(installer)])
     print(f"artifact: {artifact}")
-    return artifact
+    return [artifact, installer]
 
 
 def appimage_svg() -> str:
@@ -426,6 +455,7 @@ def main(argv: list[str] | None = None) -> int:
         build_parser.add_argument("--reuse-venv", action="store_true", help="Reuse the clean build venv if it already exists.")
         build_parser.add_argument("--force", action="store_true", help="Skip host OS checks.")
         build_parser.add_argument("--arch", help="Override artifact architecture label.")
+        build_parser.add_argument("--signed", action="store_true", help="Require trusted signing and notarization; never fall back to unsigned.")
 
     mac = subparsers.add_parser("macos", help="Build macOS .app.zip on macOS.")
     add_build_options(mac)
@@ -465,6 +495,8 @@ def main(argv: list[str] | None = None) -> int:
     checksums.set_defaults(func=lambda _args: list(RELEASE_DIR.glob(f"{APP_BINARY_BASENAME}.v{__version__}*")))
 
     args = parser.parse_args(argv)
+    if getattr(args, "signed", False) and args.command not in ("macos", "windows"):
+        raise SystemExit("Trusted signing is only implemented for Windows and macOS.")
     result = args.func(args)
     artifacts = result if isinstance(result, list) else [result]
     artifacts = [path for path in artifacts if isinstance(path, Path) and path.exists()]

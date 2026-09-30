@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "retrieved": "2026-09-30",
   "sources": {
     "pku-0": {
@@ -13,7 +13,9 @@
       "file": "pku-0.pdf",
       "kind": "original",
       "bytes": 435666,
-      "sha256": "f9372183602fec11d864fb2c199e204abe76d34fe60d20cdd644cffc6b0aab9a"
+      "sha256": "f9372183602fec11d864fb2c199e204abe76d34fe60d20cdd644cffc6b0aab9a",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "pku-1": {
       "url": "https://lib.phil.pku.edu.cn/sites/default/files/%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%A3%AB%E7%A0%94%E7%A9%B6%E7%94%9F%E5%AD%A6%E4%BD%8D%E8%AE%BA%E6%96%87%E6%A8%A1%E6%9D%BF.doc",
@@ -26,7 +28,9 @@
       "file": "pku-1.doc",
       "kind": "original",
       "bytes": 248279,
-      "sha256": "8ad4d5866f8b255e4c32cfcd835685bfa41c24097a1a3811a46c29779c5915c7"
+      "sha256": "8ad4d5866f8b255e4c32cfcd835685bfa41c24097a1a3811a46c29779c5915c7",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "pku-2": {
       "url": "https://lib.phil.pku.edu.cn/sites/default/files/%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%93%B2%E5%AD%A6%E7%B3%BB%EF%BC%88%E5%AE%97%E6%95%99%E5%AD%A6%E7%B3%BB%EF%BC%89%E5%8D%9A%E5%A3%AB%EF%BC%88%E7%A1%95%E5%A3%AB%EF%BC%89%E7%A0%94%E7%A9%B6%E7%94%9F%E5%AD%A6%E4%BD%8D%E8%AE%BA%E6%96%87%E6%A8%A1%E6%9D%BF%E5%88%9D%E7%A8%BF%20%EF%BC%88%E6%A0%BC%E5%BC%8F%E8%87%AA%E6%9F%A5%E9%99%84%E8%A7%86%E9%A2%91%E9%93%BE%E6%8E%A5%E5%9C%A8%E6%89%B9%E6%B3%A8%E9%87%8C%EF%BC%8C2026.7.2%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD%E8%AF%B7%E5%85%B3%E6%B3%A8%E6%9C%80%E6%96%B0%E7%89%88%2C%E5%9F%BA%E4%BA%8E2026.6.15%E4%BF%AE%E6%94%B9).docx",
@@ -39,7 +43,9 @@
       "file": "pku-2.docx",
       "kind": "original",
       "bytes": 904119,
-      "sha256": "3aff510a50ac6e45c3c850260e0f6db37d2c2e8b76e562bcb4dafaf2b463704f"
+      "sha256": "3aff510a50ac6e45c3c850260e0f6db37d2c2e8b76e562bcb4dafaf2b463704f",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "thu-2025": {
       "url": "https://www.dhs.tsinghua.edu.cn/wp-content/uploads/2023/12/2025032107444819.pdf",
@@ -52,7 +58,9 @@
       "file": "thu-2025.pdf",
       "kind": "original",
       "bytes": 1208189,
-      "sha256": "32a82eb76f39ed6a3ab93cbc259fb376a960c05ad7e5ac6d490f4e9052f3fd41"
+      "sha256": "32a82eb76f39ed6a3ab93cbc259fb376a960c05ad7e5ac6d490f4e9052f3fd41",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "sjtu-0": {
       "url": "https://www.gs.sjtu.edu.cn/storage/gs/web/cn/article/2024/07/8dff34547269297128145bdf67d7794b.docx",
@@ -65,7 +73,9 @@
       "file": "sjtu-0.docx",
       "kind": "original",
       "bytes": 218068,
-      "sha256": "22dfebf3332939293b1b08bb158fd479b7267162ffb63a82d95c3e8366c1a81f"
+      "sha256": "22dfebf3332939293b1b08bb158fd479b7267162ffb63a82d95c3e8366c1a81f",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "fudan-0": {
       "url": "https://library.fudan.edu.cn/_upload/article/files/12/c4/af23155d49e48925a9d76e5f405c/20a623fe-dc74-4df7-84d4-99524810a7c9.doc",
@@ -78,7 +88,9 @@
       "file": "fudan-0.doc",
       "kind": "original",
       "bytes": 65536,
-      "sha256": "2abed3a355349db8dfa61091a5d12fe2848141ddd0152f5d1ced6435d5e8f82b"
+      "sha256": "2abed3a355349db8dfa61091a5d12fe2848141ddd0152f5d1ced6435d5e8f82b",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "seu-0": {
       "url": "https://jwc.seu.edu.cn/_upload/article/files/6d/68/bad017de41a88a6b75325544e07e/3cfc3307-d6c2-4df1-afdb-618b36b788a2.docx",
@@ -91,7 +103,9 @@
       "file": "seu-0.docx",
       "kind": "original",
       "bytes": 2098907,
-      "sha256": "4223efdcc8b34ef8b3a6bf1a6bc743309a89564a96d43d396d2ccdcd0f1948ee"
+      "sha256": "4223efdcc8b34ef8b3a6bf1a6bc743309a89564a96d43d396d2ccdcd0f1948ee",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "sysu-1": {
       "url": "https://mpa.sysu.edu.cn/sites/default/files/2025-12/%E8%AF%BE%E7%A8%8B%E8%AE%BA%E6%96%87%E5%B0%81%E9%9D%A2%E9%A1%B5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E5%8F%82%E8%80%83%E6%A0%BC%E5%BC%8F.docx",
@@ -104,7 +118,9 @@
       "file": "sysu-1.docx",
       "kind": "original",
       "bytes": 91026,
-      "sha256": "003532323d2608af44ee898bd7f457d07aafd07ed2fced441a87a94526dc794f"
+      "sha256": "003532323d2608af44ee898bd7f457d07aafd07ed2fced441a87a94526dc794f",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "sbs-0": {
       "url": "https://yjs.sbs.edu.cn/docs/2024-05/b181c91423864c1faf9bb1c75f0cc696.doc",
@@ -117,7 +133,9 @@
       "file": "sbs-0.doc",
       "kind": "original",
       "bytes": 42496,
-      "sha256": "a618ab5ba19b2fc16c7f45e16fa4a58b4354b958339eb76f002a8f16a0e6bc41"
+      "sha256": "a618ab5ba19b2fc16c7f45e16fa4a58b4354b958339eb76f002a8f16a0e6bc41",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "mit-0": {
       "url": "https://libraries.mit.edu/app/uploads/sites/18/2023/04/Specifications-for-Thesis-Preparation-2022-2023-for-PDF.pdf",
@@ -130,7 +148,9 @@
       "file": "mit-0.pdf",
       "kind": "original",
       "bytes": 335267,
-      "sha256": "41015138be347bca8417dcfb16f9712480dbc1af2fee8ec09147cc8e4604fe6d"
+      "sha256": "41015138be347bca8417dcfb16f9712480dbc1af2fee8ec09147cc8e4604fe6d",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "mit": {
       "url": "https://libraries.mit.edu/distinctive-collections/thesis-specs/",
@@ -143,7 +163,9 @@
       "file": "mit-clean.txt",
       "kind": "web-text-snapshot",
       "bytes": 39168,
-      "sha256": "ea930ad75420fdccdee3df66029a7afcb615ba6ce3077ed1308ba02d34e6236b"
+      "sha256": "ea930ad75420fdccdee3df66029a7afcb615ba6ce3077ed1308ba02d34e6236b",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "stanford": {
       "url": "https://studentservices.stanford.edu/my-academics/earn-my-degree/graduate-degree-progress/dissertations-and-theses/prepare-your-work-0",
@@ -156,7 +178,9 @@
       "file": "stanford-clean.txt",
       "kind": "web-text-snapshot",
       "bytes": 22996,
-      "sha256": "95e05cb711db9562f4066a906c9d1d8e2ce11b237510b6cb71c3c10bd4504721"
+      "sha256": "95e05cb711db9562f4066a906c9d1d8e2ce11b237510b6cb71c3c10bd4504721",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "cambridge": {
       "url": "https://www.socanth.cam.ac.uk/current-students/mres-course/mres-style-guidelines",
@@ -169,7 +193,9 @@
       "file": "cambridge-clean.txt",
       "kind": "web-text-snapshot",
       "bytes": 6110,
-      "sha256": "d36d6c596a3d8ac222eb10606b602f40177a010d31a6b0ef4c88f453b9d50c09"
+      "sha256": "d36d6c596a3d8ac222eb10606b602f40177a010d31a6b0ef4c88f453b9d50c09",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     },
     "oxford": {
       "url": "https://classics.web.ox.ac.uk/sitefiles/dphil-handbook-2025-v1.0.pdf",
@@ -182,7 +208,9 @@
       "file": "oxford.pdf",
       "kind": "original",
       "bytes": 545823,
-      "sha256": "5404fe91ba7d4d7daaef3485566870b379bfb71d87a2dd8e4bd49be9359ee547"
+      "sha256": "5404fe91ba7d4d7daaef3485566870b379bfb71d87a2dd8e4bd49be9359ee547",
+      "distribution": "link-only",
+      "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
     }
   },
   "profiles": [

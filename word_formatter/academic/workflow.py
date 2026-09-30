@@ -25,7 +25,14 @@ from .layout import (
     format_notes,
 )
 from .fields import number_captions, cross_references, add_contents
-from .bibliography import load_references, apply_references
+
+
+def file_digest(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def run(
@@ -38,6 +45,8 @@ def run(
     pdf=False,
     cancel=None,
     progress=None,
+    available_fonts=None,
+    save_report=False,
 ):
     started = time.monotonic()
     if cancel and cancel.is_set():
@@ -46,10 +55,14 @@ def run(
     if source.suffix.lower() != ".docx" or not source.is_file():
         raise ValueError("论文模式需要 DOCX；旧格式请先使用桌面通用模式转换。")
     template = validate_template(template)
-    digest = hashlib.sha256(source.read_bytes()).hexdigest()
+    digest = file_digest(source)
     doc = Document(source)
     before = inventory(doc)
     before_issues, items = audit(doc, template)
+    from .preflight import font_issues
+
+    compatibility = font_issues(template, available_fonts)
+    before_issues.extend(compatibility)
     parent = Path(output_dir).resolve() if output_dir else source.parent
     safe_stem = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", source.stem)[:70]
     directory = parent
@@ -134,6 +147,8 @@ def run(
                 continue_tables(doc, template, report["changes"], report["warnings"])
                 landscape_tables(doc, template)
             if "references" in groups and reference_path:
+                from .bibliography import load_references, apply_references
+
                 apply_references(
                     doc,
                     load_references(reference_path),
@@ -206,12 +221,13 @@ def run(
                         office = finalize(stage, host, pdf)
                         report["office"] = office
                         if office.get("success"):
-                            checked = compare_inventory(before, inventory(Document(stage)))
+                            staged_document = Document(stage)
+                            host_inventory = inventory(staged_document)
+                            checked = compare_inventory(before, host_inventory)
                             # Office legitimately rewrites XML; binary media loss is still unacceptable.
                             binaries_lost = [
                                 s for s in checked["lost_categories"] if s.startswith("/")
                             ]
-                            host_inventory = inventory(Document(stage))
                             # Office rewrites equation/revision XML, so byte hashes
                             # differ legitimately; disappearing objects do not.
                             for tag, label in (("m:oMath", "公式"),
@@ -244,7 +260,7 @@ def run(
                                 from .documents import inspect_pdf
 
                                 office["pdf_check"] = inspect_pdf(pdf_path)
-                            doc = Document(destination)
+                            doc = staged_document
                         else:
                             report["warnings"].append(
                                 dict(
@@ -280,7 +296,7 @@ def run(
             report["source_structure"] = report["structure"]
             report["structure"] = [item.to_dict() for item in final_structure]
             # Exact identity of the original is verified at the end of the operation.
-            if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+            if file_digest(source) != digest:
                 report["warnings"].append(
                     dict(
                         code="source-changed",
@@ -289,10 +305,20 @@ def run(
                     )
                 )
             report["after_issues"].extend(report["warnings"])
+            report["after_issues"].extend(compatibility)
         report["duration_seconds"] = round(time.monotonic() - started, 2)
-        if check_only:
-            report["report"] = str(directory / "检查报告.html")
-            write_report(directory, report)
+        try:
+            if save_report and not check_only:
+                directory = Path(tempfile.mkdtemp(prefix=safe_stem + "_报告_", dir=parent))
+            if check_only or save_report:
+                report["report"] = str(directory / "检查报告.html")
+                write_report(directory, report)
+        except OSError as exc:
+            if check_only:
+                raise
+            report["report"] = None
+            report["after_issues"].append(dict(code="report-save", index=-1,
+                message="副本已保存，但报告写入失败：" + str(exc)))
         step("检查报告已生成。" if check_only else "排版副本已生成。")
         return report
     except Exception as exc:

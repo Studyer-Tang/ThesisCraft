@@ -92,7 +92,9 @@ def scan(doc, overrides=None):
             prefix = match.group() if match else ""
         elif style == "PS appendix":
             kind, region = "appendix", "appendix"
-        elif DECIMAL.match(text) or DECIMAL_CJK.match(text):
+        elif ((DECIMAL.match(text) or DECIMAL_CJK.match(text))
+              and len(text) < 100 and not re.search(r"[。！？；.!?;]$", text)
+              and not style.lower().startswith(("list", "列表"))):
             match = DECIMAL.match(text) or DECIMAL_CJK.match(text)
             kind = "h" + str(match.group(1).replace("．", ".").count(".") + 1)
             prefix, region, confidence = match.group(), "body", "review"

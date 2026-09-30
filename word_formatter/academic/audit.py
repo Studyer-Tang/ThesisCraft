@@ -314,7 +314,7 @@ def write_report(directory, report):
     office_text = (
         "目录和引用已更新。"
         if office.get("success")
-        else "可使用插件“更新目录与引用”刷新页码。"
+        else "请在 Word/WPS 中更新目录及交叉引用，再导出 PDF 检查分页。Mac Word：点击目录并选择更新整个目录；通过文件菜单保存为 PDF。"
     )
     preview = ""
     if office.get("pdf") and Path(office["pdf"]).exists():

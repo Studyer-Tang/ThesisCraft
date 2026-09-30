@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 
 SAFE_FIELDS = {
     "TOC",
@@ -64,30 +65,32 @@ def update_fields(document):
 
 def finalize(path, host="word", pdf=False):
     path = Path(path).resolve()
-    report = path.with_suffix(".office.json")
     command = (
         [sys.executable, "--academic-office"]
         if getattr(sys, "frozen", False)
         else [sys.executable, "-m", "word_formatter.academic.office_io"]
     )
-    command += [str(path), "--host", host, "--report", str(report)]
+    command += [str(path), "--host", host]
     if pdf:
         command.append("--pdf")
-    try:
-        result = subprocess.run(
-            command,
-            timeout=OFFICE_TIMEOUT_SECONDS,
-            capture_output=True,
-            text=True,
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
-    except subprocess.TimeoutExpired:
-        return dict(host=host, success=False, error=
-                    "文档较大或 Office 未响应，自动更新等待超过 10 分钟。"
-                    "排版副本已保留，可打开副本后手动更新目录与交叉引用。")
-    if report.exists():
-        return json.loads(report.read_text(encoding="utf-8"))
-    raise RuntimeError("Office 处理失败：" + result.stderr[-800:])
+    with tempfile.TemporaryDirectory(prefix="thesiscraft-office-report-") as folder:
+        report = Path(folder) / "result.json"
+        try:
+            result = subprocess.run(
+                command + ["--report", str(report)],
+                timeout=OFFICE_TIMEOUT_SECONDS, capture_output=True, text=True,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
+        except subprocess.TimeoutExpired:
+            return dict(host=host, success=False, error=
+                        "文档较大或 Office 未响应，自动更新等待超过 10 分钟。"
+                        "排版副本已保留，可打开副本后手动更新目录与交叉引用。")
+        if report.exists():
+            data = json.loads(report.read_text(encoding="utf-8"))
+            if result.returncode:
+                data.update(success=False, error=data.get("error") or "Office 辅助进程异常退出。")
+            return data
+        raise RuntimeError("Office 处理失败：" + result.stderr[-800:])
 
 
 def main(argv=None):

@@ -51,3 +51,11 @@
 原有 24 项测试与 21 项新增回归测试分别运行。另有真实 Word/WPS 工具栏集成测试。CI 配置覆盖三个系统与 Python 3.10/3.12，Python 核心已通过三系统 CI；真实 Office 验收在 Windows 上执行。
 
 复杂 Word 文档仍有能力边界：未全面重排页眉、脚注、文本框和修订内部内容；Markdown 不做完整语义渲染；真实复杂文档的分页效果仍需要在 Word/WPS 中检查。
+
+## 4.2.1 学术工作流与发行
+
+学术入口 GUI/CLI → `academic.workflow` → `structure/layout/fields/audit` 共用同一套文档变换；GUI 仅处理交互和任务队列，`preflight` 是不修改配置的纯字体检查。`catalog` 保存独立规则和来源元数据，不包含第三方原件；用户显式导入官方样稿才校验并复制。
+
+文档哈希分块读取；Office 更新后的文档只解析一次并复用完整性清单。编号识别避开长正文、完整句子和列表，防止分节及页眉页脚数量失控。大依赖按功能加载，未引入 WebView、后台服务或数据库。更新检查仅显式触发，以固定官方链接呈现结果，不执行远程代码。
+
+发布入口仍为 `build_release.py`，平台签名集中于 `packaging/signing.py`。未配置证书时 `--signed` 失败；未签名 CI 不得发布普通稳定版本号。Windows 安装目录使用固定程序名，免管理员权限；Mac 提供双架构 DMG。验收边界见 COMPATIBILITY.md。
