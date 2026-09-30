@@ -133,6 +133,7 @@ def audit(doc, template):
             if (
                 p._p.find(qn("w:pPr") + "/" + qn("w:numPr")) is None
                 and template["numbering"]["scheme"] != "none"
+                and "numbering" in template["enabled"]
             ):
                 issue(
                     "manual-number",
@@ -140,7 +141,7 @@ def audit(doc, template):
                     item.index,
                     group="numbering",
                 )
-        if key and item.text:
+        if key and key in template["style_keys"] and item.text and "styles" in template["enabled"]:
             spec = template["styles"][key]
             style = p.style
             run = next((r for r in p.runs if r.text.strip()), None)
@@ -183,7 +184,8 @@ def audit(doc, template):
     for n, section in enumerate(doc.sections):
         for key in ("top", "bottom", "left", "right"):
             actual = getattr(section, key + "_margin")
-            if actual is not None and abs(actual.cm - template["page"][key]) > 0.03:
+            if ("pages" in template["enabled"] and template["page"]["set_margins"]
+                    and actual is not None and abs(actual.cm - template["page"][key]) > 0.03):
                 issue(
                     "margin",
                     f"第 {n + 1} 节{key}页边距为 {actual.cm:.2f}cm，要求 {template['page'][key]:g}cm。",
@@ -227,6 +229,8 @@ def audit(doc, template):
     if next(doc.element.iter(qn('wp:anchor')), None) is not None:
         issue('floating-images', '浮动图片保留原有锚点、环绕与位置，请在打印预览检查遮挡。', group='figures')
     for index, shape in enumerate(doc.inline_shapes):
+        if "figures" not in template["enabled"]:
+            continue
         if shape.width.cm > template["figures"]["max_width_cm"] + 0.01:
             issue(
                 "image-width",
@@ -333,6 +337,8 @@ def write_report(directory, report):
         f'''<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>学研排版 · 检查报告</title>
 <style>body{{font:16px/1.7 'Microsoft YaHei',sans-serif;background:#f5f7fb;color:#18263c;margin:0}}main{{max-width:1120px;margin:32px auto;padding:32px;background:white;border-radius:16px}}h1{{margin-top:0}}table{{border-collapse:collapse;width:100%;font-size:14px;table-layout:fixed}}td,th{{padding:10px;border-bottom:1px solid #ddd;text-align:left;overflow-wrap:anywhere}}th{{background:#edf2fa}}.button,button{{display:inline-block;padding:8px 14px;background:#174c87;color:white;border:0;border-radius:6px;margin:4px;text-decoration:none;cursor:pointer}}.status{{padding:18px;background:#eef5ff}}details{{margin:24px 0}}tr:target{{background:#fff2c4}}</style>
 <main><h1>学研排版 · 检查报告</h1><p>{esc(report["template_name"])} · {esc(report.get("duration_seconds", 0))} 秒</p>
+<p>{esc(report.get("template_scope", ""))}</p>
+<details><summary>规范来源与人工核对事项</summary><ul>{''.join('<li>' + esc(item) + '</li>' for item in report.get('manual_checks', []))}</ul>{''.join('<p>' + esc(url) + '</p>' for url in report.get('template_sources', []))}</details>
 <p>{result_link}<a class="button" href="{esc(source_link)}">打开原件 / 回退</a></p>
 <p class="status">错误 {counts["error"]} · 待确认 {counts["warning"]} · 提示 {counts["info"]}<br>原件始终保留。此报告检查结构与格式，最终分页请在 Word/WPS 或 PDF 预览中确认。</p>
 <p>{esc(integrity_text)}</p><p>{esc(office_text)}</p>{preview}

@@ -124,12 +124,20 @@ def base_template(degree="master"):
         department="",
         year="2026",
         degree=degree,
+        language="zh",
+        document_type="thesis",
+        catalog_id="",
+        manual_checks=[],
+        style_keys=list(STYLE_LABELS),
         template_version="1.0",
         sources=[],
         scope="通用预设，须按学校和院系当年规范调整。",
         styles=styles,
         cleanup=dict(bold=False, italic=False, underline=False),
         page=dict(
+            paper_size="A4",
+            layout_only=False,
+            set_margins=True,
             top=2.5,
             bottom=2.5,
             left=3.0,
@@ -238,7 +246,8 @@ def validate_template(data):
     _merge(result, data)
     if result["schema_version"] != 1:
         raise ValueError("不支持的模板 schema_version。")
-    choices = {"degree": ("bachelor", "master", "doctor")}
+    choices = {"degree": ("bachelor", "master", "doctor"),
+               "language": ("zh", "en"), "document_type": ("thesis", "course")}
     for key, values in choices.items():
         if result[key] not in values:
             raise ValueError(key + " 选项不正确。")
@@ -266,6 +275,12 @@ def validate_template(data):
         if not re.fullmatch("[0-9a-fA-F]{6}", style["color"]):
             raise ValueError("字体颜色须为六位十六进制颜色。")
     page = result["page"]
+    if page["paper_size"] not in ("A4", "Letter", "preserve"):
+        raise ValueError("纸型须为 A4、Letter 或 preserve。")
+    if any(key not in STYLE_LABELS for key in result["style_keys"]):
+        raise ValueError("未知排版样式范围。")
+    if any(not isinstance(item, str) for item in result["manual_checks"]):
+        raise ValueError("人工核对项目必须为文字。")
     for key in (
         "top",
         "bottom",
@@ -441,6 +456,12 @@ def pku_template(degree="master"):
 
 
 def load_template(value=None):
+    if value and isinstance(value, str):
+        from .catalog import get_profile, profile_template
+
+        profile = get_profile(value)
+        if profile is not None:
+            return profile_template(profile)
     if value in ("pku-master", "pku-doctor"):
         return pku_template(value.split("-")[1])
     if value in ("bachelor", "master", "doctor"):

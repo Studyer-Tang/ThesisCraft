@@ -19,8 +19,10 @@ ALIGNS = dict(
 )
 
 
-def setup_styles(doc, template, update_existing=True):
+def setup_styles(doc, template, update_existing=True, initialize=False):
     for key, name in STYLE_NAMES.items():
+        if not initialize and key not in template["style_keys"] and name in doc.styles:
+            continue
         if not update_existing and name in doc.styles:
             continue
         style = (
@@ -39,9 +41,10 @@ def setup_styles(doc, template, update_existing=True):
             style.font.italic = False
         if template.get("cleanup", {}).get("underline"):
             style.font.underline = False
-        style.element.get_or_add_rPr().get_or_add_rFonts().set(
-            qn("w:eastAsia"), spec["font"]
-        )
+        fonts = style.element.get_or_add_rPr().get_or_add_rFonts()
+        fonts.set(qn("w:eastAsia"), spec["font"])
+        for attr in ("asciiTheme", "hAnsiTheme", "eastAsiaTheme", "cstheme"):
+            fonts.attrib.pop(qn("w:" + attr), None)
         fmt = style.paragraph_format
         fmt.alignment = ALIGNS[spec["align"]]
         fmt.line_spacing = (
@@ -66,7 +69,7 @@ def setup_styles(doc, template, update_existing=True):
 
 
 def apply_style(paragraph, key, template):
-    if key not in STYLE_NAMES:
+    if key not in STYLE_NAMES or key not in template["style_keys"]:
         return
     paragraph.style = STYLE_NAMES[key]
     spec = template["styles"][key]
@@ -286,7 +289,34 @@ def _managed_paragraph(part, style_name):
     )
 
 
+def page_geometry(section, template):
+    page = template["page"]
+    if page["set_margins"]:
+        for name in ("top", "bottom", "left", "right"):
+            setattr(section, name + "_margin", Cm(page[name]))
+        section.gutter = Cm(page["gutter"])
+        section.header_distance = Cm(page["header_distance"])
+        section.footer_distance = Cm(page["footer_distance"])
+    if page["paper_size"] != "preserve":
+        width, height = (21, 29.7) if page["paper_size"] == "A4" else (21.59, 27.94)
+        if section.orientation == WD_ORIENT.LANDSCAPE and (
+            page["preserve_landscape"] or template["tables"]["landscape_wide"]
+        ):
+            width, height = height, width
+        else:
+            section.orientation = WD_ORIENT.PORTRAIT
+        section.page_width, section.page_height = Cm(width), Cm(height)
+
+
 def paginate(doc, items, template, changes):
+    if template["page"]["layout_only"]:
+        for section in doc.sections:
+            page_geometry(section, template)
+        if template["page"]["set_margins"]:
+            set_child(doc.settings.element, "w:mirrorMargins",
+                      val=int(template["page"]["mirror_margins"]))
+        changes.append(dict(index=-1, action="应用纸型与页面尺寸，保留原有分节、页眉及页码"))
+        return
     paragraphs = list(doc.paragraphs)
     regions = {p._p: item.region for p, item in zip(paragraphs, items)}
     boundaries = [
@@ -329,17 +359,7 @@ def paginate(doc, items, template, changes):
         is_front = region in ("abstract", "abstract_en") or (
             region == "symbols" and first_body
         )
-        for name in ("top", "bottom", "left", "right"):
-            setattr(section, name + "_margin", Cm(page[name]))
-        section.gutter = Cm(page["gutter"])
-        section.header_distance, section.footer_distance = (
-            Cm(page["header_distance"]),
-            Cm(page["footer_distance"]),
-        )
-        if (
-            not page["preserve_landscape"] and not template["tables"]["landscape_wide"]
-        ) or section.orientation != WD_ORIENT.LANDSCAPE:
-            section.page_width, section.page_height = Cm(21), Cm(29.7)
+        page_geometry(section, template)
         section.start_type = (
             WD_SECTION_START.ODD_PAGE
             if page["chapter_recto"] and not is_cover and not is_front
@@ -491,6 +511,8 @@ def format_images(doc, template):
 
 
 def format_notes(doc, template):
+    if "footnote" not in template["style_keys"] and "endnote" not in template["style_keys"]:
+        return
     props = doc.settings.element.find(qn("w:footnotePr"))
     if props is None:
         props = element("w:footnotePr")
@@ -505,7 +527,7 @@ def format_notes(doc, template):
             if str(part.partname).endswith("/endnotes.xml")
             else None
         )
-        if key is None:
+        if key is None or key not in template["style_keys"]:
             continue
         from lxml import etree
         from docx.oxml import parse_xml
@@ -546,7 +568,13 @@ def create_skeleton(template, destination):
     from ..storage import save_document
 
     doc = Document()
-    setup_styles(doc, template)
+    setup_styles(doc, template, initialize=True)
+    for section in doc.sections:
+        page_geometry(section, template)
+    if template["language"] == "en" or template["document_type"] == "course":
+        _short_skeleton(doc, template)
+        save_document(doc, destination)
+        return destination
     meta = template["metadata"]
     doc.add_paragraph(meta["title"] or "【填写论文题目】", STYLE_NAMES["title"])
     doc.add_paragraph(meta["title_en"] or "【填写英文题目】", STYLE_NAMES["subtitle"])
@@ -569,19 +597,21 @@ def create_skeleton(template, destination):
         ("摘要", "【填写中文摘要】"),
         ("Abstract", "【填写英文摘要】"),
     ]:
-        doc.add_paragraph(heading, STYLE_NAMES["front_heading"])
-        doc.add_paragraph(text)
+        role = "abstract" if heading == "摘要" else "abstract_en"
+        doc.add_paragraph(heading, STYLE_NAMES[role + "_heading"])
+        doc.add_paragraph(text, STYLE_NAMES[role])
         doc.add_paragraph(
             ("关键词：" + (meta["keywords"] or "【关键词】"))
             if heading == "摘要"
-            else "Keywords: " + (meta["keywords_en"] or "【keywords】")
+            else "Keywords: " + (meta["keywords_en"] or "【keywords】"),
+            STYLE_NAMES["keywords"],
         )
     for title in ("第1章 绪论", "第2章 方法", "第3章 结果与讨论", "第4章 结论"):
         doc.add_paragraph(title, "Heading 1")
-        doc.add_paragraph("【在这里填写正文】")
+        doc.add_paragraph("【在这里填写正文】", STYLE_NAMES["body"])
     for heading in ("参考文献", "附录 A 补充材料", "符号表", "致谢", "学术成果"):
         doc.add_paragraph(heading, STYLE_NAMES["front_heading"])
-        doc.add_paragraph("【按实际内容填写；不需要的章节可删除】")
+        doc.add_paragraph("【按实际内容填写；不需要的章节可删除】", STYLE_NAMES["body"])
     if template["front_matter_path"]:
         from docxcompose.composer import Composer
         from ..storage import ensure_distinct_paths
@@ -615,3 +645,34 @@ def create_skeleton(template, destination):
         doc = composer.doc
     save_document(doc, destination)
     return destination
+
+
+def _short_skeleton(doc, template):
+    """Editable Word draft; school-specific title pages remain an explicit review step."""
+    english = template["language"] == "en"
+    thesis = template["document_type"] == "thesis"
+    meta = template["metadata"]
+    placeholder = "{{write_here}}" if english else "【在这里填写】"
+    doc.add_paragraph(meta["title_en" if english else "title"] or
+                      ("{{title}}" if english else "【论文题目】"), STYLE_NAMES["title"])
+    doc.add_paragraph(template["school"], STYLE_NAMES["cover_info"])
+    doc.add_paragraph(meta["author"] or ("{{author}}" if english else "【姓名与学号】"),
+                      STYLE_NAMES["cover_info"])
+    if thesis:
+        doc.add_page_break()
+    if thesis or "abstract" in template["required_sections"]:
+        doc.add_paragraph("Abstract" if english else "摘要", STYLE_NAMES["front_heading"])
+        doc.add_paragraph(placeholder, STYLE_NAMES["abstract_en" if english else "abstract"])
+    if thesis:
+        doc.add_page_break()
+        doc.add_paragraph("Contents" if english else "目录", STYLE_NAMES["front_heading"])
+        field(doc.add_paragraph(), 'TOC \\o "1-3" \\h \\z \\u',
+              "Update this field in Word" if english else "请在 Word 中更新目录域",
+              template["styles"]["body"])
+    titles = ("Introduction", "Methods and discussion", "Conclusion") if english else ("引言", "分析与讨论", "结论")
+    for title in titles:
+        p = doc.add_paragraph(title, "Heading 1")
+        p.paragraph_format.page_break_before = thesis
+        doc.add_paragraph(placeholder, STYLE_NAMES["body"])
+    doc.add_paragraph("References" if english else "参考文献", STYLE_NAMES["front_heading"])
+    doc.add_paragraph(placeholder, STYLE_NAMES["bibliography"])

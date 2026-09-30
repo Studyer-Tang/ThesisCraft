@@ -31,6 +31,7 @@ PRESETS = {
     "北京大学博士（研究生指南）": "pku-doctor",
 }
 CHOICES = {
+    "paper_size": {"A4": "A4", "Letter": "Letter", "保留原纸型": "preserve"},
     "degree": {"本科": "bachelor", "硕士": "master", "博士": "doctor"},
     "scheme": {v: k for k, v in NUMBERING.items()},
     "align": {
@@ -62,6 +63,9 @@ CHOICES = {
     "restart": {"连续": "continuous", "每页重置": "eachPage", "每节重置": "eachSect"},
 }
 LABELS = {
+    "paper_size": "纸张大小",
+    "layout_only": "保留原有分节、页眉及页码",
+    "set_margins": "应用模板页边距",
     "font": "中文字体",
     "latin": "英文/数字字体",
     "size": "字号（磅）",
@@ -162,6 +166,7 @@ class AcademicWindow:
         self.refs = tk.StringVar()
         self.preset = tk.StringVar(value=self.template["name"])
         self.style_key = tk.StringVar(value="正文")
+        self.style_enabled = tk.BooleanVar(value=True)
         self.status = tk.StringVar(value="选择论文和模板，即可开始排版。原文档保留。")
         self.current_style = "body"
         self.blocks = []
@@ -169,7 +174,8 @@ class AcademicWindow:
         self.scroll_canvases = {}
         self._build()
         self.refresh()
-        self.root.after(120, self.poll)
+        self._poll_id = self.root.after(120, self.poll)
+        self.root.bind("<Destroy>", self.stop_polling, add=True)
         self.root.protocol("WM_DELETE_WINDOW", self.close)
         self.root.bind("<MouseWheel>", self.scroll_active_tab)
         self.root.bind("<Button-4>", self.scroll_active_tab)
@@ -212,12 +218,13 @@ class AcademicWindow:
         )
         combo.pack(side="left")
         combo.bind("<<ComboboxSelected>>", self.choose_preset)
-        ttk.Button(presets, text="保存为默认", command=self.save_default).pack(
+        ttk.Button(presets, text="高校模板库…", command=self.open_catalog).pack(
             side="left", padx=8
         )
         more = ttk.Menubutton(presets, text="模板管理 ▾")
         menu = tk.Menu(more, tearoff=False)
         for title, action in [
+            ("保存为默认", self.save_default),
             ("导入模板", self.import_template),
             ("从 Word 样稿读取", self.import_styles),
             ("导出模板", self.export_template),
@@ -311,6 +318,8 @@ class AcademicWindow:
         )
         chooser.grid(row=0, column=0, columnspan=4, sticky="w", pady=10)
         chooser.bind("<<ComboboxSelected>>", self.change_style)
+        ttk.Checkbutton(typography, text="排版时应用当前样式", variable=self.style_enabled).grid(
+            row=0, column=2, columnspan=2, sticky="e")
         for i, (key, value) in enumerate(self.template["styles"]["body"].items()):
             self.control(
                 typography,
@@ -669,6 +678,7 @@ class AcademicWindow:
         var.set(value)
 
     def refresh(self):
+        self.style_enabled.set(self.current_style in self.template["style_keys"])
         self.refs.set(self.template["reference_library"])
         for key, binding in self.vars.items():
             value = self.template
@@ -699,6 +709,10 @@ class AcademicWindow:
         result["styles"][self.current_style] = {
             k: self.get_value(v) for k, v in self.style_vars.items()
         }
+        if not self.style_enabled.get() and self.current_style in result["style_keys"]:
+            result["style_keys"].remove(self.current_style)
+        elif self.style_enabled.get() and self.current_style not in result["style_keys"]:
+            result["style_keys"].append(self.current_style)
         result["enabled"] = [k for k, v in self.group_vars.items() if v.get()]
         result["reference_library"] = self.refs.get()
         return validate_template(result)
@@ -730,6 +744,24 @@ class AcademicWindow:
     def choose_preset(self, _event=None):
         self.template = load_template(PRESETS[self.preset.get()])
         self.refresh()
+
+    def open_catalog(self):
+        from .catalog_dialog import CatalogDialog
+
+        def apply(template):
+            template["metadata"] = self.collect()["metadata"]
+            self.template = template
+            self.preset.set(template["name"])
+            self.refresh()
+            self.show_result("已加载：" + template["name"] + "\n\n" +
+                             "\n".join(template["manual_checks"]))
+            self.status.set("规范已应用。可先检查当前论文，再生成排版副本。")
+
+        def document(path):
+            self.source.set(path)
+            self.status.set("已新建 Word 文档：" + path)
+
+        CatalogDialog(self.root, apply, document)
 
     def select_source(self):
         path = filedialog.askopenfilename(
@@ -907,6 +939,7 @@ class AcademicWindow:
         self.worker.start()
 
     def poll(self):
+        self._poll_id = None
         try:
             while True:
                 kind, payload = self.events.get_nowait()
@@ -951,7 +984,12 @@ class AcademicWindow:
         if self.closing and not (self.worker and self.worker.is_alive()):
             self.root.destroy()
             return
-        self.root.after(120, self.poll)
+        self._poll_id = self.root.after(120, self.poll)
+
+    def stop_polling(self, event):
+        if event.widget is self.root and self._poll_id is not None:
+            self.root.after_cancel(self._poll_id)
+            self._poll_id = None
 
     def open_result_folder(self):
         if self.report:

@@ -35,6 +35,15 @@ def check(gui=True):
         report = run(source, load_template("master"), check_only=True)
         if not Path(report["report"]).is_file():
             raise RuntimeError("Audit report missing")
+        from .academic.catalog import get_profile, new_document, export_bundle
+
+        profile = get_profile("sjtu-master")
+        new_document(profile, Path(folder) / "school.docx")
+        export_bundle(profile, Path(folder) / "school.zip")
+        international = run(source, load_template("stanford-doctor"))
+        page = Document(international["output"]).sections[0]
+        if abs(page.page_width.cm - 21.59) > 0.01:
+            raise RuntimeError("Letter paper setup failed")
         record = dict(
             key="smoke",
             authors=["Study-Tang"],
@@ -60,6 +69,14 @@ def check(gui=True):
                 window.toggle_advanced()
                 window.lock_inputs(True)
                 window.lock_inputs(False)
+                from .academic.catalog_dialog import CatalogDialog
+
+                dialog = CatalogDialog(root, lambda _: None, lambda _: None)
+                dialog.query.set("Stanford")
+                root.update_idletasks()
+                if len(dialog.rows) != 1:
+                    raise RuntimeError("Catalog search failed")
+                dialog.destroy()
             finally:
                 root.destroy()
     return dict(
@@ -68,7 +85,7 @@ def check(gui=True):
         system=platform.system(),
         architecture=platform.machine(),
         gui=gui,
-        checks=["docx", "source-preservation", "audit", "csl"]
+        checks=["docx", "source-preservation", "audit", "csl", "university-catalog", "letter-paper"]
         + (["gui"] if gui else []),
     )
 
