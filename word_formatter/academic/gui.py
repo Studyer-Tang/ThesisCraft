@@ -426,7 +426,7 @@ class AcademicWindow:
         ).pack(anchor="w", pady=4)
         tool_actions = [
             ("检查正式版更新…", lambda: self.check_updates(False)),
-            ("查看最新预览版…", lambda: self.check_updates(True)),
+            ("检查更新（含预览版）…", lambda: self.check_updates(True)),
             ("按顺序合并章节…", self.merge),
             ("拆分为章节副本…", self.split),
             ("打开通用文档模式", self.launch_general),
