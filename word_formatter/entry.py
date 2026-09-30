@@ -13,12 +13,18 @@ def main(argv=None):
     if sys.stderr is None:
         sys.stderr = open(os.devnull, 'w', encoding='utf-8')
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] == '--self-check':
+        from word_formatter.self_check import main as check_main
+        return check_main(argv[1:])
     if argv and argv[0] in ('--install-native', '--uninstall-native'):
         from word_formatter.native_install import main as native_main
         return native_main(remove=argv[0] == '--uninstall-native')
     if argv and argv[0] == '--academic':
         from word_formatter.academic.gui import main as academic_main
         return academic_main(argv[1:])
+    if argv and argv[0] == '--general':
+        from word_formatter.gui import main as general_main
+        return general_main()
     if argv and argv[0] == '--academic-office':
         from word_formatter.academic.office_io import main as academic_office_main
         return academic_office_main(argv[1:])
@@ -42,9 +48,9 @@ def main(argv=None):
         print(__version__)
         return 0
 
-    from word_formatter.gui import main as gui_main
+    from word_formatter.academic.gui import main as gui_main
 
-    gui_main()
+    gui_main(argv)
     return 0
 
 

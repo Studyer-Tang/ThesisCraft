@@ -40,6 +40,8 @@ def run(
     progress=None,
 ):
     started = time.monotonic()
+    if cancel and cancel.is_set():
+        raise InterruptedError("已取消；原件未修改。")
     source = Path(source).resolve()
     if source.suffix.lower() != ".docx" or not source.is_file():
         raise ValueError("论文模式需要 DOCX；旧格式请先使用桌面通用模式转换。")
@@ -70,7 +72,7 @@ def run(
     )
 
     def step(message):
-        if cancel and cancel.is_set():
+        if cancel and cancel.is_set() and not report["output"]:
             raise InterruptedError("已取消；原件未修改。")
         if progress:
             progress(message)
@@ -185,7 +187,7 @@ def run(
                     # Another job may publish the same name after planning.
                     continue
             report["output"] = str(destination)
-            if host:
+            if host and not (cancel and cancel.is_set()):
                 step("正在更新目录与交叉引用" + ("并导出 PDF…" if pdf else "…"))
                 from .office_io import finalize
 
@@ -259,6 +261,9 @@ def run(
                                  "排版副本已生成；目录、交叉引用自动更新未完成，可在 Word/WPS 中更新域。"
                                  + str(exc))
                         )
+            elif host and cancel and cancel.is_set():
+                report["warnings"].append(dict(code="cancel-after-save", index=-1,
+                    message="副本已保存；已取消后续目录更新与 PDF 导出。"))
             elif pdf:
                 report["warnings"].append(
                     dict(
