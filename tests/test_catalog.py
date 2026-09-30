@@ -28,7 +28,7 @@ class CatalogTests(unittest.TestCase):
         self.addCleanup(temp.cleanup)
         self.root = Path(temp.name)
 
-    def test_all_profiles_validate_and_all_originals_have_matching_hashes(self):
+    def test_all_profiles_validate_and_new_documents_are_offline(self):
         entries = catalog.profiles()
         self.assertEqual(len(entries), len({p["id"] for p in entries}))
         self.assertEqual({p["category"] for p in entries}, set(catalog.CATEGORIES))
@@ -40,22 +40,9 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(template["catalog_id"], profile["id"])
                 self.assertTrue(template["sources"])
                 self.assertTrue(template["manual_checks"])
-                for source in catalog.sources(profile):
-                    self.assertEqual(len(catalog.source_bytes(source)), source["bytes"])
-                if profile["word_source"]:
-                    copy = catalog.new_document(
-                        profile, self.root / (profile["id"] + ".docx")
-                    )
-                    original = next(
-                        s
-                        for s in catalog.sources(profile)
-                        if s["id"] == profile["word_source"]
-                    )
-                    self.assertEqual(
-                        hashlib.sha256(copy.read_bytes()).hexdigest(),
-                        original["sha256"],
-                    )
-                    self.assertTrue(Document(copy).paragraphs)
+                self.assertTrue(all(s["distribution"] == "link-only" for s in catalog.sources(profile)))
+                copy = catalog.new_document(profile, self.root / (profile["id"] + ".docx"))
+                self.assertTrue(Document(copy).paragraphs)
 
     def test_search_returns_independent_profiles_and_exact_category(self):
         self.assertEqual(len(catalog.profiles("Stanford")), 1)
@@ -75,28 +62,33 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(validate_template(config), load_template(profile["id"]))
             sources = json.loads(bundle.read("sources.json"))
             for source in sources:
-                data = bundle.read("sources/" + source["file"])
-                self.assertEqual(hashlib.sha256(data).hexdigest(), source["sha256"])
+                self.assertEqual(source["distribution"], "link-only")
+                self.assertTrue(source["url"].startswith("https://"))
+            self.assertFalse(any(name.startswith("sources/") for name in bundle.namelist()))
             self.assertIn("NOTICE.md", bundle.namelist())
 
-    def test_corrupt_asset_fails_before_replacing_existing_destination(self):
-        destination = self.root / "existing.docx"
-        destination.write_bytes(b"original user data")
+    def test_local_original_requires_matching_hash_and_never_overwrites_source(self):
+        original = self.root / "school.docx"
+        doc = Document()
+        doc.add_paragraph("Official-style fixture")
+        doc.save(original)
+        data = original.read_bytes()
         profile = catalog.get_profile("sjtu-master")
-        with patch(
-            "word_formatter.academic.catalog.source_bytes",
-            side_effect=ValueError("bad hash"),
-        ):
+        destination = self.root / "copy.docx"
+        with self.assertRaises(ValueError):
+            catalog.new_document(profile, destination, original_path=original)
+        records = catalog._catalog()
+        source = records["sources"][profile["word_source"]]
+        with patch.dict(source, sha256=hashlib.sha256(data).hexdigest()):
+            catalog.new_document(profile, destination, original_path=original)
+            self.assertEqual(destination.read_bytes(), data)
+            with self.assertRaises(FileExistsError):
+                catalog.new_document(profile, destination, original_path=original)
             with self.assertRaises(ValueError):
-                catalog.new_document(profile, destination)
-        self.assertEqual(destination.read_bytes(), b"original user data")
-        with self.assertRaises(FileExistsError):
-            catalog.new_document(profile, destination)
-        self.assertEqual(destination.read_bytes(), b"original user data")
+                catalog.new_document(profile, original, overwrite=True, original_path=original)
+        self.assertEqual(original.read_bytes(), data)
         with self.assertRaises(ValueError):
             catalog.new_document(profile, catalog.DATA / "source.docx")
-        with self.assertRaises(ValueError):
-            catalog.source_bytes({"file": "../index.json"})
 
     def test_letter_format_retains_sections_headers_and_unselected_headings(self):
         source = self.root / "input.docx"

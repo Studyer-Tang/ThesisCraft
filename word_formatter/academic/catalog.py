@@ -52,14 +52,11 @@ def sources(profile):
     return [deepcopy(_catalog()["sources"][key]) for key in profile["source_ids"]]
 
 
-def source_bytes(source):
-    """Validate bundled bytes before exporting; never fetch at app startup."""
-    filename = source["file"]
-    if Path(filename).name != filename or filename in ("", ".", ".."):
-        raise ValueError("资料文件名无效。")
-    data = (DATA / "sources" / filename).read_bytes()
+def source_bytes(source, path):
+    """Verify an explicitly selected local original; never bundle or fetch it."""
+    data = Path(path).read_bytes()
     if hashlib.sha256(data).hexdigest() != source["sha256"]:
-        raise ValueError("资料校验失败：" + filename)
+        raise ValueError("文件与收录版本不一致，请核对官方版本后直接在 Word 中使用。")
     return data
 
 
@@ -77,12 +74,17 @@ def _publish(destination, writer, overwrite=False):
     return destination
 
 
-def new_document(profile, destination, overwrite=False):
+def new_document(profile, destination, overwrite=False, original_path=None):
     if Path(destination).suffix.lower() != ".docx":
         raise ValueError("新建 Word 文档请使用 .docx 扩展名。")
     original = profile.get("word_source")
-    if original:
-        data = source_bytes(_catalog()["sources"][original])
+    if original_path is not None:
+        from ..storage import ensure_distinct_paths
+
+        ensure_distinct_paths(original_path, destination)
+        if not original:
+            raise ValueError("此规范未登记官方 DOCX 样稿。")
+        data = source_bytes(_catalog()["sources"][original], original_path)
         return _publish(destination, lambda path: path.write_bytes(data), overwrite)
     from .layout import create_skeleton
 
@@ -94,11 +96,10 @@ def new_document(profile, destination, overwrite=False):
 
 
 def export_bundle(profile, destination, overwrite=False):
-    """Export editable rules, provenance, and unmodified downloaded documents together."""
+    """Export our editable settings and official links, without third-party originals."""
     if Path(destination).suffix.lower() != ".zip":
         raise ValueError("资料包请使用 .zip 扩展名。")
     records = sources(profile)
-    assets = [(record["file"], source_bytes(record)) for record in records]
 
     def write(path):
         with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
@@ -110,7 +111,5 @@ def export_bundle(profile, destination, overwrite=False):
                 "sources.json", json.dumps(records, ensure_ascii=False, indent=2)
             )
             archive.writestr("NOTICE.md", (DATA / "NOTICE.md").read_bytes())
-            for filename, data in assets:
-                archive.writestr("sources/" + filename, data)
 
     return _publish(destination, write, overwrite)

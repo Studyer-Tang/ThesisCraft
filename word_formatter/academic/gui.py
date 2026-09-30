@@ -425,6 +425,8 @@ class AcademicWindow:
             ),
         ).pack(anchor="w", pady=4)
         tool_actions = [
+            ("检查正式版更新…", lambda: self.check_updates(False)),
+            ("查看最新预览版…", lambda: self.check_updates(True)),
             ("按顺序合并章节…", self.merge),
             ("拆分为章节副本…", self.split),
             ("打开通用文档模式", self.launch_general),
@@ -498,6 +500,7 @@ class AcademicWindow:
         ttk.Button(actions, text="打开结果", command=self.open_report).pack(
             side="right"
         )
+        ttk.Button(actions, text="检查报告", command=self.open_audit).pack(side="right", padx=4)
         track = ttk.Frame(footer_area, height=4)
         track.pack(fill="x", pady=6)
         track.pack_propagate(False)
@@ -906,6 +909,15 @@ class AcademicWindow:
         source, refs = self.source.get(), self.refs.get() or None
         host = {"Word": "word", "WPS": "wps"}.get(self.host.get())
         pdf = self.pdf.get()
+        # Tcl/Tk must only be queried on its UI thread, before starting the worker.
+        from tkinter.font import families
+
+        available_fonts = families(self.root)
+        from .preflight import font_issues
+
+        warnings = font_issues(template, available_fonts)
+        if warnings:
+            self.show_result("\n".join(item["message"] for item in warnings))
         self.cancel.clear()
         self.lock_inputs(True)
         self.progress.start()
@@ -927,6 +939,8 @@ class AcademicWindow:
                             reference_path=refs,
                             host=host,
                             pdf=pdf,
+                            available_fonts=available_fonts,
+                            save_report=True,
                             cancel=self.cancel,
                             progress=lambda s: self.events.put(("progress", s)),
                         ),
@@ -943,6 +957,11 @@ class AcademicWindow:
         try:
             while True:
                 kind, payload = self.events.get_nowait()
+                if kind == "update-info":
+                    message, url = payload
+                    if messagebox.askyesno("版本更新", message + "\n打开官方发布页？", parent=self.root):
+                        webbrowser.open(url)
+                    continue
                 if kind == "progress":
                     self.status.set(payload)
                     continue
@@ -974,7 +993,7 @@ class AcademicWindow:
                         "• " + item["message"] for item in issues[:20]
                     ]
                     if len(issues) > 20:
-                        lines.append("其余提示请通过“只检查”生成完整报告。")
+                        lines.append("其余提示请点击“检查报告”查看。")
                     lines += ["", payload.get("output") or payload["report"]]
                     self.show_result("\n".join(lines))
                     if self.notebook.winfo_manager():
@@ -1018,6 +1037,25 @@ class AcademicWindow:
                     )
             elif self.report.get("report"):
                 webbrowser.open(Path(self.report["report"]).as_uri())
+
+    def open_audit(self):
+        if self.report and self.report.get("report"):
+            webbrowser.open(Path(self.report["report"]).as_uri())
+
+    def check_updates(self, preview=False):
+        def check():
+            from ..updates import latest_release, RELEASES
+            from ..version import __version__
+
+            try:
+                release = latest_release(preview)
+                message = ("可用版本：" + release["tag"] if release else "暂未找到此渠道的版本。")
+                message += "\n当前程序版本：" + __version__
+                message += "\n下载后按安装说明更新；历史版本可从发布页恢复。"
+                self.events.put(("update-info", (message, release["url"] if release else RELEASES)))
+            except Exception:
+                self.events.put(("update-info", ("更新检查失败，请检查网络或稍后重试。", RELEASES)))
+        threading.Thread(target=check, daemon=True).start()
 
     def merge(self):
         paths = filedialog.askopenfilenames(

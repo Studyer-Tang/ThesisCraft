@@ -20,7 +20,7 @@ class CatalogDialog(tk.Toplevel):
         frame = ttk.Frame(self, padding=16)
         frame.pack(fill="both", expand=True)
         ttk.Label(
-            frame, text="按学校、院系或英文名称搜索；资料随软件保存，可离线使用。"
+            frame, text="排版配置可离线使用；官方原件通过来源链接获取，或选择已下载的样稿。"
         ).pack(anchor="w")
         filters = ttk.Frame(frame)
         filters.pack(fill="x", pady=10)
@@ -71,9 +71,11 @@ class CatalogDialog(tk.Toplevel):
         self.word_button = ttk.Button(actions, text="新建 Word 文档…", command=self.new)
         self.word_button.pack(side="left", padx=8)
         self.bundle_button = ttk.Button(
-            actions, text="保存原始资料包…", command=self.export
+            actions, text="导出配置与来源…", command=self.export
         )
         self.bundle_button.pack(side="left")
+        self.import_button = ttk.Button(actions, text="导入官方 DOCX…", command=self.import_original)
+        self.import_button.pack(side="left", padx=8)
         self.link_button = ttk.Button(
             actions, text="查看官方来源", command=self.open_source
         )
@@ -118,6 +120,7 @@ class CatalogDialog(tk.Toplevel):
             self.word_button,
             self.bundle_button,
             self.link_button,
+            self.import_button,
         ):
             button.configure(state="normal" if p else "disabled")
         text = "没有匹配的模板，请缩短关键词或更改类型。"
@@ -125,18 +128,15 @@ class CatalogDialog(tk.Toplevel):
             t = catalog.profile_template(p)
             if not t["enabled"]:
                 self.apply_button.configure(state="disabled")
-            self.word_button.configure(
-                text="复制官方 Word 样稿…"
-                if p.get("word_source")
-                else "新建可编辑 DOCX…"
-            )
+            self.word_button.configure(text="新建可编辑 DOCX…")
+            self.import_button.configure(state="normal" if p.get("word_source") else "disabled")
             text = p["name"] + "\n\n" + t["scope"] + "\n\n需要核对：\n"
             text += "\n".join("• " + item for item in t["manual_checks"])
             text += "\n\n原始资料：\n" + "\n".join(
                 f"• {s['title']}（{s['version']}）\n  {s.get('page') or s['url']}"
                 for s in catalog.sources(p)
             )
-            text += "\n\n新建 DOCX 为起草文件；目录域请在 Word/WPS 中更新。"
+            text += "\n\n新建 DOCX 为本软件生成的起草文件，不含官方封面。目录域请在 Word/WPS 中更新。原件未随包分发。"
         self.details.configure(state="normal")
         self.details.delete("1.0", "end")
         self.details.insert("1.0", text)
@@ -147,7 +147,13 @@ class CatalogDialog(tk.Toplevel):
             self.on_apply(catalog.profile_template(p))
             self.destroy()
 
-    def new(self):
+    def import_original(self):
+        path = filedialog.askopenfilename(parent=self, title="选择从学校官网下载的 DOCX",
+                                         filetypes=[("Word 文档", "*.docx")])
+        if path:
+            self.new(original_path=path)
+
+    def new(self, original_path=None):
         if not (p := self.selected()):
             return
         path = filedialog.asksaveasfilename(
@@ -158,7 +164,7 @@ class CatalogDialog(tk.Toplevel):
         )
         if path:
             try:
-                catalog.new_document(p, path, overwrite=True)
+                catalog.new_document(p, path, overwrite=True, original_path=original_path)
                 self.on_apply(catalog.profile_template(p))
                 self.on_document(path)
                 self.destroy()
@@ -179,7 +185,7 @@ class CatalogDialog(tk.Toplevel):
                 catalog.export_bundle(p, path, overwrite=True)
                 messagebox.showinfo(
                     "已保存",
-                    "资料包包含原件、来源记录和可导入排版设置。\n" + path,
+                    "已导出可导入排版设置和官方来源记录，不含第三方原件。\n" + path,
                     parent=self,
                 )
             except Exception as exc:

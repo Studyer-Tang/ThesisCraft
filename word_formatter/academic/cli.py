@@ -1,6 +1,7 @@
 """Academic commands available through both paper-studio and legacy wfp."""
 
 import json
+from pathlib import Path
 from .templates import load_template, save_template, validate_template
 
 
@@ -88,7 +89,7 @@ def add_parser(subparsers):
     p.add_argument("--template", default="pku-master")
     p.add_argument("--set", action="append")
     p.add_argument("-o", "--output", required=True)
-    p.add_argument("--original", action="store_true", help="优先复制高校库原始 DOCX 样稿，未提供时生成骨架")
+    p.add_argument("--original", type=Path, metavar="DOCX", help="校验并复制自行从官网下载的 DOCX 样稿")
 
     def new(a):
         from .layout import create_skeleton
@@ -99,7 +100,7 @@ def add_parser(subparsers):
             profile = get_profile(a.template)
             if profile is None or a.set:
                 raise ValueError("--original 需要高校库 ID，且不能与 --set 合用。")
-            print(new_document(profile, a.output))
+            print(new_document(profile, a.output, original_path=a.original))
         else:
             print(create_skeleton(config(a), a.output))
         return 0
