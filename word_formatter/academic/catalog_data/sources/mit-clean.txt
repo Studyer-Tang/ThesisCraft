@@ -1,0 +1,357 @@
+MIT Specifications for Thesis Preparation | Distinctive Collections
+Skip to Main Content
+Libraries home
+Distinctive Collections
+MIT Specifications for Thesis Preparation
+Distinctive Collections
+MIT Specifications for Thesis PreparationView this page as an accessible PDF.
+Table of Contents
+Thesis Preparation Checklist
+General information
+Timeline for submission and publication
+Submitting your thesis document to your department
+Bachelor’s degree thesis
+Graduate degree thesis
+Dual degree theses
+Joint theses
+Submitting your thesis information to the libraries
+What happens to your thesis?
+Formatting specifications
+Pagination
+Title selection
+Embedded links
+Font
+Spacing
+Sections of your thesis
+Title page
+Special circumstances
+Signature page
+Abstract page
+Acknowledgments
+Biographical notes
+Table of contents
+List of figures
+List of tables
+List of supplemental material
+Notes and bibliographic references
+Appendices
+Ownership of copyright
+Open licensing
+Labeling copyright in your thesis
+Use of previously published material in your thesis
+Supplemental material and research data
+Digital supplementary material
+Physical supplementary material
+Creating your thesis document/digital format
+Starting with accessible source files
+Creating a PDF/A-1
+File naming
+How to submit thesis information to the MIT Libraries
+Placing a temporary hold on your thesis
+After publication
+Changes to a thesis after submission
+Permission to reuse or republish from MIT Theses
+Directory
+General Information
+This guide has been prepared by the MIT Libraries, as prescribed by the Committee on Graduate Programs and the Committee on Undergraduate Program, to assist students and faculty in the preparation of theses. The Institute is committed to the preservation of each student’s thesis because it is both a requirement for the MIT degree and a record of original research that contains information of lasting value.
+In this guide, “department” refers to a graduate or undergraduate program within an academic unit, and “thesis” refers to the digital copy of the written thesis. The official thesis version of record, which is submitted to the MIT Libraries, is the digital copy of the written thesis that has been approved by the thesis committee and certified by the department in fulfillment of a student’s graduation requirement.
+The requirements in this guide apply to all theses and have been specified both to facilitate the care and dissemination of the thesis and to assure the preservation of the final approved document. Individual departments may dictate more stringent requirements.
+Before beginning your thesis research, remember that the final output of this research—your thesis document—should only include research findings that may be shared publicly, in adherence with MIT’s policy on Open Research and Free Interchange of Information. If you anticipate that your thesis will contain content that requires review by an external sponsor or agency, it is critical that you allow sufficient time for this review to take place prior to thesis submission.
+Questions not answered in this guide should be referred to the appropriate department officer or to the MIT Libraries (mit-theses@mit.edu).
+Timeline for submission and publication
+Final edited and complete thesis PDF is due to your department on the date specified in the Academic Calendar.
+Hold requests should be submitted to the Vice Chancellor for Undergraduate and Graduate Education or TLO concurrent with your thesis submission.
+Thesis information is due to the MIT Libraries before your date of graduation.
+Departments must transfer theses to the MIT Libraries within 30 days from the last day of class (end of term).
+One week later (30 days from the last day of classes + 7 days) or one week after the degree award date (whichever is later) the MIT Libraries may begin publishing theses in DSpace@MIT.
+If you have requested and received a temporary (up to 90-day) hold on the publication of your thesis from the Vice Chancellor, your thesis will be placed on hold as soon as it is received by the Libraries, and the 90-day hold will begin 30 days from the last day of class (end of term).
+If your thesis research is included in a disclosure to the TLO, the TLO may place your thesis on temporary hold with the Libraries, as appropriate.
+Submitting your thesis document to your department
+Your thesis document will be submitted to your department as a PDF, formatted and including the appropriate rights statement and sections as outlined in these specifications. Your department will provide more specific guidance on submitting your files for certification and acceptance.
+Your department will provide information on submitting:
+A PDF/A-1 of your final thesis document (with no signatures)
+Signature page (if required by your department; your department will provide specific guidance)
+Original source files used to create the PDF of your thesis (optional, but encouraged)
+Supplementary materials (optional and must be approved by your advisor and program)
+Degree candidates must submit their thesis to the appropriate office of the department in which they are registered on the dates specified in the Academic Calendar. (Academic Calendar | MIT Registrar). September, February, and May/June are the only months in which degrees are awarded.
+Bachelor’s degree theses
+Not all departments send bachelor’s theses to the MIT Libraries. Please check the requirements of your department.
+Graduate degree theses
+Departments are required to submit each master’s and doctoral thesis to the MIT Libraries.
+Dual degree theses
+You may request approval to pursue master’s degrees in two fields simultaneously, using a single thesis or two separate theses to meet the degree requirements for each department. A student who chooses this academic degree path is thus pursuing dual degrees, as opposed to an interdisciplinary degree in two or more research fields. A copy of your thesis document should be submitted to both departments. Your home department of registration will submit the thesis document to the MIT Libraries.
+Joint theses
+Most MIT theses are written by a single author. In those cases where two or more students are responsible, only a single document should be submitted to the MIT Libraries. Permission to undertake collaborative thesis research must be obtained in advance from the Vice Chancellor or their designee. Undergraduate students who wish to undertake joint thesis research should submit a request via email to the Office of the Vice Chancellor. Graduate students who wish to undertake joint thesis research should submit a request to the Office of Graduate Education via the general petition process.
+Submitting your thesis information to the libraries
+Information about your thesis must be submitted to the Libraries thesis submission and processing system prior to your day of graduation. The information you provide must match the title page and abstract of your thesis. See How to submit thesis information to the MIT Libraries section for more details.
+What happens to your thesis?
+The academic department is required to submit the thesis to the MIT Libraries within one month after the last day of the term in which the thesis was submitted (Faculty Regulation 2.72). The thesis document becomes part of the permanent archival collection. All thesis documents that have been approved will be transferred electronically to the MIT Libraries by a department representative via the MIT Libraries thesis submission and processing system.
+The full-text PDF of each thesis is made publicly available in DSpace@MIT. A bibliographic record will appear in the MIT Libraries’ catalog, as well as the OCLC database WorldCat, which is accessible to libraries and individuals worldwide.
+Formatting specifications
+Pagination
+The title page is always considered to be page 1, and every page must be included in the count regardless of whether a number is physically printed on a page. The entire thesis—including title page, prefatory material, illustrations, and all text and appendices—must be paginated in one consecutive numbering sequence.
+Title selection
+Your work will be a more valuable research tool for other scholars if it can be located easily. Search engines use the words in the title, and sometimes other descriptive words, to locate works. Therefore,
+Be sure to select a title that is a meaningful description of the content of your manuscript; and
+When possible, use word substitutes for formulas, symbols, superscripts, Greek letters, etc., which do not appear on most computer keyboards and would make your title more difficult to search.Examples:
+Do not: “The Effects of Ion Implantation and Annealing on the Properties of TiSi2 Films on Silicon Substrates”
+Do: “The Effects of Ion Implantation and Annealing on the Properties of Titanium Silicide Films on Silicon Substrates”
+Do not: “Radiative Decays of the J/ψ to Two Pseudoscalar Final States”
+Do: “Radiative Decays on the J/Psi to Two Pseudoscalar Final States”
+Embedded links
+You may include clickable links to online resources within the thesis file. Make the link self-descriptive so that it can stand on its own and is natural language that fits within the surrounding writing of your paragraph. The full URL should be included as a footnote or bibliography citation (dependent on citation style).
+Example:
+Sentence in thesis: Further information is available on the MIT Writing and Communications Center’s website. The full-text PDF of each thesis is made publicly available in DSpace@MIT.
+Footnote or Bibliography: follow the rules of your chosen citation style and include the full website URL, in this case http://libraries.mit.edu/mit-theses
+Font
+While not required, it is suggested that you use a sans serif font, as those tend to be more easily readable.
+Spacing
+The text of the thesis may be single-, double-, or one-and-a-half-spaced. The abstract, biography, notes, bibliography, and acknowledgment should be single-spaced.
+Sections of your thesis
+Title page
+Required (all information should be on a single page)
+The title page should contain the title, name of the author (this can be the author’s preferred name), previous degrees, the degree(s) to be awarded at MIT, the date the degree(s) will be conferred (May/June, September, or February only), copyright notice (and legend, if required), and appropriate names of thesis supervisor(s) and student’s home department or program officer.
+The title page should have the following fields in the following order and centered (including spacing):
+Thesis title as submitted to registrar
+by
+Author’s preferred name
+Previous degree information, if applicable
+Submitted to the [department name] in partial fulfillment of the requirements for the degree(s) of
+[degree name]
+at the
+Massachusetts Institute of Technology
+Month and year degree will be granted (May or June, September, February ONLY)
+Copyright statement
+This permission legend MUST follow: The author hereby grants to MIT a nonexclusive, worldwide, irrevocable, royalty-free license to exercise any and all rights under copyright, including to reproduce, preserve, distribute and publicly display copies of the thesis, or release the thesis under an open-access license.
+[Insert 2 blank lines]
+Note: The remaining fields are left aligned and not centered
+Authored by: [Author name]
+[Author’s department name] (align with the beginning of the author’s name from the previous line)
+[Date thesis is to be presented to the department] (align with the beginning of the author’s name from the first line)
+Certified by: [Advisor’s full name as it appears in the MIT catalog]
+[Advisor’s department as it appears in the MIT catalog] (align with the beginning of the advisor’s name from the previous line), Thesis supervisor
+Accepted by: [name]
+[title – line 1] (align with the beginning of the name from the previous line)
+[title – line 2] (align with the beginning of the name from the first line)
+Note: The name and title of this person varies in different degree programs and may vary each term; contact the departmental thesis administrator for specific information
+Students in joint graduate programs (such as Harvard-MIT Health Sciences and Technology and Woods Hole Oceanographic Institution) should list both their MIT thesis supervisor and the supervisor from the partner academic institution.
+The name and title of the department or the program officer varies in different degree programs and may vary each term. Contact the departmental graduate administrator for specific information.
+For candidates receiving two degrees, both degrees to be awarded should appear on the title page. For candidates in dual degree programs, all degrees and departments or programs should appear on the title page, and the names of both department heads/committee chairs are required. Whenever there are co-supervisors, both names should appear on the title page.
+Here are some PDF examples of title pages:
+Bachelor’s Degree – using a Creative Commons license
+PhD candidate – using a Creative Commons license
+Master’s candidate – dual degrees
+Masters’ candidates – multiple authors
+Masters’ candidates – multiple authors with dual degrees and extra committee members
+Bachelor’s Degree – change of thesis supervisor
+Title page: Special circumstances – change of thesis supervisor
+If your supervisor has recently died or is no longer affiliated with the Institute:
+Both this person and your new supervisor should be listed on your title page
+Under the new supervisor’s name, state that they are approving the thesis on behalf of the previous supervisor
+An additional page should be added to the thesis, before the acknowledgments page, with an explanation about why a new supervisor is approving your thesis on behalf of your previous supervisor. You may also thank the new supervisor for acting in this capacity
+Review this PDF example of a title page with a change in supervisor
+If your supervisor is external to the Institute (such as an industrial supervisor):
+You should acknowledge this individual on the Acknowledgements page as appropriate, but should not list this person on the thesis title page
+The full thesis committee and thesis readers can be acknowledged on the Acknowledgements page, but should not be included on the title page
+Signature page
+Not Required
+Please consult with your department to determine if they are requiring or requesting an additional signature page.
+Abstract page
+Required
+Each thesis must include an abstract of generally no more than 500 words single-spaced. The abstract should be thought of as a brief descriptive summary, not a lengthy introduction to the thesis. The abstract should immediately follow the title page.
+The abstract page should have the following fields in the following order and centered (including spacing):
+Thesis title
+by
+Author’s preferred name
+Submitted to the [Department] on [date thesis will be submitted] in Partial Fulfillment of the Requirements for the Degree of [Name of degree to be received]
+[Insert 1 blank line]
+Note: The remaining fields are left aligned and not centered
+ABSTRACT
+Single-spaced summary; approximately 500 words or less; try not to use formulas or special characters
+Thesis supervisor: [Supervisor’s name]
+Title: [Title of supervisor]
+The Abstract page should include the same information as on the title page. With the thesis title, author name, and submitting statement above the abstract, the word “ABSTRACT” typed before the body of the text, and the thesis supervisor’s name and title below the abstract.
+Acknowledgements
+Optional
+An acknowledgement page may be included and is the appropriate place to include information such as external supervisor (such as an industrial advisor) or a list of the full thesis committee and thesis readers. Please note that your thesis will be publicly available online at DSpace@MIT, which is regularly crawled and indexed by Google and other search-engine providers.
+Biographical notes
+Optional
+The thesis may contain a short biography of the candidate, including institutions attended and dates of attendance, degrees and honors, titles of publications, teaching and professional experience, and other matters that may be pertinent. Please note that your thesis will be publicly available online at DSpace@MIT, which is regularly crawled and indexed by Google and other search-engine providers.
+Table of contents
+Strongly recommended
+List of figures
+Required if including figures
+List of Tables
+Required if including tables
+List of Supplemental Material
+Required if submitting supplemental materials
+Notes and bibliographic references
+Required
+Whenever possible, notes should be placed at the bottom of the appropriate page or in the body of the text. Notes should conform to the style appropriate to the discipline. If notes appear at the bottom of the page, they should be single-spaced and included within the specified margins.
+It may be appropriate to place bibliographic references either at the end of the chapter in which they occur or at the end of the thesis.
+The style of quotations, footnotes, and bibliographic references may be prescribed by your department. If your department does not prescribe a style or specify a style manual, choose one and be consistent. Further information is available on the MIT Writing and Communications Center’s website.
+Appendices
+Optional
+Ownership of copyright
+The Institute’s policy concerning ownership of thesis copyright is covered in Rules and Regulations of the Faculty, 2.73 and MIT Policies and Procedures 13.1.3. Copyright covers the intellectual property in the words and images in the thesis. If the thesis also includes patentable subject matter, students should contact the Technology Licensing Office (TLO) prior to submission of their thesis.
+Under these regulations, students retain the copyright to student theses.
+The student must, as a condition of a degree award, grant to MIT a nonexclusive, worldwide, irrevocable, royalty-free license to exercise any and all rights under copyright, including to reproduce, preserve, distribute and publicly display copies of the thesis, or release the thesis under an open-access license. The MIT Libraries publish the thesis on DSpace@MIT, allowing open access to the research output of MIT.
+Open licensing
+You may also, optionally, apply a Creative Commons License to your thesis. The Creative Commons License allows you to grant permissions and provide guidance on how your work can be reused by others. For more information about CC: https://creativecommons.org/about/cclicenses/. To determine which CC license is right for you, you can use the CC license chooser.
+Labeling copyright in your thesis
+You must include an appropriate copyright notice on the title page of your thesis. This should include the following:
+the symbol “c” with a circle around it © and/or the word “copyright”
+the year of publication (the year in which the degree is to be awarded)
+the name of the copyright owner
+the words “All rights reserved” or your chosen Creative Commons license
+Examples:
+All rights are reserved: © 2008 Jane Doe. All rights reserved
+Also include the following statement below the ©“The author hereby grants to MIT a nonexclusive, worldwide, irrevocable, royalty-free license to exercise any and all rights under copyright, including to reproduce, preserve, distribute and publicly display copies of the thesis, or release the thesis under an open-access license.”
+Creative Commons license: © 2021 John Doe. License: CC BY-NC 4.0, https://creativecommons.org/licenses/by-nc/4.0
+Also include the following statement below the © “The author hereby grants to MIT a nonexclusive, worldwide, irrevocable, royalty-free license to exercise any and all rights under copyright, including to reproduce, preserve, distribute and publicly display copies of the thesis, or release the thesis under an open-access license.”
+Use of previously published material in your thesis
+You are responsible for obtaining permission, if necessary, to include previously published material in your thesis. This applies to most figures, images, and excerpts of text created and published by someone else; it may also apply to your own previous work. For figures and short excerpts from academic works, permission may already be available through the MIT Libraries (see here for additional information). Students may also rely on fair use, as appropriate. For assistance with copyright questions about your thesis, Ask Scholarly Communications.
+When including your own previously published material in your thesis, you may also need to obtain copyright clearance. If, for example, a student has already published part of the thesis as a journal article and, as a condition of publication, has assigned copyright to the journal’s publisher, the student’s rights are limited by what the publisher allows. More information about publisher policies on reuse in theses is available here.
+Students can hold onto sufficient rights to reuse published articles (or excerpts of these) in their thesis if they are covered by MIT’s open access policy. Learn more about MIT’s open access policy and opt-in here. Ask Scholarly Communications for more information.
+When including your own previously published articles in your thesis, check with your department for specific requirements, and consider the following:
+Ensure you have any necessary copyright permissions to include previously published material in your thesis.
+Be sure to discuss copyright clearance and embargo options with your co-authors and your advisor well in advance of preparing your thesis for submission.
+Include citations of where portions of the thesis have been previously published.
+When an article included has multiple authors, clearly designate the role you had in the research and production of the published paper that you are including in your thesis.
+Supplemental material and research data
+Supplemental material that may be submitted with your thesis is the materials that are essential to understanding the research findings of your thesis, but impossible to incorporate or embed into a PDF. Materials submitted to the MIT Libraries may be provided as supplemental digital files or in some cases physical items. All supplementary materials must be approved for submission by your advisor. The MIT Libraries can help answer questions you may have about managing the supplementary material and other research materials associated with your research.
+Contact mit-theses@mit.edu early in your thesis writing process to determine the best way to include supplemental materials with your thesis.
+You may also have other research data and outputs related to your thesis research that are not considered supplemental material and should not be submitted with your thesis. Research materials include the facts, observations, images, computer program results, recordings, measurements, or experiences on which a research output—an argument, theory, test or hypothesis, or other output—is based. These may also be termed, “research data.” This term relates to data generated, collected, or used during research projects, and in some cases may include the research output itself. Research materials should be deposited in appropriate research data repositories and cited in your thesis. You may consult the MIT Libraries’ Data Management Services website for guidance or reach out to Data Management Services (DMS)(data-management@mit.edu), who can help answer questions you may have about managing your thesis data and choosing suitable solutions for longer term storage and access.
+Supplementary information may be submitted with your thesis to your program after approval from your thesis advisor.
+Supplemental material should be mentioned and summarized in the written document, for example, using a few key frames from a movie to create a figure.
+A list of supplementary information along with brief descriptions should be included in your thesis document. For digital files, the description should include information about the file types and any software and version needed to open and view the files.
+Issues regarding the format of non-traditional, supplemental content should be resolved with your advisor.
+Appendices and references are not considered supplementary information.
+If your research data has been submitted to a repository, it should not also be submitted with your thesis.
+Digital supplementary material
+File naming and file types:
+Follow the required file-naming convention for supplementary files: authorLastName-kerb-degree-dept-year-type_supplemental.ext
+Audio and video content should be made accessible by providing:
+Captioning (legally required): text versions of the audio content, synchronized with the video: ways to get your video captioned
+Additional content, not required:
+For video, an audio description: a separate narrative audio track that describes important visual content, making it accessible to people who are unable to see the video
+Transcripts: should capture all the spoken audio, plus on-screen text and descriptions of key visual information that wouldn’t otherwise be accessible without seeing the video
+Physical supplementary material
+For physical components that are integral to understanding the thesis document, and which cannot be meaningfully conveyed in a digital form, the author may submit the physical items to the MIT Libraries along with their thesis document. When photographs or a video of a physical item (such as a model) would be sufficient, the images should be included in the thesis document, and a video could be submitted as digital supplementary material.
+An example of physical materials that would be approved for submission as part of the thesis would be photographs that cannot be shared digitally in our repository due to copyright restrictions. In this case, the photographs could be submitted as a physical volume that is referred to in the thesis document.
+As with digital supplementary information and research materials, physical materials must be approved for submission by your advisor. Contact mit-theses@mit.edu early in your thesis writing process to determine if physical materials should accompany your thesis, and if so how to schedule a transfer of materials to the MIT Libraries.
+Creating your thesis document/digital format
+You are required to submit a PDF/A-1 formatted thesis document to your department. In addition, it is recommended that original files, or source files, (such a .doc or .tex) are submitted alongside the PDF/A-1 to better ensure long-term access to your thesis.
+Starting with accessible source files
+You should create accessible files that support the use of screen readers and make your document more easily readable by assistive technologies. This will expand who is able to access your thesis. By creating an accessible document from the beginning, there will be less work required to remediate the PDF that gets created. Most software offers a guide for creating documents that are accessible to screen readers. Review the guidelines provided by the MIT Libraries.
+In general:
+Use styles and other layout features for headings, lists, tables, etc. If you don’t like the default styles associated with the headings, you can customize them.
+Avoid using blank lines to add visual spacing and instead increase the size of the spaces before and/or after the line.
+Avoid using text boxes.
+Embed URLs.
+Anchor images to text when inserting them into a doc.
+Add alt-text to any images or figures that convey meaning (including, math formulas).
+Use a sans serif font.
+Add basic embedded metadata, such as author, title, year of graduation, department, keywords etc. to your thesis via your original author tool.
+Creating a PDF/A-1
+PDF/A-1 (either a or b) is the more suitable format for long term preservation than a basic PDF. It ensures that the PDF format conforms to certain specifications which make it more likely to open and be viewable in the long term. It is best for static content that will not change in the future, as this is the most preservation-worthy version and does not allow for some complex elements that could corrupt or prevent the file from being viewable in the future. Guidelines on how to convert specific file types to PDF/A.
+In general:
+Convert to PDF/A directly from your original files (text, Word, InDesign, LaTeX, etc.). It is much easier and better to create valid PDF/A documents from your original files than from a regular PDF. Converting directly will ensure that fonts and hyperlinks are embedded in the document.
+Do not embed multimedia files (audio and video), scripts, executables, lab notebooks, etc. into your PDF. Still images are fine. The other formats mentioned may be able to be submitted as supplemental files.
+Do not password protect or encrypt your PDF file.
+Validate your PDF/A file before submitting it to your department.
+File naming
+All digital files must be named according to this scheme: authorLastName-kerb-degree-dept-year-type_other.ext
+Examples:
+Thesis PDF: macdonald-mssimon-mcp-dusp-2025-thesis.pdf
+Signature page: macdonald-mssimon-mcp-dusp-2025-sig.pdf
+Original source file: macdonald-mssimon-mcp-2025-source.docx
+Supplemental file: macdonald-mssimon-mcp-2025-supplmental_1.mov
+Second supplemental file: macdonald-mssimon-mcp-2025-supplmental_2.mov
+Read Me file about supplemental: macdonald-mssimon-mcp-2025-supplemental-readme.txt
+How to submit thesis information to the MIT Libraries
+Before your day of graduation, you should submit your thesis title page metadata to the MIT Libraries prior to your day of graduation. The submission form requires Kerberos login.
+Student submitted metadata allows for quicker Libraries processing times. It also provides a note field for you to let Libraries’ staff know about any metadata discrepancies.
+The information you provide must match the title page and abstract of your thesis. Please have a copy of your completed thesis on hand to enter this information directly from your thesis. If any discrepancies are found during processing, Libraries’ staff will publish using the information on the approved thesis document. You will be asked to confirm or provide:
+Preferred name of author(s)as they appear on the title page of the thesis
+ORCID ID (optional)
+ORCID provides a persistent digital identifier that distinguishes you from every other researcher. The goal is to support the creation of a permanent, clear, and unambiguous record of scholarly communication by enabling reliable attribution of authors and contributors. Read ORCID FAQs to learn more
+Thesis title
+Department(s)
+Degree(s)
+Copyright
+License (optional)
+A license is optional, and very difficult to remove once published. The Creative Commons License allows you to grant permissions and provide guidance on how your work can be reused by others. Read more information about CC.
+Thesis supervisor(s)
+Abstract
+Placing a temporary hold on your thesis
+Thesis research should be undertaken in light of MIT’s policy of open research and the free interchange of information. Openness requires that, as a general policy, thesis research should not be undertaken on campus when the results may not be published.
+On occasion, there may be a good reason for delaying the distribution of a thesis to obtain patent protection, or for reasons of privacy or security. The Institute has established conditions, timelines, and a review process for when it is allowable to delay publishing of a thesis.
+Written notification of patent holds and other restrictions must reach the MIT Libraries before the thesis in question is received by the MIT Libraries. Theses will not be available to the public prior to being published by the MIT Libraries. The Libraries may begin publishing theses in DSpace@MIT one month and one week from the last day of classes, or one week after the degree award date (whichever is later).
+Thesis hold requests related to MIT-initiated patent applications should be directed to the Technology Licensing Office (TLO) (tlo@mit.edu).
+Thesis research that was supported by Institute funds and/or the use of Institute facilities is, by default, the property of MIT. Thesis work may result in intellectual property that a student and faculty advisor wish to patent. In this case, technology should be disclosed to MIT’s Technology Licensing Office which will review the patentability of the work, and file for a US patent if appropriate. Requests for a thesis hold must be made jointly by the student and advisor directly to the MIT TLO as part of the technology disclosure process. Learn how to submit an invention disclosure here.
+Additional relevant technology licensing information for students may be found here.
+Student-initiated patents must first be reviewed by TLO, and are then processed by the Division of Graduate and Undergraduate Education.
+Thesis hold or restricted access requests should be directed to the Division of Graduate and Undergraduate Education (GUE-thesis-holds@mit.edu), using the Thesis Hold Request Form, when related to:
+Student-initiated patents: When the student holds intellectual property rights, as previously determined by TLO. [up to 90-day hold]
+Pursuit of business opportunities: When the student holds intellectual property rights as previously determined by TLO and wishes to pursue a business opportunity, unrelated to intellectual property that is patentable by MIT. [up to 90-day hold]
+Government restrictions: Government agencies that sponsor research may require that theses be submitted for security review. If the agency does not permit immediate public disclosure of a thesis, this does not preclude its acceptance. [up to 90-day hold]
+Privacy and security: Occasionally, on completing a thesis, a student may feel that its distribution will jeopardize the privacy or safety of the author or other individuals. If the thesis cannot be rewritten to remove the problematic material, the author and advisor should submit the thesis to the director of their graduate program who will prepare a recommendation to the Vice Chancellor in consultation with the Vice President for Research. [up to 90-day hold]
+Scholarly journal articles pending publication: When the student plans to publish parts of the thesis in journals that refuse pre-published materials. [up to 90-day hold]
+Book publication: Any MIT doctoral degree recipient who is attempting to publish a book based wholly or in part on his/her dissertation may request a temporary removal of the thesis from public access on DSpace@MIT.
+Such a request must be accompanied by documentation that demonstrates that the author’s manuscript cannot be published due to the availability of the related thesis online. If approved, online access to view and download the thesis will be limited to those with MIT certificate permission. [up to 24-month hold]
+In all cases the Vice Chancellor or their designee will review the completed form. If approved, the form will be forwarded to the Libraries. The student will be informed when their approved request is submitted to the Libraries, and when the hold is enacted.
+In the circumstance that a student wants to extend a hold beyond the initial 90-day period, they should contact the Office of Vice President for Research (thesisholdextensions@mit.edu) when their initial hold period is coming to an end. VPR may consult with the TLO and/or GUE, as appropriate, to extend the hold. Such requests must include:
+VPR Thesis Hold Extension Request form (pdf)
+Signed GUE Thesis Hold Request form
+Documentation from the author’s Department Head noting departmental approval of an extended hold
+After publication
+Your thesis will be published on DSpace@MIT. Theses are processed by the MIT Libraries and published in the order they are transferred by your department. The Libraries will begin publishing theses in DSpace@MIT one month and one week from the last day of classes, or one week after the degree award date (whichever is later).
+Changes to a thesis after submission
+All changes made to a thesis, after it has been submitted to the MIT Libraries by your department, must have approval from the Vice Chancellor or their designee. Thesis documents should be carefully reviewed prior to submission to ensure they do not contain misspellings or incorrect formatting. Change requests for these types of minor errors will not be approved.
+There are two types of change requests that can be made:
+Errata: When the purpose is to correct significant errors in content, the author should create an errata sheet using the form and instructions (PDF) and obtain approval first from both the thesis supervisor or program chair, before submitting for review by the Vice Chancellor.
+Substitution: If the purpose of the change is to excise classified, proprietary, or confidential information, the author should fill out the application form (PDF) and have the request approved first by the thesis supervisor or program chair, before submitting for review by the Vice Chancellor.
+Students and supervisors should vet thesis content carefully before submission to avoid these scenarios whenever possible.
+Permission to reuse or republish from MIT Theses
+You are always authorized to post electronic versions of your own thesis, in whole or in part, on a website, without asking permission. If you hold the copyright in the thesis, approving and/or denying requests for permission to use portions of the thesis in third-party publications is your responsibility.
+Directory
+MIT Libraries Thesis Team
+https://libguides.mit.edu/mit-thesis-faq
+mit-theses@mit.edu | https://thesis-submit.mit.edu/
+Distinctive Collections
+Room 14N-118 | 617-253-5690
+https://libraries.mit.edu/distinctive-collections/
+Technology Licensing Office
+tlo@mit.edu | 617-253-6966
+http://tlo.mit.edu/
+Office of the General Counsel
+mitogc@mit.edu  | 617-452-2082
+http://ogc.mit.edu/
+Office of Graduate Education
+Room 3-107 | 617-253-4680
+http://oge.mit.edu/
+grad-ed@mit.edu
+MIT Libraries,  Scholarly Communications
+https://libraries.mit.edu/scholarly/
+Ask Scholarly Communications
+Office of  the Vice Chancellor
+Room 7-133 | 617-253-6056
+https://gue.mit.edu/
+gue-thesis-holds@mit.edu
+Office of the Vice President for Research
+Room 3-234 | 617-253-8177
+thesisholdextensions@mit.edu
+MIT Writing and Communications Center
+Room E18-233
+writing-center@mit.edu | https://cmsw.mit.edu/writing-and-communication-center/
+Approved November 2022 and updated:
+March 2023: to incorporate changes to MIT Policies and Procedures 13.1.3 Intellectual Property Not Owned by MIT.
+September 2023: to bring the holds section in alignment with Graduate Policies and Procedures, and minor edits to title page examples.
+November 2024: to align with changes to the MIT Libraries submission form.
+April 2026: to consolidate thesis holds information previously available on other MIT webpages.
+Log in – Distinctive Collections
+Request System
+Questions?
+MIT Thesis FAQ
+Email: mit-theses@mit.edu

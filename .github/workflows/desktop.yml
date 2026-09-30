@@ -68,4 +68,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: gh release create "$RELEASE_TAG" release/* --verify-tag --prerelease --title "ThesisCraft $RELEASE_TAG · Windows & macOS" --notes-file docs/RELEASE-v4.1.md
+        run: gh release create "$RELEASE_TAG" release/* --verify-tag --prerelease --title "ThesisCraft $RELEASE_TAG · Windows & macOS" --notes-file docs/RELEASE-v4.2.md

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "thesiscraft"
-version = "4.1.0"
+version = "4.2.0"
 description = "ThesisCraft: local document formatting for desktop, CLI, Word and WPS"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -37,7 +37,7 @@ wfp-desktop = "word_formatter.gui:main"
 include = ["word_formatter*"]
 
 [tool.setuptools.package-data]
-"word_formatter.academic" = ["styles/*.csl", "styles/*.md"]
+"word_formatter.academic" = ["styles/*.csl", "styles/*.md", "catalog_data/*.json", "catalog_data/*.md", "catalog_data/sources/*"]
 
 [tool.ruff.lint]
 select = ["F"]

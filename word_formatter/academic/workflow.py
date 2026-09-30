@@ -63,6 +63,8 @@ def run(
         source_sha256=digest,
         template_name=template["name"],
         template_scope=template["scope"],
+        template_sources=template["sources"],
+        manual_checks=template["manual_checks"],
         before_issues=before_issues,
         structure=[i.to_dict() for i in items],
         changes=[],

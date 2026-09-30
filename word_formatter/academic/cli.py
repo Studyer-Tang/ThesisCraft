@@ -63,7 +63,7 @@ def add_parser(subparsers):
         p.add_argument("--output-dir")
         p.add_argument(
             "--template",
-            help="pku-master / pku-doctor / bachelor / master / doctor 或 JSON 路径",
+            help="高校库 ID（thesis templates 查看）、通用预设或 JSON 路径",
         )
         p.add_argument(
             "--set",
@@ -88,14 +88,49 @@ def add_parser(subparsers):
     p.add_argument("--template", default="pku-master")
     p.add_argument("--set", action="append")
     p.add_argument("-o", "--output", required=True)
+    p.add_argument("--original", action="store_true", help="优先复制高校库原始 DOCX 样稿，未提供时生成骨架")
 
     def new(a):
         from .layout import create_skeleton
 
-        print(create_skeleton(config(a), a.output))
+        if a.original:
+            from .catalog import get_profile, new_document
+
+            profile = get_profile(a.template)
+            if profile is None or a.set:
+                raise ValueError("--original 需要高校库 ID，且不能与 --set 合用。")
+            print(new_document(profile, a.output))
+        else:
+            print(create_skeleton(config(a), a.output))
         return 0
 
     p.set_defaults(func=new)
+    p = commands.add_parser("templates", help="搜索离线高校规范库")
+    p.add_argument("--search", default="")
+    p.add_argument("--category", choices=["course", "bachelor", "master", "doctor"], default="")
+
+    def list_templates(a):
+        from .catalog import profiles
+
+        print(json.dumps([{k: p[k] for k in ("id", "name", "coverage", "word_source")}
+                          for p in profiles(a.search, a.category)], ensure_ascii=False, indent=2))
+        return 0
+
+    p.set_defaults(func=list_templates)
+    p = commands.add_parser("template-bundle", help="导出规范原件、来源和排版设置")
+    p.add_argument("--template", required=True)
+    p.add_argument("-o", "--output", required=True)
+
+    def bundle(a):
+        from .catalog import get_profile, export_bundle
+
+        profile = get_profile(a.template)
+        if profile is None:
+            raise ValueError("未找到高校模板：" + a.template)
+        print(export_bundle(profile, a.output))
+        return 0
+
+    p.set_defaults(func=bundle)
     p = commands.add_parser("merge", help="按给定顺序合并章节")
     p.add_argument("paths", nargs="+")
     p.add_argument("-o", "--output", required=True)

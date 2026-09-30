@@ -1,0 +1,3321 @@
+{
+  "version": 1,
+  "retrieved": "2026-09-30",
+  "sources": {
+    "pku-0": {
+      "url": "https://lib.phil.pku.edu.cn/sites/default/files/%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%94%9F%E5%AD%A6%E4%BD%8D%E8%AE%BA%E6%96%87%E5%86%99%E4%BD%9C%E6%8C%87%E5%8D%97.pdf",
+      "resolved_url": "https://lib.phil.pku.edu.cn/sites/default/files/%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%94%9F%E5%AD%A6%E4%BD%8D%E8%AE%BA%E6%96%87%E5%86%99%E4%BD%9C%E6%8C%87%E5%8D%97.pdf",
+      "page": "https://lib.phil.pku.edu.cn/node/56876",
+      "retrieved": "2026-09-30",
+      "id": "pku-0",
+      "title": "北京大学研究生学位论文写作指南",
+      "version": "2014",
+      "file": "pku-0.pdf",
+      "kind": "original",
+      "bytes": 435666,
+      "sha256": "f9372183602fec11d864fb2c199e204abe76d34fe60d20cdd644cffc6b0aab9a"
+    },
+    "pku-1": {
+      "url": "https://lib.phil.pku.edu.cn/sites/default/files/%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%A3%AB%E7%A0%94%E7%A9%B6%E7%94%9F%E5%AD%A6%E4%BD%8D%E8%AE%BA%E6%96%87%E6%A8%A1%E6%9D%BF.doc",
+      "resolved_url": "https://lib.phil.pku.edu.cn/sites/default/files/%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%A3%AB%E7%A0%94%E7%A9%B6%E7%94%9F%E5%AD%A6%E4%BD%8D%E8%AE%BA%E6%96%87%E6%A8%A1%E6%9D%BF.doc",
+      "page": "https://lib.phil.pku.edu.cn/node/56876",
+      "retrieved": "2026-09-30",
+      "id": "pku-1",
+      "title": "北京大学博士研究生学位论文模板",
+      "version": "2024（发布页标注）",
+      "file": "pku-1.doc",
+      "kind": "original",
+      "bytes": 248279,
+      "sha256": "8ad4d5866f8b255e4c32cfcd835685bfa41c24097a1a3811a46c29779c5915c7"
+    },
+    "pku-2": {
+      "url": "https://lib.phil.pku.edu.cn/sites/default/files/%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%93%B2%E5%AD%A6%E7%B3%BB%EF%BC%88%E5%AE%97%E6%95%99%E5%AD%A6%E7%B3%BB%EF%BC%89%E5%8D%9A%E5%A3%AB%EF%BC%88%E7%A1%95%E5%A3%AB%EF%BC%89%E7%A0%94%E7%A9%B6%E7%94%9F%E5%AD%A6%E4%BD%8D%E8%AE%BA%E6%96%87%E6%A8%A1%E6%9D%BF%E5%88%9D%E7%A8%BF%20%EF%BC%88%E6%A0%BC%E5%BC%8F%E8%87%AA%E6%9F%A5%E9%99%84%E8%A7%86%E9%A2%91%E9%93%BE%E6%8E%A5%E5%9C%A8%E6%89%B9%E6%B3%A8%E9%87%8C%EF%BC%8C2026.7.2%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD%E8%AF%B7%E5%85%B3%E6%B3%A8%E6%9C%80%E6%96%B0%E7%89%88%2C%E5%9F%BA%E4%BA%8E2026.6.15%E4%BF%AE%E6%94%B9).docx",
+      "resolved_url": "https://lib.phil.pku.edu.cn/sites/default/files/%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%93%B2%E5%AD%A6%E7%B3%BB%EF%BC%88%E5%AE%97%E6%95%99%E5%AD%A6%E7%B3%BB%EF%BC%89%E5%8D%9A%E5%A3%AB%EF%BC%88%E7%A1%95%E5%A3%AB%EF%BC%89%E7%A0%94%E7%A9%B6%E7%94%9F%E5%AD%A6%E4%BD%8D%E8%AE%BA%E6%96%87%E6%A8%A1%E6%9D%BF%E5%88%9D%E7%A8%BF%20%EF%BC%88%E6%A0%BC%E5%BC%8F%E8%87%AA%E6%9F%A5%E9%99%84%E8%A7%86%E9%A2%91%E9%93%BE%E6%8E%A5%E5%9C%A8%E6%89%B9%E6%B3%A8%E9%87%8C%EF%BC%8C2026.7.2%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD%E8%AF%B7%E5%85%B3%E6%B3%A8%E6%9C%80%E6%96%B0%E7%89%88%2C%E5%9F%BA%E4%BA%8E2026.6.15%E4%BF%AE%E6%94%B9).docx",
+      "page": "https://lib.phil.pku.edu.cn/node/56876",
+      "retrieved": "2026-09-30",
+      "id": "pku-2",
+      "title": "北京大学哲学系（宗教学系）研究生模板初稿",
+      "version": "2026-07-02（发布页标注）",
+      "file": "pku-2.docx",
+      "kind": "original",
+      "bytes": 904119,
+      "sha256": "3aff510a50ac6e45c3c850260e0f6db37d2c2e8b76e562bcb4dafaf2b463704f"
+    },
+    "thu-2025": {
+      "url": "https://www.dhs.tsinghua.edu.cn/wp-content/uploads/2023/12/2025032107444819.pdf",
+      "resolved_url": "https://www.dhs.tsinghua.edu.cn/wp-content/uploads/2023/12/2025032107444819.pdf",
+      "page": "https://www.dhs.tsinghua.edu.cn/wp-content/uploads/2023/12/2025032107444819.pdf",
+      "retrieved": "2026-09-30",
+      "id": "thu-2025",
+      "title": "清华大学研究生学位论文写作指南",
+      "version": "2025-03",
+      "file": "thu-2025.pdf",
+      "kind": "original",
+      "bytes": 1208189,
+      "sha256": "32a82eb76f39ed6a3ab93cbc259fb376a960c05ad7e5ac6d490f4e9052f3fd41"
+    },
+    "sjtu-0": {
+      "url": "https://www.gs.sjtu.edu.cn/storage/gs/web/cn/article/2024/07/8dff34547269297128145bdf67d7794b.docx",
+      "resolved_url": "https://www.gs.sjtu.edu.cn/storage/gs/web/cn/article/2024/07/8dff34547269297128145bdf67d7794b.docx",
+      "page": "https://www.gs.sjtu.edu.cn/post/detail/Z3M2MjU=",
+      "retrieved": "2026-09-30",
+      "id": "sjtu-0",
+      "title": "上海交通大学研究生学位论文参考模板",
+      "version": "附件地址 2024-07，校级指南 2025-11-24",
+      "file": "sjtu-0.docx",
+      "kind": "original",
+      "bytes": 218068,
+      "sha256": "22dfebf3332939293b1b08bb158fd479b7267162ffb63a82d95c3e8366c1a81f"
+    },
+    "fudan-0": {
+      "url": "https://library.fudan.edu.cn/_upload/article/files/12/c4/af23155d49e48925a9d76e5f405c/20a623fe-dc74-4df7-84d4-99524810a7c9.doc",
+      "resolved_url": "https://library.fudan.edu.cn/_upload/article/files/12/c4/af23155d49e48925a9d76e5f405c/20a623fe-dc74-4df7-84d4-99524810a7c9.doc",
+      "page": "https://library.fudan.edu.cn/medical/747/list.htm",
+      "retrieved": "2026-09-30",
+      "id": "fudan-0",
+      "title": "复旦大学博士、硕士学位论文规范",
+      "version": "2026-06",
+      "file": "fudan-0.doc",
+      "kind": "original",
+      "bytes": 65536,
+      "sha256": "2abed3a355349db8dfa61091a5d12fe2848141ddd0152f5d1ced6435d5e8f82b"
+    },
+    "seu-0": {
+      "url": "https://jwc.seu.edu.cn/_upload/article/files/6d/68/bad017de41a88a6b75325544e07e/3cfc3307-d6c2-4df1-afdb-618b36b788a2.docx",
+      "resolved_url": "https://jwc.seu.edu.cn/_upload/article/files/6d/68/bad017de41a88a6b75325544e07e/3cfc3307-d6c2-4df1-afdb-618b36b788a2.docx",
+      "page": "https://jwc.seu.edu.cn/2025/0320/c21686a522328/page.htm",
+      "retrieved": "2026-09-30",
+      "id": "seu-0",
+      "title": "东南大学本科毕业设计（论文）模板",
+      "version": "2025-03",
+      "file": "seu-0.docx",
+      "kind": "original",
+      "bytes": 2098907,
+      "sha256": "4223efdcc8b34ef8b3a6bf1a6bc743309a89564a96d43d396d2ccdcd0f1948ee"
+    },
+    "sysu-1": {
+      "url": "https://mpa.sysu.edu.cn/sites/default/files/2025-12/%E8%AF%BE%E7%A8%8B%E8%AE%BA%E6%96%87%E5%B0%81%E9%9D%A2%E9%A1%B5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E5%8F%82%E8%80%83%E6%A0%BC%E5%BC%8F.docx",
+      "resolved_url": "https://mpa.sysu.edu.cn/sites/default/files/2025-12/%E8%AF%BE%E7%A8%8B%E8%AE%BA%E6%96%87%E5%B0%81%E9%9D%A2%E9%A1%B5%E6%A8%A1%E6%9D%BF%E4%B8%8E%E5%8F%82%E8%80%83%E6%A0%BC%E5%BC%8F.docx",
+      "page": "https://mpa.sysu.edu.cn/article/745",
+      "retrieved": "2026-09-30",
+      "id": "sysu-1",
+      "title": "中山大学 MPA 课程论文封面页与参考格式",
+      "version": "2025-12-22（发布页）",
+      "file": "sysu-1.docx",
+      "kind": "original",
+      "bytes": 91026,
+      "sha256": "003532323d2608af44ee898bd7f457d07aafd07ed2fced441a87a94526dc794f"
+    },
+    "sbs-0": {
+      "url": "https://yjs.sbs.edu.cn/docs/2024-05/b181c91423864c1faf9bb1c75f0cc696.doc",
+      "resolved_url": "https://yjs.sbs.edu.cn/docs/2024-05/b181c91423864c1faf9bb1c75f0cc696.doc",
+      "page": "https://yjs.sbs.edu.cn/xzzx/pygzxz/777434fe80de4980a3558a84c64c61b7.htm",
+      "retrieved": "2026-09-30",
+      "id": "sbs-0",
+      "title": "上海商学院研究生课程（论文类）试卷",
+      "version": "2025-05-13（发布页）",
+      "file": "sbs-0.doc",
+      "kind": "original",
+      "bytes": 42496,
+      "sha256": "a618ab5ba19b2fc16c7f45e16fa4a58b4354b958339eb76f002a8f16a0e6bc41"
+    },
+    "mit-0": {
+      "url": "https://libraries.mit.edu/app/uploads/sites/18/2023/04/Specifications-for-Thesis-Preparation-2022-2023-for-PDF.pdf",
+      "resolved_url": "https://libraries.mit.edu/app/uploads/sites/18/2023/04/Specifications-for-Thesis-Preparation-2022-2023-for-PDF.pdf",
+      "page": "https://libraries.mit.edu/distinctive-collections/thesis-specs/",
+      "retrieved": "2026-09-30",
+      "id": "mit-0",
+      "title": "MIT Specifications for Thesis Preparation (PDF archive)",
+      "version": "2022–2023（历史附件，现行规则见网页）",
+      "file": "mit-0.pdf",
+      "kind": "original",
+      "bytes": 335267,
+      "sha256": "41015138be347bca8417dcfb16f9712480dbc1af2fee8ec09147cc8e4604fe6d"
+    },
+    "mit": {
+      "url": "https://libraries.mit.edu/distinctive-collections/thesis-specs/",
+      "resolved_url": "https://libraries.mit.edu/distinctive-collections/thesis-specs/",
+      "page": "",
+      "retrieved": "2026-09-30",
+      "id": "mit",
+      "title": "MIT thesis specifications",
+      "version": "网页修订记录含 2026-07",
+      "file": "mit-clean.txt",
+      "kind": "web-text-snapshot",
+      "bytes": 39168,
+      "sha256": "ea930ad75420fdccdee3df66029a7afcb615ba6ce3077ed1308ba02d34e6236b"
+    },
+    "stanford": {
+      "url": "https://studentservices.stanford.edu/my-academics/earn-my-degree/graduate-degree-progress/dissertations-and-theses/prepare-your-work-0",
+      "resolved_url": "https://studentservices.stanford.edu/my-academics/earn-my-degree/graduate-degree-progress/dissertations-and-theses/prepare-your-work-0",
+      "page": "",
+      "retrieved": "2026-09-30",
+      "id": "stanford",
+      "title": "Stanford Dissertation and Thesis Preparation",
+      "version": "网页未注明版本",
+      "file": "stanford-clean.txt",
+      "kind": "web-text-snapshot",
+      "bytes": 22996,
+      "sha256": "95e05cb711db9562f4066a906c9d1d8e2ce11b237510b6cb71c3c10bd4504721"
+    },
+    "cambridge": {
+      "url": "https://www.socanth.cam.ac.uk/current-students/mres-course/mres-style-guidelines",
+      "resolved_url": "https://www.socanth.cam.ac.uk/current-students/mres-course/mres-style-guidelines",
+      "page": "",
+      "retrieved": "2026-09-30",
+      "id": "cambridge",
+      "title": "Cambridge Social Anthropology MRes Style Guidelines",
+      "version": "网页未注明版本",
+      "file": "cambridge-clean.txt",
+      "kind": "web-text-snapshot",
+      "bytes": 6110,
+      "sha256": "d36d6c596a3d8ac222eb10606b602f40177a010d31a6b0ef4c88f453b9d50c09"
+    },
+    "oxford": {
+      "url": "https://classics.web.ox.ac.uk/sitefiles/dphil-handbook-2025-v1.0.pdf",
+      "resolved_url": "https://classics.web.ox.ac.uk/sitefiles/dphil-handbook-2025-v1.0.pdf",
+      "page": "",
+      "retrieved": "2026-09-30",
+      "id": "oxford",
+      "title": "Oxford Classics DPhil Handbook",
+      "version": "2025",
+      "file": "oxford.pdf",
+      "kind": "original",
+      "bytes": 545823,
+      "sha256": "5404fe91ba7d4d7daaef3485566870b379bfb71d87a2dd8e4bd49be9359ee547"
+    }
+  },
+  "profiles": [
+    {
+      "id": "pku-master-2014",
+      "name": "北京大学 · 硕士 · 2014",
+      "school": "北京大学",
+      "department": "",
+      "category": "master",
+      "version": "2014",
+      "keywords": "北大 PKU Peking",
+      "coverage": "校级研究生指南：字体、段落、页边距、编号与页眉页码。",
+      "source_ids": [
+        "pku-0",
+        "pku-1"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "北京大学 · 硕士 · 2014",
+        "school": "北京大学",
+        "year": "2014",
+        "catalog_id": "pku-master-2014",
+        "manual_checks": [
+          "2014 指南不等同于 2026 新规范；提交前核实本院系要求。",
+          "旧指南的参考文献标准不自动应用；封面与声明使用当年文件。"
+        ],
+        "template_version": "2014",
+        "sources": [
+          "https://lib.phil.pku.edu.cn/node/56876",
+          "https://lib.phil.pku.edu.cn/node/56876"
+        ],
+        "scope": "校级研究生指南：字体、段落、页边距、编号与页眉页码。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "size": 26
+          },
+          "subtitle": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h1": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h2": {
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 24,
+            "after": 6
+          },
+          "h3": {
+            "size": 13,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "h4": {
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "body": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract_en": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "keywords": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "caption_figure": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "caption_table": {
+            "size": 11,
+            "before": 12,
+            "after": 6
+          },
+          "caption_en": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "equation": {
+            "before": 6,
+            "after": 6
+          },
+          "bibliography": {
+            "spacing": 16,
+            "spacing_unit": "pt",
+            "before": 3
+          },
+          "table": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "table_header": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "footnote": {
+            "size": 9,
+            "align": "justify"
+          },
+          "appendix": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "acknowledgements": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "symbols": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "publications": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "front_heading": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_heading": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_en_heading": {
+            "latin": "Arial",
+            "size": 12,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 8,
+            "after": 6
+          },
+          "toc1": {
+            "font": "黑体",
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 6,
+            "indent": 0
+          },
+          "toc2": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "toc3": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "仿宋",
+            "size": 16,
+            "align": "center"
+          }
+        },
+        "page": {
+          "top": 3.0,
+          "left": 2.6,
+          "right": 2.6,
+          "gutter": 0,
+          "header_distance": 2.0,
+          "footer_distance": 1.75,
+          "number_position": "center",
+          "header_text": "北京大学{degree}学位论文",
+          "mirror_margins": true,
+          "header_line_pt": 0.75
+        },
+        "numbering": {
+          "scheme": "chinese",
+          "separator": ".",
+          "equation_brackets": "（）"
+        },
+        "contents": {
+          "figures": false,
+          "tables": false
+        },
+        "references": {
+          "hanging_cm": 0.741,
+          "superscript": true
+        },
+        "notes": {
+          "number_format": "decimalEnclosedCircle",
+          "restart": "eachPage"
+        },
+        "enabled": [
+          "styles",
+          "pages",
+          "numbering",
+          "tables",
+          "figures",
+          "contents"
+        ]
+      }
+    },
+    {
+      "id": "pku-philosophy-master-2026",
+      "name": "北京大学 · 哲学系（宗教学系） · 硕士 · 2026-07",
+      "school": "北京大学",
+      "department": "哲学系（宗教学系）",
+      "category": "master",
+      "version": "2026-07",
+      "keywords": "北大 PKU Peking philosophy",
+      "coverage": "哲学系图书馆自查模板初稿；新建时完整复制原 DOCX。",
+      "source_ids": [
+        "pku-0",
+        "pku-2"
+      ],
+      "word_source": "pku-2",
+      "template": {
+        "name": "北京大学 · 哲学系（宗教学系） · 硕士 · 2026-07",
+        "school": "北京大学",
+        "department": "哲学系（宗教学系）",
+        "year": "2026-07",
+        "catalog_id": "pku-philosophy-master-2026",
+        "manual_checks": [
+          "模板为分馆参考初稿，须检查批注、自查提示和当年正式要求。",
+          "一键排版保留原分节与页码；学位类型及封面信息请自行填写。"
+        ],
+        "template_version": "2026-07",
+        "sources": [
+          "https://lib.phil.pku.edu.cn/node/56876",
+          "https://lib.phil.pku.edu.cn/node/56876"
+        ],
+        "scope": "哲学系图书馆自查模板初稿；新建时完整复制原 DOCX。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "size": 26
+          },
+          "subtitle": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h1": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h2": {
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 24,
+            "after": 6
+          },
+          "h3": {
+            "size": 13,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "h4": {
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "body": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract_en": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "keywords": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "caption_figure": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "caption_table": {
+            "size": 11,
+            "before": 12,
+            "after": 6
+          },
+          "caption_en": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "equation": {
+            "before": 6,
+            "after": 6
+          },
+          "bibliography": {
+            "spacing": 16,
+            "spacing_unit": "pt",
+            "before": 3
+          },
+          "table": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "table_header": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "footnote": {
+            "size": 9,
+            "align": "justify"
+          },
+          "appendix": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "acknowledgements": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "symbols": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "publications": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "front_heading": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_heading": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_en_heading": {
+            "latin": "Arial",
+            "size": 12,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 8,
+            "after": 6
+          },
+          "toc1": {
+            "font": "黑体",
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 6,
+            "indent": 0
+          },
+          "toc2": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "toc3": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "仿宋",
+            "size": 16,
+            "align": "center"
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "top": 3.0,
+          "left": 2.6,
+          "right": 2.6,
+          "gutter": 0,
+          "header_distance": 2.0,
+          "footer_distance": 1.75,
+          "number_position": "center",
+          "header_text": "北京大学{degree}学位论文",
+          "mirror_margins": true,
+          "header_line_pt": 0.75
+        },
+        "numbering": {
+          "scheme": "chinese",
+          "separator": ".",
+          "equation_brackets": "（）"
+        },
+        "contents": {
+          "figures": false,
+          "tables": false
+        },
+        "references": {
+          "hanging_cm": 0.741,
+          "superscript": true
+        },
+        "notes": {
+          "number_format": "decimalEnclosedCircle",
+          "restart": "eachPage"
+        },
+        "enabled": [
+          "styles",
+          "pages",
+          "numbering"
+        ]
+      }
+    },
+    {
+      "id": "tsinghua-master-2025",
+      "name": "清华大学 · 硕士 · 2025-03",
+      "school": "清华大学",
+      "department": "",
+      "category": "master",
+      "version": "2025-03",
+      "keywords": "清华 THU Tsinghua",
+      "coverage": "校级研究生指南 §§2.3–2.4：正文、标题、图表和页面尺寸；保留分节。",
+      "source_ids": [
+        "thu-2025"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "清华大学 · 硕士 · 2025-03",
+        "school": "清华大学",
+        "year": "2025-03",
+        "catalog_id": "tsinghua-master-2025",
+        "manual_checks": [
+          "封面与正文页边距不同：本预设统一设置正文边距，正式封面请单独恢复。",
+          "双面打印、正文另页右页、目录起始和篇眉页码需人工核对。"
+        ],
+        "style_keys": [
+          "body",
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "abstract",
+          "abstract_en",
+          "abstract_heading",
+          "abstract_en_heading",
+          "front_heading",
+          "bibliography",
+          "caption_figure",
+          "caption_table",
+          "table",
+          "table_header",
+          "equation",
+          "footnote",
+          "acknowledgements",
+          "publications",
+          "symbols"
+        ],
+        "template_version": "2025-03",
+        "sources": [
+          "https://www.dhs.tsinghua.edu.cn/wp-content/uploads/2023/12/2025032107444819.pdf"
+        ],
+        "scope": "校级研究生指南 §§2.3–2.4：正文、标题、图表和页面尺寸；保留分节。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "size": 26
+          },
+          "subtitle": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h1": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h2": {
+            "latin": "Arial",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 24,
+            "after": 6
+          },
+          "h3": {
+            "latin": "Arial",
+            "size": 13,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "h4": {
+            "latin": "Arial",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "body": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract_en": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "keywords": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "caption_figure": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "caption_table": {
+            "size": 11,
+            "before": 12,
+            "after": 6
+          },
+          "caption_en": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "equation": {
+            "before": 6,
+            "after": 6
+          },
+          "bibliography": {
+            "spacing": 16,
+            "spacing_unit": "pt",
+            "before": 3
+          },
+          "table": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "table_header": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "footnote": {
+            "size": 9,
+            "align": "justify"
+          },
+          "appendix": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "acknowledgements": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "symbols": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "publications": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "front_heading": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_heading": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_en_heading": {
+            "latin": "Arial",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 8,
+            "after": 6
+          },
+          "toc1": {
+            "font": "黑体",
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 6,
+            "indent": 0
+          },
+          "toc2": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "toc3": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "仿宋",
+            "size": 16,
+            "align": "center"
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "top": 3,
+          "bottom": 3,
+          "right": 3,
+          "gutter": 0,
+          "header_distance": 2.2,
+          "footer_distance": 2.2,
+          "number_position": "center",
+          "header_text": "北京大学{degree}学位论文",
+          "header_line_pt": 0.75
+        },
+        "numbering": {
+          "separator": ".",
+          "equation_brackets": "（）"
+        },
+        "tables": {
+          "inner_pt": 1
+        },
+        "contents": {
+          "figures": false,
+          "tables": false
+        },
+        "references": {
+          "hanging_cm": 1,
+          "superscript": true
+        },
+        "notes": {
+          "number_format": "decimalEnclosedCircle",
+          "restart": "eachPage"
+        },
+        "enabled": [
+          "styles",
+          "pages",
+          "numbering",
+          "tables",
+          "figures"
+        ]
+      }
+    },
+    {
+      "id": "sjtu-master",
+      "name": "上海交通大学 · 硕士 · 2025指南/2024样稿",
+      "school": "上海交通大学",
+      "department": "",
+      "category": "master",
+      "version": "2025指南/2024样稿",
+      "keywords": "上交 交大 SJTU Shanghai Jiao Tong",
+      "coverage": "正文和标题按 2025 指南；页边距取官方参考 Word 样稿。",
+      "source_ids": [
+        "sjtu-0"
+      ],
+      "word_source": "sjtu-0",
+      "template": {
+        "name": "上海交通大学 · 硕士 · 2025指南/2024样稿",
+        "school": "上海交通大学",
+        "year": "2025指南/2024样稿",
+        "catalog_id": "sjtu-master",
+        "manual_checks": [
+          "原 DOCX 完整保留；一键排版的标题字号按研究生院文字指南核对。",
+          "学院可自行制定格式；正文在允许范围内选择小四号，行距按样稿 20 磅。"
+        ],
+        "style_keys": [
+          "body",
+          "h1",
+          "h2",
+          "h3"
+        ],
+        "template_version": "2025指南/2024样稿",
+        "sources": [
+          "https://www.gs.sjtu.edu.cn/post/detail/Z3MzNDA0",
+          "https://www.gs.sjtu.edu.cn/post/detail/Z3M2MjU="
+        ],
+        "scope": "正文和标题按 2025 指南；页边距取官方参考 Word 样稿。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "body": {
+            "spacing": 20,
+            "spacing_unit": "pt"
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "top": 3.5,
+          "bottom": 4,
+          "left": 2.5,
+          "header_distance": 2.5,
+          "footer_distance": 3
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "fudan-master-2026",
+      "name": "复旦大学 · 硕士 · 2026-06",
+      "school": "复旦大学",
+      "department": "",
+      "category": "master",
+      "version": "2026-06",
+      "keywords": "复旦 Fudan",
+      "coverage": "新版规范：A4、正文宋体/Times New Roman、小四号、固定 20 磅行距。",
+      "source_ids": [
+        "fudan-0"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "复旦大学 · 硕士 · 2026-06",
+        "school": "复旦大学",
+        "year": "2026-06",
+        "catalog_id": "fudan-master-2026",
+        "manual_checks": [
+          "规范写明 Word 默认页边距，未给数值：本预设保留原页边距，须在 Word 核对。",
+          "封面、指导小组名单、摘要和声明参照原 DOC 附件。",
+          "参考文献按最新 GB/T 7714 要求核对，本预设不自动改为 2015 标准。"
+        ],
+        "style_keys": [
+          "body"
+        ],
+        "template_version": "2026-06",
+        "sources": [
+          "https://library.fudan.edu.cn/medical/747/list.htm"
+        ],
+        "scope": "新版规范：A4、正文宋体/Times New Roman、小四号、固定 20 磅行距。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "body": {
+            "spacing": 20,
+            "spacing_unit": "pt"
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "set_margins": false
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "pku-doctor-2014",
+      "name": "北京大学 · 博士 · 2014",
+      "school": "北京大学",
+      "department": "",
+      "category": "doctor",
+      "version": "2014",
+      "keywords": "北大 PKU Peking",
+      "coverage": "校级研究生指南：字体、段落、页边距、编号与页眉页码。",
+      "source_ids": [
+        "pku-0",
+        "pku-1"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "北京大学 · 博士 · 2014",
+        "school": "北京大学",
+        "year": "2014",
+        "degree": "doctor",
+        "catalog_id": "pku-doctor-2014",
+        "manual_checks": [
+          "2014 指南不等同于 2026 新规范；提交前核实本院系要求。",
+          "旧指南的参考文献标准不自动应用；封面与声明使用当年文件。"
+        ],
+        "template_version": "2014",
+        "sources": [
+          "https://lib.phil.pku.edu.cn/node/56876",
+          "https://lib.phil.pku.edu.cn/node/56876"
+        ],
+        "scope": "校级研究生指南：字体、段落、页边距、编号与页眉页码。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "size": 26
+          },
+          "subtitle": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h1": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h2": {
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 24,
+            "after": 6
+          },
+          "h3": {
+            "size": 13,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "h4": {
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "body": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract_en": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "keywords": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "caption_figure": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "caption_table": {
+            "size": 11,
+            "before": 12,
+            "after": 6
+          },
+          "caption_en": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "equation": {
+            "before": 6,
+            "after": 6
+          },
+          "bibliography": {
+            "spacing": 16,
+            "spacing_unit": "pt",
+            "before": 3
+          },
+          "table": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "table_header": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "footnote": {
+            "size": 9,
+            "align": "justify"
+          },
+          "appendix": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "acknowledgements": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "symbols": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "publications": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "front_heading": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_heading": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_en_heading": {
+            "latin": "Arial",
+            "size": 12,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 8,
+            "after": 6
+          },
+          "toc1": {
+            "font": "黑体",
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 6,
+            "indent": 0
+          },
+          "toc2": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "toc3": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "仿宋",
+            "size": 16,
+            "align": "center"
+          }
+        },
+        "page": {
+          "top": 3.0,
+          "left": 2.6,
+          "right": 2.6,
+          "gutter": 0,
+          "header_distance": 2.0,
+          "footer_distance": 1.75,
+          "number_position": "center",
+          "header_text": "北京大学{degree}学位论文",
+          "mirror_margins": true,
+          "header_line_pt": 0.75
+        },
+        "numbering": {
+          "scheme": "chinese",
+          "separator": ".",
+          "equation_brackets": "（）"
+        },
+        "contents": {
+          "figures": false,
+          "tables": false
+        },
+        "references": {
+          "hanging_cm": 0.741,
+          "superscript": true
+        },
+        "notes": {
+          "number_format": "decimalEnclosedCircle",
+          "restart": "eachPage"
+        },
+        "enabled": [
+          "styles",
+          "pages",
+          "numbering",
+          "tables",
+          "figures",
+          "contents"
+        ]
+      }
+    },
+    {
+      "id": "pku-philosophy-doctor-2026",
+      "name": "北京大学 · 哲学系（宗教学系） · 博士 · 2026-07",
+      "school": "北京大学",
+      "department": "哲学系（宗教学系）",
+      "category": "doctor",
+      "version": "2026-07",
+      "keywords": "北大 PKU Peking philosophy",
+      "coverage": "哲学系图书馆自查模板初稿；新建时完整复制原 DOCX。",
+      "source_ids": [
+        "pku-0",
+        "pku-2"
+      ],
+      "word_source": "pku-2",
+      "template": {
+        "name": "北京大学 · 哲学系（宗教学系） · 博士 · 2026-07",
+        "school": "北京大学",
+        "department": "哲学系（宗教学系）",
+        "year": "2026-07",
+        "degree": "doctor",
+        "catalog_id": "pku-philosophy-doctor-2026",
+        "manual_checks": [
+          "模板为分馆参考初稿，须检查批注、自查提示和当年正式要求。",
+          "一键排版保留原分节与页码；学位类型及封面信息请自行填写。"
+        ],
+        "template_version": "2026-07",
+        "sources": [
+          "https://lib.phil.pku.edu.cn/node/56876",
+          "https://lib.phil.pku.edu.cn/node/56876"
+        ],
+        "scope": "哲学系图书馆自查模板初稿；新建时完整复制原 DOCX。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "size": 26
+          },
+          "subtitle": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h1": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h2": {
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 24,
+            "after": 6
+          },
+          "h3": {
+            "size": 13,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "h4": {
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "body": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract_en": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "keywords": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "caption_figure": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "caption_table": {
+            "size": 11,
+            "before": 12,
+            "after": 6
+          },
+          "caption_en": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "equation": {
+            "before": 6,
+            "after": 6
+          },
+          "bibliography": {
+            "spacing": 16,
+            "spacing_unit": "pt",
+            "before": 3
+          },
+          "table": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "table_header": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "footnote": {
+            "size": 9,
+            "align": "justify"
+          },
+          "appendix": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "acknowledgements": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "symbols": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "publications": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "front_heading": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_heading": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_en_heading": {
+            "latin": "Arial",
+            "size": 12,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 8,
+            "after": 6
+          },
+          "toc1": {
+            "font": "黑体",
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 6,
+            "indent": 0
+          },
+          "toc2": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "toc3": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "仿宋",
+            "size": 16,
+            "align": "center"
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "top": 3.0,
+          "left": 2.6,
+          "right": 2.6,
+          "gutter": 0,
+          "header_distance": 2.0,
+          "footer_distance": 1.75,
+          "number_position": "center",
+          "header_text": "北京大学{degree}学位论文",
+          "mirror_margins": true,
+          "header_line_pt": 0.75
+        },
+        "numbering": {
+          "scheme": "chinese",
+          "separator": ".",
+          "equation_brackets": "（）"
+        },
+        "contents": {
+          "figures": false,
+          "tables": false
+        },
+        "references": {
+          "hanging_cm": 0.741,
+          "superscript": true
+        },
+        "notes": {
+          "number_format": "decimalEnclosedCircle",
+          "restart": "eachPage"
+        },
+        "enabled": [
+          "styles",
+          "pages",
+          "numbering"
+        ]
+      }
+    },
+    {
+      "id": "tsinghua-doctor-2025",
+      "name": "清华大学 · 博士 · 2025-03",
+      "school": "清华大学",
+      "department": "",
+      "category": "doctor",
+      "version": "2025-03",
+      "keywords": "清华 THU Tsinghua",
+      "coverage": "校级研究生指南 §§2.3–2.4：正文、标题、图表和页面尺寸；保留分节。",
+      "source_ids": [
+        "thu-2025"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "清华大学 · 博士 · 2025-03",
+        "school": "清华大学",
+        "year": "2025-03",
+        "degree": "doctor",
+        "catalog_id": "tsinghua-doctor-2025",
+        "manual_checks": [
+          "封面与正文页边距不同：本预设统一设置正文边距，正式封面请单独恢复。",
+          "双面打印、正文另页右页、目录起始和篇眉页码需人工核对。"
+        ],
+        "style_keys": [
+          "body",
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "abstract",
+          "abstract_en",
+          "abstract_heading",
+          "abstract_en_heading",
+          "front_heading",
+          "bibliography",
+          "caption_figure",
+          "caption_table",
+          "table",
+          "table_header",
+          "equation",
+          "footnote",
+          "acknowledgements",
+          "publications",
+          "symbols"
+        ],
+        "template_version": "2025-03",
+        "sources": [
+          "https://www.dhs.tsinghua.edu.cn/wp-content/uploads/2023/12/2025032107444819.pdf"
+        ],
+        "scope": "校级研究生指南 §§2.3–2.4：正文、标题、图表和页面尺寸；保留分节。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "size": 26
+          },
+          "subtitle": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h1": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "h2": {
+            "latin": "Arial",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 24,
+            "after": 6
+          },
+          "h3": {
+            "latin": "Arial",
+            "size": 13,
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "h4": {
+            "latin": "Arial",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "after": 6
+          },
+          "body": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "abstract_en": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "keywords": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "caption_figure": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "caption_table": {
+            "size": 11,
+            "before": 12,
+            "after": 6
+          },
+          "caption_en": {
+            "size": 11,
+            "before": 6,
+            "after": 12
+          },
+          "equation": {
+            "before": 6,
+            "after": 6
+          },
+          "bibliography": {
+            "spacing": 16,
+            "spacing_unit": "pt",
+            "before": 3
+          },
+          "table": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "table_header": {
+            "size": 11,
+            "before": 3,
+            "after": 3
+          },
+          "footnote": {
+            "size": 9,
+            "align": "justify"
+          },
+          "appendix": {
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "acknowledgements": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "symbols": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "publications": {
+            "spacing": 20.0,
+            "spacing_unit": "pt"
+          },
+          "front_heading": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_heading": {
+            "latin": "Arial",
+            "spacing": 1.0,
+            "before": 24,
+            "after": 18
+          },
+          "abstract_en_heading": {
+            "latin": "Arial",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 8,
+            "after": 6
+          },
+          "toc1": {
+            "font": "黑体",
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "before": 6,
+            "indent": 0
+          },
+          "toc2": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "toc3": {
+            "align": "left",
+            "spacing": 20,
+            "spacing_unit": "pt",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "仿宋",
+            "size": 16,
+            "align": "center"
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "top": 3,
+          "bottom": 3,
+          "right": 3,
+          "gutter": 0,
+          "header_distance": 2.2,
+          "footer_distance": 2.2,
+          "number_position": "center",
+          "header_text": "北京大学{degree}学位论文",
+          "header_line_pt": 0.75
+        },
+        "numbering": {
+          "separator": ".",
+          "equation_brackets": "（）"
+        },
+        "tables": {
+          "inner_pt": 1
+        },
+        "contents": {
+          "figures": false,
+          "tables": false
+        },
+        "references": {
+          "hanging_cm": 1,
+          "superscript": true
+        },
+        "notes": {
+          "number_format": "decimalEnclosedCircle",
+          "restart": "eachPage"
+        },
+        "enabled": [
+          "styles",
+          "pages",
+          "numbering",
+          "tables",
+          "figures"
+        ]
+      }
+    },
+    {
+      "id": "sjtu-doctor",
+      "name": "上海交通大学 · 博士 · 2025指南/2024样稿",
+      "school": "上海交通大学",
+      "department": "",
+      "category": "doctor",
+      "version": "2025指南/2024样稿",
+      "keywords": "上交 交大 SJTU Shanghai Jiao Tong",
+      "coverage": "正文和标题按 2025 指南；页边距取官方参考 Word 样稿。",
+      "source_ids": [
+        "sjtu-0"
+      ],
+      "word_source": "sjtu-0",
+      "template": {
+        "name": "上海交通大学 · 博士 · 2025指南/2024样稿",
+        "school": "上海交通大学",
+        "year": "2025指南/2024样稿",
+        "degree": "doctor",
+        "catalog_id": "sjtu-doctor",
+        "manual_checks": [
+          "原 DOCX 完整保留；一键排版的标题字号按研究生院文字指南核对。",
+          "学院可自行制定格式；正文在允许范围内选择小四号，行距按样稿 20 磅。"
+        ],
+        "style_keys": [
+          "body",
+          "h1",
+          "h2",
+          "h3"
+        ],
+        "template_version": "2025指南/2024样稿",
+        "sources": [
+          "https://www.gs.sjtu.edu.cn/post/detail/Z3MzNDA0",
+          "https://www.gs.sjtu.edu.cn/post/detail/Z3M2MjU="
+        ],
+        "scope": "正文和标题按 2025 指南；页边距取官方参考 Word 样稿。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "body": {
+            "spacing": 20,
+            "spacing_unit": "pt"
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "top": 3.5,
+          "bottom": 4,
+          "left": 2.5,
+          "header_distance": 2.5,
+          "footer_distance": 3
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "fudan-doctor-2026",
+      "name": "复旦大学 · 博士 · 2026-06",
+      "school": "复旦大学",
+      "department": "",
+      "category": "doctor",
+      "version": "2026-06",
+      "keywords": "复旦 Fudan",
+      "coverage": "新版规范：A4、正文宋体/Times New Roman、小四号、固定 20 磅行距。",
+      "source_ids": [
+        "fudan-0"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "复旦大学 · 博士 · 2026-06",
+        "school": "复旦大学",
+        "year": "2026-06",
+        "degree": "doctor",
+        "catalog_id": "fudan-doctor-2026",
+        "manual_checks": [
+          "规范写明 Word 默认页边距，未给数值：本预设保留原页边距，须在 Word 核对。",
+          "封面、指导小组名单、摘要和声明参照原 DOC 附件。",
+          "参考文献按最新 GB/T 7714 要求核对，本预设不自动改为 2015 标准。"
+        ],
+        "style_keys": [
+          "body"
+        ],
+        "template_version": "2026-06",
+        "sources": [
+          "https://library.fudan.edu.cn/medical/747/list.htm"
+        ],
+        "scope": "新版规范：A4、正文宋体/Times New Roman、小四号、固定 20 磅行距。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "body": {
+            "spacing": 20,
+            "spacing_unit": "pt"
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "set_margins": false
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "seu-bachelor-2025",
+      "name": "东南大学 · 本科 · 2025-03",
+      "school": "东南大学",
+      "department": "",
+      "category": "bachelor",
+      "version": "2025-03",
+      "keywords": "东大 SEU Southeast",
+      "coverage": "本科模板说明中的正文、标题与摘要格式；页边距取 DOCX 实测值。",
+      "source_ids": [
+        "seu-0"
+      ],
+      "word_source": "seu-0",
+      "template": {
+        "name": "东南大学 · 本科 · 2025-03",
+        "school": "东南大学",
+        "year": "2025-03",
+        "degree": "bachelor",
+        "catalog_id": "seu-bachelor-2025",
+        "manual_checks": [
+          "标题和正文采用样稿说明文字所列字号；原 DOCX 中的表格和声明完整保留。",
+          "保留并填写 AI 工具使用情况说明表、独创性声明和授权书。"
+        ],
+        "style_keys": [
+          "body",
+          "h1",
+          "h2",
+          "h3",
+          "abstract",
+          "abstract_en",
+          "abstract_heading",
+          "abstract_en_heading"
+        ],
+        "template_version": "2025-03",
+        "sources": [
+          "https://jwc.seu.edu.cn/2025/0320/c21686a522328/page.htm"
+        ],
+        "scope": "本科模板说明中的正文、标题与摘要格式；页边距取 DOCX 实测值。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "h3": {
+            "font": "宋体",
+            "bold": false
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "top": 2,
+          "bottom": 2,
+          "left": 2,
+          "right": 2,
+          "gutter": 0
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "sysu-mpa-course",
+      "name": "中山大学 · MPA · 课程论文 · 2025发布",
+      "school": "中山大学",
+      "department": "MPA",
+      "category": "course",
+      "version": "2025发布",
+      "keywords": "course essay SYSU Sun Yat-sen",
+      "coverage": "原始课程论文封面/试卷资料；未公布完整正文规则，因此默认不改正文格式。",
+      "source_ids": [
+        "sysu-1"
+      ],
+      "word_source": "sysu-1",
+      "template": {
+        "name": "中山大学 · MPA · 课程论文 · 2025发布",
+        "school": "中山大学",
+        "department": "MPA",
+        "year": "2025发布",
+        "document_type": "course",
+        "catalog_id": "sysu-mpa-course",
+        "manual_checks": [
+          "MPA 专用，不能作为中山大学全校通用课程规范。",
+          "任课教师的正文要求另行确认。"
+        ],
+        "style_keys": [],
+        "template_version": "2025发布",
+        "sources": [
+          "https://mpa.sysu.edu.cn/article/745"
+        ],
+        "scope": "原始课程论文封面/试卷资料；未公布完整正文规则，因此默认不改正文格式。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "page": {
+          "layout_only": true
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "required_sections": [],
+        "enabled": []
+      }
+    },
+    {
+      "id": "sbs-course",
+      "name": "上海商学院 · 研究生 · 课程论文 · 2025发布",
+      "school": "上海商学院",
+      "department": "研究生",
+      "category": "course",
+      "version": "2025发布",
+      "keywords": "course essay SBS",
+      "coverage": "原始课程论文封面/试卷资料；未公布完整正文规则，因此默认不改正文格式。",
+      "source_ids": [
+        "sbs-0"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "上海商学院 · 研究生 · 课程论文 · 2025发布",
+        "school": "上海商学院",
+        "department": "研究生",
+        "year": "2025发布",
+        "document_type": "course",
+        "catalog_id": "sbs-course",
+        "manual_checks": [
+          "按任课教师要求补充正文排版；本条目主要用于复制课程封面。",
+          "旧式 DOC 原件在资料包内，可用 Word 另存为 DOCX。"
+        ],
+        "style_keys": [],
+        "template_version": "2025发布",
+        "sources": [
+          "https://yjs.sbs.edu.cn/xzzx/pygzxz/777434fe80de4980a3558a84c64c61b7.htm"
+        ],
+        "scope": "原始课程论文封面/试卷资料；未公布完整正文规则，因此默认不改正文格式。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "page": {
+          "layout_only": true
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "required_sections": [],
+        "enabled": []
+      }
+    },
+    {
+      "id": "mit-bachelor",
+      "name": "MIT 麻省理工学院 · 本科 · 2026网页快照",
+      "school": "MIT 麻省理工学院",
+      "department": "",
+      "category": "bachelor",
+      "version": "2026网页快照",
+      "keywords": "Massachusetts Institute Technology MIT",
+      "coverage": "现行网页规定的行距；无衬线字体为建议。采用 Arial 12 pt、正文 1.5 倍作为可编辑选项。",
+      "source_ids": [
+        "mit",
+        "mit-0"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "MIT 麻省理工学院 · 本科 · 2026网页快照",
+        "school": "Massachusetts Institute of Technology",
+        "year": "2026网页快照",
+        "degree": "bachelor",
+        "language": "en",
+        "catalog_id": "mit-bachelor",
+        "manual_checks": [
+          "现行电子提交页未规定统一页边距和纸型；Letter 为起草选择，保留原稿边距。",
+          "2022–2023 PDF 为历史档案，与当前网页不同时以网页为准。",
+          "连续页码从标题页计 1；标题页许可声明、PDF/A 与无障碍需另行完成。"
+        ],
+        "style_keys": [
+          "body",
+          "abstract_en",
+          "acknowledgements"
+        ],
+        "template_version": "2026网页快照",
+        "sources": [
+          "https://libraries.mit.edu/distinctive-collections/thesis-specs/",
+          "https://libraries.mit.edu/distinctive-collections/thesis-specs/"
+        ],
+        "scope": "现行网页规定的行距；无衬线字体为建议。采用 Arial 12 pt、正文 1.5 倍作为可编辑选项。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "subtitle": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "h1": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "h2": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "h3": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "h4": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "body": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract_en": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "spacing": 1,
+            "indent": 0
+          },
+          "keywords": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "caption_figure": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "caption_table": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "caption_en": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "equation": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "bibliography": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "table": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "table_header": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "note": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "footnote": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "endnote": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "appendix": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "acknowledgements": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "spacing": 1,
+            "indent": 0
+          },
+          "symbols": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "publications": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "header": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "footer": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "front_heading": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "abstract_heading": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "abstract_en_heading": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "toc1": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "toc2": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "toc3": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          }
+        },
+        "page": {
+          "paper_size": "Letter",
+          "layout_only": true,
+          "set_margins": false
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "required_sections": [
+          "bibliography"
+        ],
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "mit-master",
+      "name": "MIT 麻省理工学院 · 硕士 · 2026网页快照",
+      "school": "MIT 麻省理工学院",
+      "department": "",
+      "category": "master",
+      "version": "2026网页快照",
+      "keywords": "Massachusetts Institute Technology MIT",
+      "coverage": "现行网页规定的行距；无衬线字体为建议。采用 Arial 12 pt、正文 1.5 倍作为可编辑选项。",
+      "source_ids": [
+        "mit",
+        "mit-0"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "MIT 麻省理工学院 · 硕士 · 2026网页快照",
+        "school": "Massachusetts Institute of Technology",
+        "year": "2026网页快照",
+        "language": "en",
+        "catalog_id": "mit-master",
+        "manual_checks": [
+          "现行电子提交页未规定统一页边距和纸型；Letter 为起草选择，保留原稿边距。",
+          "2022–2023 PDF 为历史档案，与当前网页不同时以网页为准。",
+          "连续页码从标题页计 1；标题页许可声明、PDF/A 与无障碍需另行完成。"
+        ],
+        "style_keys": [
+          "body",
+          "abstract_en",
+          "acknowledgements"
+        ],
+        "template_version": "2026网页快照",
+        "sources": [
+          "https://libraries.mit.edu/distinctive-collections/thesis-specs/",
+          "https://libraries.mit.edu/distinctive-collections/thesis-specs/"
+        ],
+        "scope": "现行网页规定的行距；无衬线字体为建议。采用 Arial 12 pt、正文 1.5 倍作为可编辑选项。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "subtitle": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "h1": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "h2": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "h3": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "h4": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "body": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract_en": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "spacing": 1,
+            "indent": 0
+          },
+          "keywords": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "caption_figure": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "caption_table": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "caption_en": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "equation": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "bibliography": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "table": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "table_header": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "note": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "footnote": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "endnote": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "appendix": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "acknowledgements": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "spacing": 1,
+            "indent": 0
+          },
+          "symbols": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "publications": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "header": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "footer": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "front_heading": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "abstract_heading": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "abstract_en_heading": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "toc1": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "toc2": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "toc3": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          }
+        },
+        "page": {
+          "paper_size": "Letter",
+          "layout_only": true,
+          "set_margins": false
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "required_sections": [
+          "bibliography"
+        ],
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "mit-doctor",
+      "name": "MIT 麻省理工学院 · 博士 · 2026网页快照",
+      "school": "MIT 麻省理工学院",
+      "department": "",
+      "category": "doctor",
+      "version": "2026网页快照",
+      "keywords": "Massachusetts Institute Technology MIT",
+      "coverage": "现行网页规定的行距；无衬线字体为建议。采用 Arial 12 pt、正文 1.5 倍作为可编辑选项。",
+      "source_ids": [
+        "mit",
+        "mit-0"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "MIT 麻省理工学院 · 博士 · 2026网页快照",
+        "school": "Massachusetts Institute of Technology",
+        "year": "2026网页快照",
+        "degree": "doctor",
+        "language": "en",
+        "catalog_id": "mit-doctor",
+        "manual_checks": [
+          "现行电子提交页未规定统一页边距和纸型；Letter 为起草选择，保留原稿边距。",
+          "2022–2023 PDF 为历史档案，与当前网页不同时以网页为准。",
+          "连续页码从标题页计 1；标题页许可声明、PDF/A 与无障碍需另行完成。"
+        ],
+        "style_keys": [
+          "body",
+          "abstract_en",
+          "acknowledgements"
+        ],
+        "template_version": "2026网页快照",
+        "sources": [
+          "https://libraries.mit.edu/distinctive-collections/thesis-specs/",
+          "https://libraries.mit.edu/distinctive-collections/thesis-specs/"
+        ],
+        "scope": "现行网页规定的行距；无衬线字体为建议。采用 Arial 12 pt、正文 1.5 倍作为可编辑选项。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "subtitle": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "h1": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "h2": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "h3": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "h4": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "body": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract_en": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "spacing": 1,
+            "indent": 0
+          },
+          "keywords": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "caption_figure": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "caption_table": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "caption_en": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "equation": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "bibliography": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "table": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "table_header": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "note": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "footnote": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "endnote": {
+            "font": "Arial",
+            "latin": "Arial"
+          },
+          "appendix": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "acknowledgements": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "spacing": 1,
+            "indent": 0
+          },
+          "symbols": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "publications": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "header": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "footer": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "front_heading": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "abstract_heading": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "abstract_en_heading": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left"
+          },
+          "toc1": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "toc2": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "toc3": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "Arial",
+            "latin": "Arial",
+            "align": "left",
+            "indent": 0
+          }
+        },
+        "page": {
+          "paper_size": "Letter",
+          "layout_only": true,
+          "set_margins": false
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "required_sections": [
+          "bibliography"
+        ],
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "stanford-doctor",
+      "name": "Stanford 斯坦福大学 · 博士 · 网页快照",
+      "school": "Stanford 斯坦福大学",
+      "department": "",
+      "category": "doctor",
+      "version": "网页快照",
+      "keywords": "Stanford PhD dissertation",
+      "coverage": "博士：Letter 纸型，内侧 1.5 英寸/其余 1 英寸；选用允许的 TNR 12 pt 与 1.5 倍行距。",
+      "source_ids": [
+        "stanford"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "Stanford 斯坦福大学 · 博士 · 网页快照",
+        "school": "Stanford University",
+        "year": "网页快照",
+        "degree": "doctor",
+        "language": "en",
+        "catalog_id": "stanford-doctor",
+        "manual_checks": [
+          "标题页格式须参照官网，双面打印时另开启左右对称页边距。",
+          "预备页从 iv 起编；提交 PDF 不含系统自动插入的版权页和签名页。",
+          "参考文献遵循所在院系指定风格。"
+        ],
+        "style_keys": [
+          "body",
+          "abstract_en",
+          "acknowledgements"
+        ],
+        "template_version": "网页快照",
+        "sources": [
+          "https://studentservices.stanford.edu/my-academics/earn-my-degree/graduate-degree-progress/dissertations-and-theses/prepare-your-work-0"
+        ],
+        "scope": "博士：Letter 纸型，内侧 1.5 英寸/其余 1 英寸；选用允许的 TNR 12 pt 与 1.5 倍行距。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "subtitle": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "h1": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "h2": {
+            "font": "Times New Roman"
+          },
+          "h3": {
+            "font": "Times New Roman"
+          },
+          "h4": {
+            "font": "Times New Roman"
+          },
+          "body": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract_en": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "keywords": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "caption_figure": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "caption_table": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "caption_en": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "equation": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "bibliography": {
+            "font": "Times New Roman"
+          },
+          "table": {
+            "font": "Times New Roman"
+          },
+          "table_header": {
+            "font": "Times New Roman"
+          },
+          "note": {
+            "font": "Times New Roman"
+          },
+          "footnote": {
+            "font": "Times New Roman"
+          },
+          "endnote": {
+            "font": "Times New Roman"
+          },
+          "appendix": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "acknowledgements": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "symbols": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "publications": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "header": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "footer": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "front_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "abstract_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "abstract_en_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "toc1": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "toc2": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "toc3": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          }
+        },
+        "page": {
+          "paper_size": "Letter",
+          "layout_only": true,
+          "top": 2.54,
+          "bottom": 2.54,
+          "left": 3.81,
+          "right": 2.54,
+          "gutter": 0,
+          "header_distance": 1.27,
+          "footer_distance": 1.27
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "required_sections": [
+          "bibliography"
+        ],
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "cambridge-socanth-master",
+      "name": "Cambridge 剑桥大学 · 社会人类学 MRes · 硕士 · 网页快照",
+      "school": "Cambridge 剑桥大学",
+      "department": "社会人类学 MRes",
+      "category": "master",
+      "version": "网页快照",
+      "keywords": "Cambridge Cambridge University Social Anthropology essay MRes",
+      "coverage": "社会人类学 MRes：TNR 正文至少 12 pt，四周约 2.5 cm；课程论文单倍行距、段间空行，学位论文选择 1.5 倍。",
+      "source_ids": [
+        "cambridge"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "Cambridge 剑桥大学 · 社会人类学 MRes · 硕士 · 网页快照",
+        "school": "University of Cambridge",
+        "department": "社会人类学 MRes",
+        "year": "网页快照",
+        "language": "en",
+        "catalog_id": "cambridge-socanth-master",
+        "manual_checks": [
+          "院系专用，不能套用于其他 Cambridge 项目。",
+          "段首三空格、章节首段顶格需人工处理；本预设保留为无首行缩进建议值。",
+          "A4 为起草选择；装订后有效边距及字数限制请核对原文。"
+        ],
+        "style_keys": [
+          "body"
+        ],
+        "template_version": "网页快照",
+        "sources": [
+          "https://www.socanth.cam.ac.uk/current-students/mres-course/mres-style-guidelines"
+        ],
+        "scope": "社会人类学 MRes：TNR 正文至少 12 pt，四周约 2.5 cm；课程论文单倍行距、段间空行，学位论文选择 1.5 倍。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "subtitle": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "h1": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "h2": {
+            "font": "Times New Roman"
+          },
+          "h3": {
+            "font": "Times New Roman"
+          },
+          "h4": {
+            "font": "Times New Roman"
+          },
+          "body": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract_en": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "keywords": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "caption_figure": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "caption_table": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "caption_en": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "equation": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "bibliography": {
+            "font": "Times New Roman"
+          },
+          "table": {
+            "font": "Times New Roman"
+          },
+          "table_header": {
+            "font": "Times New Roman"
+          },
+          "note": {
+            "font": "Times New Roman"
+          },
+          "footnote": {
+            "font": "Times New Roman"
+          },
+          "endnote": {
+            "font": "Times New Roman"
+          },
+          "appendix": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "acknowledgements": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "symbols": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "publications": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "header": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "footer": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "front_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "abstract_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "abstract_en_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "toc1": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "toc2": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "toc3": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "left": 2.5,
+          "gutter": 0
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "required_sections": [
+          "bibliography"
+        ],
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "cambridge-socanth-course",
+      "name": "Cambridge 剑桥大学 · 社会人类学 MRes · 课程论文 · 网页快照",
+      "school": "Cambridge 剑桥大学",
+      "department": "社会人类学 MRes",
+      "category": "course",
+      "version": "网页快照",
+      "keywords": "Cambridge Cambridge University Social Anthropology essay MRes",
+      "coverage": "社会人类学 MRes：TNR 正文至少 12 pt，四周约 2.5 cm；课程论文单倍行距、段间空行，学位论文选择 1.5 倍。",
+      "source_ids": [
+        "cambridge"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "Cambridge 剑桥大学 · 社会人类学 MRes · 课程论文 · 网页快照",
+        "school": "University of Cambridge",
+        "department": "社会人类学 MRes",
+        "year": "网页快照",
+        "language": "en",
+        "document_type": "course",
+        "catalog_id": "cambridge-socanth-course",
+        "manual_checks": [
+          "院系专用，不能套用于其他 Cambridge 项目。",
+          "段首三空格、章节首段顶格需人工处理；本预设保留为无首行缩进建议值。",
+          "A4 为起草选择；装订后有效边距及字数限制请核对原文。"
+        ],
+        "style_keys": [
+          "body"
+        ],
+        "template_version": "网页快照",
+        "sources": [
+          "https://www.socanth.cam.ac.uk/current-students/mres-course/mres-style-guidelines"
+        ],
+        "scope": "社会人类学 MRes：TNR 正文至少 12 pt，四周约 2.5 cm；课程论文单倍行距、段间空行，学位论文选择 1.5 倍。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "subtitle": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "h1": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "h2": {
+            "font": "Times New Roman"
+          },
+          "h3": {
+            "font": "Times New Roman"
+          },
+          "h4": {
+            "font": "Times New Roman"
+          },
+          "body": {
+            "font": "Times New Roman",
+            "align": "left",
+            "spacing": 1,
+            "after": 12,
+            "indent": 0
+          },
+          "abstract": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract_en": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "keywords": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "caption_figure": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "caption_table": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "caption_en": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "equation": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "bibliography": {
+            "font": "Times New Roman"
+          },
+          "table": {
+            "font": "Times New Roman"
+          },
+          "table_header": {
+            "font": "Times New Roman"
+          },
+          "note": {
+            "font": "Times New Roman"
+          },
+          "footnote": {
+            "font": "Times New Roman"
+          },
+          "endnote": {
+            "font": "Times New Roman"
+          },
+          "appendix": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "acknowledgements": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "symbols": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "publications": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "header": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "footer": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "front_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "abstract_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "abstract_en_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "toc1": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "toc2": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "toc3": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "left": 2.5,
+          "gutter": 0
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "required_sections": [
+          "bibliography"
+        ],
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    },
+    {
+      "id": "oxford-classics-doctor-2025",
+      "name": "Oxford 牛津大学 · 古典学 · 博士 · 2025",
+      "school": "Oxford 牛津大学",
+      "department": "古典学",
+      "category": "doctor",
+      "version": "2025",
+      "keywords": "Oxford DPhil Classics Ancient History",
+      "coverage": "古典学 DPhil 手册 p.22：正文双倍行距；采用建议的 TNR 12 pt、左边距 3.5 cm。",
+      "source_ids": [
+        "oxford"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "Oxford 牛津大学 · 古典学 · 博士 · 2025",
+        "school": "University of Oxford",
+        "department": "古典学",
+        "year": "2025",
+        "degree": "doctor",
+        "language": "en",
+        "catalog_id": "oxford-classics-doctor-2025",
+        "manual_checks": [
+          "仅适用 Ancient History / Classical Languages and Literature。",
+          "手册未统一列明其他页边距和纸型：A4、其余 2.5 cm 为可编辑起草值。",
+          "引文、脚注需单倍行距；封面、字数和提交程序按手册核对。"
+        ],
+        "style_keys": [
+          "body"
+        ],
+        "template_version": "2025",
+        "sources": [
+          "https://classics.web.ox.ac.uk/sitefiles/dphil-handbook-2025-v1.0.pdf"
+        ],
+        "scope": "古典学 DPhil 手册 p.22：正文双倍行距；采用建议的 TNR 12 pt、左边距 3.5 cm。 未声明的设置为可编辑建议值，封面、分页和院系补充要求须对照原文。",
+        "styles": {
+          "title": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "subtitle": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "h1": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "h2": {
+            "font": "Times New Roman"
+          },
+          "h3": {
+            "font": "Times New Roman"
+          },
+          "h4": {
+            "font": "Times New Roman"
+          },
+          "body": {
+            "font": "Times New Roman",
+            "align": "left",
+            "spacing": 2,
+            "indent": 0
+          },
+          "abstract": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "abstract_en": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "keywords": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "caption_figure": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "caption_table": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "caption_en": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "equation": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "bibliography": {
+            "font": "Times New Roman"
+          },
+          "table": {
+            "font": "Times New Roman"
+          },
+          "table_header": {
+            "font": "Times New Roman"
+          },
+          "note": {
+            "font": "Times New Roman"
+          },
+          "footnote": {
+            "font": "Times New Roman"
+          },
+          "endnote": {
+            "font": "Times New Roman"
+          },
+          "appendix": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "acknowledgements": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "symbols": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "publications": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "header": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "footer": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "front_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "abstract_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "abstract_en_heading": {
+            "font": "Times New Roman",
+            "align": "left"
+          },
+          "toc1": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "toc2": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "toc3": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          },
+          "cover_info": {
+            "font": "Times New Roman",
+            "align": "left",
+            "indent": 0
+          }
+        },
+        "page": {
+          "layout_only": true,
+          "left": 3.5,
+          "gutter": 0
+        },
+        "numbering": {
+          "scheme": "none"
+        },
+        "required_sections": [
+          "bibliography"
+        ],
+        "enabled": [
+          "styles",
+          "pages"
+        ]
+      }
+    }
+  ]
+}

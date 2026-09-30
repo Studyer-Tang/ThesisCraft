@@ -19,3 +19,6 @@ release/
 addins/windows/dist/
 addins/native/target/
 addins/native/bin/
+
+# Downloaded research intermediates
+research/
