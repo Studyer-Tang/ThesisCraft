@@ -68,7 +68,7 @@ def main():
         f'@echo off\ncd /d "%~dp0"\nstart "" "%~dp0{name}.exe" --install-native\n', encoding='ascii')
     (output/'Uninstall-Native-Addin.cmd').write_text(
         f'@echo off\ncd /d "%~dp0"\nstart "" "%~dp0{name}.exe" --uninstall-native\n',encoding='ascii')
-    for filename, arguments in [('Paper-Studio.cmd','--academic'),('Desktop.cmd',''),('Word-Plugin.cmd','--office word'),('WPS-Plugin.cmd','--office wps')]:
+    for filename, arguments in [('Paper-Studio.cmd','--academic'),('Desktop.cmd','--general'),('Word-Plugin.cmd','--office word'),('WPS-Plugin.cmd','--office wps')]:
         (output/filename).write_text(f'@echo off\ncd /d "%~dp0"\nstart "" "{name}.exe" {arguments}\n',encoding='ascii')
     shutil.copy2(ROOT/'LICENSE',output/'LICENSE')
     shutil.copy2(ROOT/'docs/THESIS-GUIDE.md',output/'论文工作台使用说明.md')

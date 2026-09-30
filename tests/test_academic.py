@@ -58,6 +58,22 @@ def fixture():
 
 
 class AcademicTests(unittest.TestCase):
+    def test_cancel_after_publication_returns_saved_copy(self):
+        import threading
+        from word_formatter.storage import save_document
+        event = threading.Event()
+
+        def save_then_cancel(doc, path):
+            save_document(doc, path)
+            event.set()
+
+        with patch("word_formatter.academic.workflow.save_document", side_effect=save_then_cancel), \
+                patch("word_formatter.academic.office_io.finalize") as office:
+            result = run(self.source, self.template, host="word", pdf=True, cancel=event)
+        self.assertTrue(Path(result["output"]).exists())
+        self.assertEqual(result["warnings"][-1]["code"], "cancel-after-save")
+        office.assert_not_called()
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

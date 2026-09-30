@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 from pathlib import Path
 import platform
@@ -18,7 +19,6 @@ import stat
 import subprocess
 import sys
 import textwrap
-import urllib.request
 import venv
 
 
@@ -84,6 +84,7 @@ def prepare_clean_venv(target: str, reuse: bool = False) -> Path:
     py = venv_python(venv_dir)
     run([str(py), "-m", "pip", "install", "--upgrade", "pip"])
     run([str(py), "-m", "pip", "install", "-r", str(ROOT / "requirements-build.txt")])
+    run([str(py), "-m", "pip", "install", "--no-deps", str(ROOT)])
     return py
 
 
@@ -154,6 +155,10 @@ def windows_tcl_tk_build_env(py: Path) -> dict[str, str]:
 
 def pyinstaller_base(py: Path, target: str) -> list[str]:
     target_build = BUILD_ROOT / target
+    notices = target_build / "THIRD-PARTY-NOTICES"
+    if notices.exists():
+        shutil.rmtree(notices)
+    run([str(py), str(ROOT / "packaging" / "collect_notices.py"), str(notices)])
     return [
         str(py),
         "-m",
@@ -176,6 +181,10 @@ def pyinstaller_base(py: Path, target: str) -> list[str]:
         "--collect-data", "babel",
         "--add-data",
         f"{module_file(py, 'docx.parts')}{os.pathsep}docx/parts",
+        "--add-data",
+        f"{ROOT / 'LICENSE'}{os.pathsep}.",
+        "--add-data",
+        f"{notices}{os.pathsep}THIRD-PARTY-NOTICES",
     ]
 
 
@@ -208,23 +217,18 @@ def require_host(expected_system: str, force: bool) -> None:
         )
 
 
-def copy_python_docx_templates_for_macos(py: Path, app_path: Path) -> None:
-    source = Path(
-        python_stdout(
-            py,
-            "from pathlib import Path; import docx; print(Path(docx.__file__).resolve().parent / 'templates')",
-        )
-    )
-    if not source.is_dir():
-        raise SystemExit(f"Missing python-docx templates directory: {source}")
-
-    target = app_path / "Contents" / "Frameworks" / "docx" / "templates"
-    if target.exists():
-        shutil.rmtree(target)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(source, target)
-    (app_path / "Contents" / "Frameworks" / "docx" / "parts").mkdir(parents=True, exist_ok=True)
-    print(f"copied python-docx templates: {source} -> {target}")
+def smoke_test(executable: Path, target: str) -> None:
+    """Validate resources and UI in the frozen process, not the build interpreter."""
+    report = BUILD_ROOT / target / "self-check.json"
+    report.unlink(missing_ok=True)
+    result = subprocess.run([str(executable), "--self-check", str(report)],
+                            cwd=BUILD_ROOT, timeout=120)
+    if result.returncode or not report.exists():
+        raise SystemExit(f"Frozen application check failed; see {report}")
+    data = json.loads(report.read_text(encoding="utf-8"))
+    if not data.get("success"):
+        raise SystemExit(data.get("error", "Frozen application check failed"))
+    print(json.dumps(data, ensure_ascii=False))
 
 
 def build_macos(args: argparse.Namespace) -> Path:
@@ -247,9 +251,13 @@ def build_macos(args: argparse.Namespace) -> Path:
     app_path = dist_dir / f"{PYINSTALLER_NAME}.app"
     if not app_path.exists():
         raise SystemExit(f"Missing app bundle: {app_path}")
-    copy_python_docx_templates_for_macos(py, app_path)
-
-    arch = args.arch or platform.machine()
+    # Resources must be collected before PyInstaller signs the bundle.
+    # Mutating Contents afterwards invalidates the arm64 ad-hoc signature.
+    run(["codesign", "--verify", "--deep", "--strict", str(app_path)])
+    smoke_test(app_path / "Contents" / "MacOS" / PYINSTALLER_NAME, "macos")
+    arch = platform.machine()
+    if args.arch and args.arch != arch:
+        raise SystemExit(f"Cannot label {arch} binaries as {args.arch}; build on that architecture.")
     artifact = RELEASE_DIR / f"{APP_BINARY_BASENAME}.v{__version__}.macOS-{arch}.app.zip"
     RELEASE_DIR.mkdir(exist_ok=True)
     if artifact.exists():
@@ -287,6 +295,7 @@ def build_windows(args: argparse.Namespace) -> Path:
     artifact = RELEASE_DIR / f"{exe_name}.exe"
     RELEASE_DIR.mkdir(exist_ok=True)
     shutil.copy2(built, artifact)
+    smoke_test(artifact, "windows")
     print(f"artifact: {artifact}")
     return artifact
 

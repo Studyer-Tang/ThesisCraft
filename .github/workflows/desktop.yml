@@ -1,0 +1,71 @@
+name: Desktop builds
+
+on:
+  push:
+    branches: [main, 'codex/cross-platform-desktop']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2022
+            target: windows
+            arch: x64
+          - os: macos-15
+            target: macos
+            arch: arm64
+          - os: macos-15-intel
+            target: macos
+            arch: x64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: ${{ matrix.arch }}
+      - run: python -m pip install ".[desktop,windows]"
+      - run: python -m unittest discover -s tests -v
+      - run: python wfp_cli.py test
+      - run: python packaging/build_release.py ${{ matrix.target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ThesisCraft-${{ matrix.target }}-${{ matrix.arch }}
+          path: |
+            release/*.exe
+            release/*.zip
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: validation-${{ matrix.target }}-${{ matrix.arch }}
+          path: build/release/${{ matrix.target }}/self-check.json
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: ThesisCraft-*
+          merge-multiple: true
+          path: release
+      - run: python packaging/build_release.py checksums
+      - name: Publish preview for testing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" release/* --verify-tag --prerelease --title "ThesisCraft $RELEASE_TAG · Windows & macOS" --notes-file docs/RELEASE-v4.1.md

@@ -23,6 +23,18 @@ PNG = base64.b64decode(
 
 
 class PreservationTests(unittest.TestCase):
+    def test_libreoffice_logical_alignment_in_inherited_style(self):
+        doc = Document()
+        para = doc.add_paragraph("跨软件样式继承", style="Body Text")
+        jc = OxmlElement("w:jc")
+        doc.styles["Normal"].element.get_or_add_pPr().append(jc)
+        for value, expected in [("start", WD_ALIGN_PARAGRAPH.LEFT),
+                                ("end", WD_ALIGN_PARAGRAPH.RIGHT)]:
+            jc.set(qn("w:val"), value)
+            self.assertEqual(WordProcessor._get_paragraph_alignment(para), expected)
+        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        self.assertEqual(WordProcessor._get_paragraph_alignment(para), WD_ALIGN_PARAGRAPH.CENTER)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

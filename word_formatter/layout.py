@@ -164,24 +164,28 @@ class LayoutMixin:
 
     @staticmethod
     def _get_paragraph_alignment(para):
-        try:
-            if para.alignment is not None:
-                return para.alignment
-        except ValueError:
-            p_pr = para._p.pPr
+        def read(p_pr):
             jc = p_pr.jc if p_pr is not None else None
             raw = jc.get(qn("w:val")) if jc is not None else None
-            return {
-                "start": WD_ALIGN_PARAGRAPH.LEFT,
-                "end": WD_ALIGN_PARAGRAPH.RIGHT,
-                "both": WD_ALIGN_PARAGRAPH.JUSTIFY,
-                "distribute": WD_ALIGN_PARAGRAPH.JUSTIFY,
-            }.get(raw)
+            if raw is None:
+                return None
+            # Logical alignment is emitted by LibreOffice in inherited styles too.
+            # These documents are laid out left-to-right by the general formatter.
+            raw = {"start": "left", "end": "right"}.get(raw, raw)
+            try:
+                return WD_ALIGN_PARAGRAPH.from_xml(raw)
+            except ValueError:
+                return None
+
+        direct = read(para._p.pPr)
+        if direct is not None:
+            return direct
         style, seen = para.style, set()
         while style is not None and style.style_id not in seen:
             seen.add(style.style_id)
-            if style.paragraph_format.alignment is not None:
-                return style.paragraph_format.alignment
+            inherited = read(style.element.pPr)
+            if inherited is not None:
+                return inherited
             style = style.base_style
         return None
 

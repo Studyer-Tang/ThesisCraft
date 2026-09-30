@@ -4,6 +4,7 @@ import argparse
 from copy import deepcopy
 from pathlib import Path
 import queue
+import sys
 import threading
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
@@ -20,13 +21,14 @@ from .templates import (
 )
 from .structure import scan
 from .workflow import run
+from ..ui_common import scroll_units
 
 PRESETS = {
-    "北京大学硕士（研究生指南）": "pku-master",
-    "北京大学博士（研究生指南）": "pku-doctor",
     "本科通用": "bachelor",
     "硕士通用": "master",
     "博士通用": "doctor",
+    "北京大学硕士（研究生指南）": "pku-master",
+    "北京大学博士（研究生指南）": "pku-doctor",
 }
 CHOICES = {
     "degree": {"本科": "bachelor", "硕士": "master", "博士": "doctor"},
@@ -133,19 +135,28 @@ class AcademicWindow:
     def __init__(self, root, source="", host="none", output_dir=""):
         self.root = root
         from ..ui_common import apply_theme
+
         apply_theme(root)
         self.initial_output = output_dir
-        self.root.title("学研排版 · 论文工作台 | Study-Tang")
-        self.root.geometry("1120x760")
-        self.root.minsize(980, 640)
-        self.template = load_template()
+        self.root.title("ThesisCraft · 学研排版")
+        self.root.geometry("1040x760")
+        self.root.minsize(940, 680)
+        from .templates import template_path
+
+        self.template = (
+            load_template() if template_path().exists() else load_template("master")
+        )
         self.events, self.cancel = queue.Queue(), threading.Event()
         self.worker = None
         self.report = None
+        self.closing = False
+        self.busy_states = {}
         self.vars, self.style_vars = {}, {}
         self.source = tk.StringVar(value=source)
         self.host = tk.StringVar(
             value={"word": "Word", "wps": "WPS"}.get(host, "稍后手动更新")
+            if sys.platform == "win32"
+            else "稍后手动更新"
         )
         self.pdf = tk.BooleanVar(value=False)
         self.refs = tk.StringVar()
@@ -161,19 +172,25 @@ class AcademicWindow:
         self.root.after(120, self.poll)
         self.root.protocol("WM_DELETE_WINDOW", self.close)
         self.root.bind("<MouseWheel>", self.scroll_active_tab)
+        self.root.bind("<Button-4>", self.scroll_active_tab)
+        self.root.bind("<Button-5>", self.scroll_active_tab)
 
     def _build(self):
         outer = ttk.Frame(self.root, padding=16)
         outer.pack(fill="both", expand=True)
-        ttk.Label(outer, text="论文工作台", style="Title.TLabel").pack(
+        ttk.Label(outer, text="ThesisCraft  学研排版", style="Title.TLabel").pack(
             anchor="w"
         )
         ttk.Label(
-            outer, text="把时间留给研究。选好模板，让论文格式保持一致。", style="Muted.TLabel"
+            outer,
+            text="选论文 → 选模板 → 检查并生成副本。文档在本机处理，原件保留。",
+            style="Muted.TLabel",
         ).pack(anchor="w", pady=(2, 12))
         top = ttk.Frame(outer)
         top.pack(fill="x")
-        ttk.Label(top, text="论文文件", style="Muted.TLabel").pack(side="left", padx=(0, 12))
+        ttk.Label(top, text="01  论文文件", style="Muted.TLabel").pack(
+            side="left", padx=(0, 12)
+        )
         ttk.Entry(top, textvariable=self.source).pack(
             side="left", fill="x", expand=True
         )
@@ -183,7 +200,9 @@ class AcademicWindow:
         ttk.Button(top, text="新建论文骨架", command=self.skeleton).pack(side="left")
         presets = ttk.Frame(outer)
         presets.pack(fill="x", pady=10)
-        ttk.Label(presets, text="论文模板", style="Muted.TLabel").pack(side="left", padx=(0, 12))
+        ttk.Label(presets, text="02  论文模板", style="Muted.TLabel").pack(
+            side="left", padx=(0, 12)
+        )
         combo = ttk.Combobox(
             presets,
             textvariable=self.preset,
@@ -193,19 +212,51 @@ class AcademicWindow:
         )
         combo.pack(side="left")
         combo.bind("<<ComboboxSelected>>", self.choose_preset)
-        ttk.Button(presets, text="设为插件默认", command=self.save_default).pack(side="left", padx=8)
+        ttk.Button(presets, text="保存为默认", command=self.save_default).pack(
+            side="left", padx=8
+        )
         more = ttk.Menubutton(presets, text="模板管理 ▾")
         menu = tk.Menu(more, tearoff=False)
-        for title, action in [("导入模板", self.import_template), ("从 Word 样稿读取", self.import_styles), ("导出模板", self.export_template)]:
+        for title, action in [
+            ("导入模板", self.import_template),
+            ("从 Word 样稿读取", self.import_styles),
+            ("导出模板", self.export_template),
+        ]:
             menu.add_command(label=title, command=action)
         more.configure(menu=menu)
         more.pack(side="left")
+        self.advanced_button = ttk.Button(
+            presets, text="高级设置", command=self.toggle_advanced
+        )
+        self.advanced_button.pack(side="right")
         self.scope = ttk.Label(outer, wraplength=1060, foreground="#596779")
         self.scope.pack(anchor="w", pady=(0, 8))
         footer_area = ttk.Frame(outer)
         footer_area.pack(side="bottom", fill="x")
         self.notebook = ttk.Notebook(outer)
-        self.notebook.pack(fill="both", expand=True)
+        self.editable_areas = (top, presets, self.notebook)
+        self.overview = ttk.LabelFrame(outer, text="03  检查与结果", padding=16)
+        self.overview.pack(fill="both", expand=True)
+        self.summary = tk.StringVar()
+        ttk.Label(self.overview, textvariable=self.summary, wraplength=940).pack(
+            anchor="w", pady=(0, 12)
+        )
+        self.result_text = tk.Text(
+            self.overview,
+            height=8,
+            wrap="word",
+            relief="flat",
+            background="white",
+            padx=14,
+            pady=12,
+            state="disabled",
+        )
+        self.result_text.pack(fill="both", expand=True)
+        self.show_result(
+            "先点击“只检查”，了解格式与结构问题；确认模板后生成新的 DOCX。\n\n"
+            "模板以学校当前要求为准。生成后请在 Word/WPS 中核对分页并更新目录。\n"
+            "高级设置中可调整字体、编号、页面，或校正文档结构。"
+        )
         main = self.scroll_tab("1 排版范围")
         self.group_vars = {key: tk.BooleanVar() for key in GROUPS}
         for row, (key, title) in enumerate(GROUPS.items()):
@@ -214,13 +265,27 @@ class AcademicWindow:
             )
         cleanup_box = ttk.LabelFrame(main, text="清理原文格式（全文）", padding=10)
         cleanup_box.grid(row=4, column=0, columnspan=2, sticky="ew", pady=10)
-        for i, (key, label) in enumerate((("bold", "清理原有加粗"),
-                                         ("italic", "清理原有斜体"),
-                                         ("underline", "清理原有下划线"))):
-            self.control(cleanup_box, self.vars, "cleanup." + key, label,
-                         self.template["cleanup"][key], 0, i * 2)
-        ttk.Label(cleanup_box, text="先清理，再按上方勾选的范围应用模板。覆盖正文、表格、页眉页脚和注释；原生公式保留。",
-                  wraplength=920).grid(row=1, column=0, columnspan=6, sticky="w", padx=8, pady=6)
+        for i, (key, label) in enumerate(
+            (
+                ("bold", "清理原有加粗"),
+                ("italic", "清理原有斜体"),
+                ("underline", "清理原有下划线"),
+            )
+        ):
+            self.control(
+                cleanup_box,
+                self.vars,
+                "cleanup." + key,
+                label,
+                self.template["cleanup"][key],
+                0,
+                i * 2,
+            )
+        ttk.Label(
+            cleanup_box,
+            text="先清理，再按上方勾选的范围应用模板。覆盖正文、表格、页眉页脚和注释；原生公式保留。",
+            wraplength=920,
+        ).grid(row=1, column=0, columnspan=6, sticky="w", padx=8, pady=6)
         info = ttk.LabelFrame(main, text="学校和模板版本", padding=10)
         info.grid(row=5, column=0, columnspan=2, sticky="ew", pady=10)
         for i, (key, label) in enumerate(
@@ -350,50 +415,78 @@ class AcademicWindow:
                 "https://grs.pku.edu.cn/xwgz11/xwsy11/bsxw111/clxz09/index.htm"
             ),
         ).pack(anchor="w", pady=4)
-        for title, action in [
+        tool_actions = [
             ("按顺序合并章节…", self.merge),
             ("拆分为章节副本…", self.split),
-            ("连接 Word 工具栏", lambda: self.launch_host("word")),
-            ("连接 WPS 工具栏", lambda: self.launch_host("wps")),
-            ("启用登录后自动连接插件", lambda: self.autostart(True)),
-            ("关闭插件自动连接", lambda: self.autostart(False)),
-        ]:
+            ("打开通用文档模式", self.launch_general),
+        ]
+        if sys.platform == "win32":
+            tool_actions += [
+                ("连接 Word 工具栏", lambda: self.launch_host("word")),
+                ("连接 WPS 工具栏", lambda: self.launch_host("wps")),
+                ("启用登录后自动连接插件", lambda: self.autostart(True)),
+                ("关闭插件自动连接", lambda: self.autostart(False)),
+            ]
+        for title, action in tool_actions:
             ttk.Button(tools, text=title, command=action).pack(anchor="w", pady=5)
         ttk.Label(
             tools,
-            text="自动连接只等待已经打开的 Word/WPS，不会主动打开办公软件。\n合并以第一个文件的页眉页脚为基础；请在合并后应用模板并检查。拆分后跨章引用需在完整论文中更新。",
+            text="合并以第一个文件的页眉页脚为基础；合并后请应用模板并检查。\n拆分后跨章引用需在完整论文中更新。Office 插件与自动导出仅支持 Windows。",
             wraplength=950,
         ).pack(anchor="w", pady=14)
         from ..ui_common import OutputFolder
-        self.output = OutputFolder(footer_area, value=self.initial_output, source=self.source.get)
+
+        self.output = OutputFolder(
+            footer_area, value=self.initial_output, source=self.source.get
+        )
         self.output.pack(fill="x", pady=(14, 0))
         footer = ttk.Frame(footer_area)
         footer.pack(fill="x", pady=(12, 5))
-        ttk.Label(footer, text="更新目录", style="Muted.TLabel").pack(side="left")
-        ttk.Combobox(
-            footer,
-            textvariable=self.host,
-            values=["Word", "WPS", "稍后手动更新"],
-            state="readonly",
-            width=17,
-        ).pack(side="left")
-        ttk.Checkbutton(footer, text="同时生成 PDF", variable=self.pdf).pack(
-            side="left", padx=10
-        )
+        if sys.platform == "win32":
+            ttk.Label(footer, text="更新目录", style="Muted.TLabel").pack(side="left")
+            ttk.Combobox(
+                footer,
+                textvariable=self.host,
+                values=["Word", "WPS", "稍后手动更新"],
+                state="readonly",
+                width=17,
+            ).pack(side="left")
+            ttk.Checkbutton(footer, text="同时生成 PDF", variable=self.pdf).pack(
+                side="left", padx=10
+            )
+        else:
+            ttk.Label(
+                footer,
+                text="目录更新 / PDF：生成后在 Word 或 WPS 中完成",
+                style="Muted.TLabel",
+            ).pack(side="left")
+        self.editable_areas += (footer,)
+        actions = ttk.Frame(footer_area)
+        actions.pack(fill="x", pady=(6, 4))
         self.action_buttons = []
         for title, action in [
             ("只检查", lambda: self.process(True)),
             ("排版并生成副本", lambda: self.process(False)),
         ]:
-            button = ttk.Button(footer, text=title, command=action, style="Primary.TButton" if title == "排版并生成副本" else "TButton")
+            button = ttk.Button(
+                actions,
+                text=title,
+                command=action,
+                style="Primary.TButton" if title == "排版并生成副本" else "TButton",
+            )
             button.pack(side="left", padx=3)
             self.action_buttons.append(button)
-        ttk.Button(footer, text="取消", command=self.cancel.set).pack(
+        ttk.Button(actions, text="取消", command=self.cancel.set).pack(
             side="left", padx=3
         )
-        self.folder_button = ttk.Button(footer, text="结果文件夹", command=self.open_result_folder, state="disabled")
+        self.folder_button = ttk.Button(
+            actions,
+            text="结果文件夹",
+            command=self.open_result_folder,
+            state="disabled",
+        )
         self.folder_button.pack(side="right", padx=(6, 0))
-        ttk.Button(footer, text="打开结果", command=self.open_report).pack(
+        ttk.Button(actions, text="打开结果", command=self.open_report).pack(
             side="right"
         )
         track = ttk.Frame(footer_area, height=4)
@@ -401,7 +494,9 @@ class AcademicWindow:
         track.pack_propagate(False)
         self.progress = ttk.Progressbar(track, mode="indeterminate")
         self.progress.pack(fill="both", expand=True)
-        ttk.Label(footer_area, textvariable=self.status, wraplength=1050).pack(anchor="w")
+        ttk.Label(footer_area, textvariable=self.status, wraplength=1050).pack(
+            anchor="w"
+        )
 
     def tab(self, title):
         frame = ttk.Frame(self.notebook, padding=12)
@@ -428,8 +523,60 @@ class AcademicWindow:
 
     def scroll_active_tab(self, event):
         canvas = self.scroll_canvases.get(self.notebook.select())
-        if canvas is not None:
-            canvas.yview_scroll(-int(event.delta / 120), "units")
+        if (
+            canvas is not None
+            and self.notebook.winfo_ismapped()
+            and not isinstance(event.widget, (ttk.Combobox, ttk.Entry))
+        ):
+            canvas.yview_scroll(scroll_units(event), "units")
+
+    def toggle_advanced(self):
+        advanced = bool(self.notebook.winfo_manager())
+        (self.notebook if advanced else self.overview).pack_forget()
+        (self.overview if advanced else self.notebook).pack(fill="both", expand=True)
+        self.advanced_button.configure(text="高级设置" if advanced else "返回简洁首页")
+        if advanced:
+            try:
+                self.update_summary(self.collect())
+            except Exception as exc:
+                self.error(exc)
+
+    def update_summary(self, template):
+        self.summary.set(
+            "本次范围：" + " · ".join(GROUPS[k] for k in template["enabled"])
+        )
+
+    def show_result(self, text):
+        self.result_text.configure(state="normal")
+        self.result_text.delete("1.0", "end")
+        self.result_text.insert("1.0", text)
+        self.result_text.configure(state="disabled")
+
+    def lock_inputs(self, busy):
+        def walk(widget):
+            for child in widget.winfo_children():
+                yield child
+                yield from walk(child)
+
+        if busy:
+            for area in self.editable_areas:
+                for widget in walk(area):
+                    if isinstance(
+                        widget,
+                        (
+                            ttk.Entry,
+                            ttk.Button,
+                            ttk.Menubutton,
+                            ttk.Checkbutton,
+                            ttk.Combobox,
+                        ),
+                    ):
+                        self.busy_states[widget] = widget.state()
+                        widget.state(["disabled"])
+        else:
+            for widget, state in self.busy_states.items():
+                widget.state(["!disabled", *state])
+            self.busy_states.clear()
 
     def settings_tab(self, title, sections):
         content = self.scroll_tab(title)
@@ -533,6 +680,7 @@ class AcademicWindow:
         for key, binding in self.style_vars.items():
             self.set_value(binding, self.template["styles"][self.current_style][key])
         self.scope.configure(text=self.template["scope"])
+        self.update_summary(self.template)
         self.preview_style()
 
     def collect(self):
@@ -590,7 +738,7 @@ class AcademicWindow:
         if path:
             self.source.set(path)
             self.template["structure_overrides"] = {}
-            self.read_structure()
+            self.status.set("已选择论文。点击“只检查”开始，或在高级设置中读取结构。")
 
     def import_template(self):
         path = filedialog.askopenfilename(
@@ -639,7 +787,7 @@ class AcademicWindow:
             template = self.collect()
             template["structure_overrides"] = {}
             save_template(template)
-            self.status.set("已保存。Word/WPS“快速论文排版”下次使用这些设置。")
+            self.status.set("已保存。下次打开工作台时使用这些设置。")
         except Exception as exc:
             self.error(exc)
 
@@ -727,6 +875,7 @@ class AcademicWindow:
         host = {"Word": "word", "WPS": "wps"}.get(self.host.get())
         pdf = self.pdf.get()
         self.cancel.clear()
+        self.lock_inputs(True)
         self.progress.start()
         self.output.set_busy(True)
         self.status.set("正在检查论文…" if check_only else "正在生成排版副本…")
@@ -766,26 +915,49 @@ class AcademicWindow:
                     continue
                 self.progress.stop()
                 self.output.set_busy(False)
+                self.lock_inputs(False)
                 for b in self.action_buttons:
                     b.configure(state="normal")
                 if kind == "error":
-                    self.error(payload)
+                    if self.cancel.is_set():
+                        self.status.set(payload)
+                    else:
+                        self.error(payload)
                 else:
                     self.report = payload
                     self.folder_button.configure(state="normal")
-                    self.status.set("完成：" + (payload.get("output") or payload["report"]))
-                    self.open_report()
-                    if payload.get('output') and payload.get('warnings'):
-                        messagebox.showwarning('副本已生成，请注意', '\n'.join(
-                            str(item['message']) for item in payload['warnings'][:3]), parent=self.root)
+                    self.status.set(
+                        "完成：" + (payload.get("output") or payload["report"])
+                    )
+                    issues = payload.get("after_issues", payload["before_issues"])
+                    lines = [
+                        "副本已保存，原件保留。"
+                        if payload.get("output")
+                        else "检查完成，文档未修改。",
+                        f"共 {len(issues)} 条检查提示；这些提示不等于最终版式验收。",
+                    ]
+                    lines += ["• " + item["action"] for item in payload["changes"]]
+                    lines += ["", "需要核对："] + [
+                        "• " + item["message"] for item in issues[:20]
+                    ]
+                    if len(issues) > 20:
+                        lines.append("其余提示请通过“只检查”生成完整报告。")
+                    lines += ["", payload.get("output") or payload["report"]]
+                    self.show_result("\n".join(lines))
+                    if self.notebook.winfo_manager():
+                        self.toggle_advanced()
         except queue.Empty:
             pass
+        if self.closing and not (self.worker and self.worker.is_alive()):
+            self.root.destroy()
+            return
         self.root.after(120, self.poll)
 
     def open_result_folder(self):
         if self.report:
             from ..ui_common import open_folder
-            path = self.report.get('output') or self.report.get('report')
+
+            path = self.report.get("output") or self.report.get("report")
             if path:
                 try:
                     open_folder(Path(path).parent)
@@ -794,15 +966,20 @@ class AcademicWindow:
 
     def open_report(self):
         if self.report:
-            output = self.report.get('output')
+            output = self.report.get("output")
             if output:
                 from .plugin import open_document
+
                 try:
-                    open_document(output, {"Word": "word", "WPS": "wps"}.get(self.host.get()))
+                    open_document(
+                        output, {"Word": "word", "WPS": "wps"}.get(self.host.get())
+                    )
                 except Exception as exc:
-                    self.status.set('副本已保存：' + output + '；自动打开失败：' + str(exc))
-            elif self.report.get('report'):
-                webbrowser.open(Path(self.report['report']).as_uri())
+                    self.status.set(
+                        "副本已保存：" + output + "；自动打开失败：" + str(exc)
+                    )
+            elif self.report.get("report"):
+                webbrowser.open(Path(self.report["report"]).as_uri())
 
     def merge(self):
         paths = filedialog.askopenfilenames(
@@ -869,6 +1046,11 @@ class AcademicWindow:
 
         launch(["--office", host])
 
+    def launch_general(self):
+        from .plugin import launch
+
+        launch(["--general"])
+
     def select_asset(self, key, pattern):
         path = filedialog.askopenfilename(
             parent=self.root, filetypes=[("资料文件", pattern)]
@@ -895,6 +1077,7 @@ class AcademicWindow:
 
     def close(self):
         if self.worker and self.worker.is_alive():
+            self.closing = True
             self.cancel.set()
             self.status.set("已请求取消，请等待当前保存或 Office 更新结束。")
             return

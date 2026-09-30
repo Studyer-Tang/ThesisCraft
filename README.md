@@ -2,28 +2,28 @@
 
 **让论文排版更省心。** 面向本科生、硕士生和博士生的本地论文排版工具，也保留公文与普通文档排版。作者与维护者：**Study-Tang**；开发辅助：**GPT**。
 
-[下载 Windows 免安装版](https://github.com/Studyer-Tang/ThesisCraft/releases/latest) · [完整使用说明](docs/THESIS-GUIDE.md) · [反馈问题](https://github.com/Studyer-Tang/ThesisCraft/issues)
+[下载 Windows / Mac 预览版](https://github.com/Studyer-Tang/ThesisCraft/releases) · [使用说明](docs/THESIS-GUIDE.md) · [构建与兼容说明](docs/DESKTOP-BUILD.md) · [反馈问题](https://github.com/Studyer-Tang/ThesisCraft/issues)
 
-## Windows 快速开始
+## Windows 与 Mac 快速开始
 
-1. 在发布页下载 `ThesisCraft.v4.0.7.Windows-portable.zip`，解压到固定文件夹，无需安装 Python。
-2. 双击 `Paper-Studio.cmd` 打开论文工作台，选择论文和模板，先检查，再生成排版副本。
-3. 在 Word 或 WPS 中检查生成的文档；需要目录与引用更新、PDF 时，选择对应的 Office 宿主。
+4.1 预览版统一了桌面入口，首次打开只显示三个步骤：**选择论文 → 选择模板 → 检查与生成副本**。字体、页码、图表、文献等配置收进“高级设置”，完成后在首页查看处理结果。
 
-| 入口 | 用途 |
-| --- | --- |
-| `Paper-Studio.cmd` | 论文工作台：模板、字体、编号、检查和导出 |
-| `Word-Plugin.cmd` | 打开 Word 学研排版操作窗口 |
-| `WPS-Plugin.cmd` | 打开 WPS 学研排版操作窗口 |
-| `Install-Native-Addin.cmd` | 安装原生“学研排版”选项卡，之后随 Word/WPS 启动 |
-| `Uninstall-Native-Addin.cmd` | 卸载原生选项卡，保留模板与桌面程序 |
-| `Desktop.cmd` | 通用桌面程序，支持批量公文排版 |
+1. 在发布页下载对应系统的 4.1 预览版：Windows 选 `.exe`；Apple 芯片 Mac 选 `macOS-arm64.app.zip`；Intel Mac 选 `macOS-x86_64.app.zip`。
+2. Windows 双击 EXE；Mac 解压后把 `ThesisCraft.app` 拖到“应用程序”并打开。无需安装 Python。
+3. 选择本地 DOCX 和适用模板，先“只检查”，再“排版并生成副本”。点击“打开结果”，在 Word/WPS 中核对分页、目录、公式和引用。
 
-插件使用前先打开并保存本地文档，再启动对应入口。独立的“学研排版”操作窗口会显示当前连接的文档名，提供快速论文排版、论文设置、插入编号/引用、更新目录与引用、导出 PDF。多个 Office 窗口同时打开时，优先连接最近查看的文档窗口；切换独立实例后，点击“连接当前文档”。即使功能区未显示传统工具栏，也能在操作窗口中使用这些功能。正常排版只生成一个新的 DOCX，不自动保存或打开报告；点击“只检查”才生成检查报告，PDF 需主动选择导出。使用面板排版期间请保持面板运行；安装原生入口后无需另开登录自启程序，可随时从功能区重新打开面板。
+| 功能 | Windows | macOS |
+| --- | --- | --- |
+| DOCX 排版、模板、检查报告、文献样式 | 支持 | 支持 |
+| 生成独立副本、打开文档与结果文件夹 | 支持 | 支持 |
+| 自动更新目录与导出 PDF | 需安装 Word/WPS | 在 Word/WPS 中手动完成 |
+| Word/WPS 原生功能区 | 另用历史插件安装包 | 不支持 |
 
-**4.0.4 已支持原生 COM 功能区自动加载。** 双击 `Install-Native-Addin.cmd` 一次，正常重启 Word/WPS 后会出现“学研排版”选项卡，点击“打开排版面板”即可使用。仅注册当前用户，无需管理员或开启宏；不是 Office 商店加载项。原生入口采用 Rust DLL，排版核心在独立进程中运行。本机 Word 16.0（64 位）与 WPS 12.1.0.28043（32 位）已验证自动加载及按钮启动；其他版本仍需验证。[原生插件说明](addins/native/README.md)
+首用默认“硕士通用”，可选择本科、博士或学校预设；已有自定义默认模板会继续使用。文档只在本机处理，不需要 AI API。模板字体需在本机可用，最终版式以学校要求及提交使用的办公软件为准。
 
-免注册的外部操作窗口、登录后自动连接、桌面版和命令行继续保留。旧 C#/.NET DLL 已停止推荐，原生 Rust 入口替代其自动加载职责。
+**发行状态：4.1 为预览版，尚无 Apple Developer ID 公证 / Windows 发布者证书。** 系统首次打开可能提示未验证发布者；请确认来自本仓库，并按系统提供的单次允许流程打开，无需关闭系统安全保护。[发布说明](docs/RELEASE-v4.1.md)
+
+原有公文与批量处理保留在“高级设置 → 章节与插件 → 打开通用文档模式”。旧版插件安装包和使用方法见[原生插件说明](addins/native/README.md)。4.1 独立 EXE 不包含原生插件 DLL；旧版 `Paper-Studio.cmd` 等入口无需继续用于新桌面版。
 
 ## 已有功能
 
@@ -49,12 +49,12 @@ git clone https://github.com/Studyer-Tang/ThesisCraft.git
 cd ThesisCraft
 python -m venv .venv
 .venv\Scripts\python.exe -m pip install -e ".[desktop,windows]"
-.venv\Scripts\python.exe wfp.py --academic
+.venv\Scripts\python.exe -m word_formatter
 ```
 
 安装后也可用 `thesiscraft-desktop` 打开论文工作台。源码内 `start-paper-studio.cmd`、`start-word-plugin.cmd`、`start-wps-plugin.cmd` 会优先使用本地构建的 EXE，否则使用 `.venv`。
 
-macOS/Linux 可安装 `.[desktop]`，CLI 安装 `.` 即可；Office 工具栏和自动 PDF 导出需要 Windows 桌面 Word/WPS。新论文 GUI 在 macOS/Linux 上尚未验收。
+macOS 可安装 `.[desktop]` 后运行 `python -m word_formatter`；CLI 安装 `.` 即可。Mac 桌面构建包含原生 GUI 与排版核心。Linux CLI 继续保留，桌面分发不在本次验收范围。
 
 ## 命令行
 
@@ -74,7 +74,7 @@ thesiscraft format -i report.docx
 thesiscraft format -i ./documents -o ./formatted
 ```
 
-命令行还提供 `wfp` 和 `paper-studio` 别名；`wfp-desktop` 与 `python wfp.py` 打开通用桌面程序。Windows 配置保存在 `%APPDATA%/Study-Tang/ThesisCraft/`，可在界面中导入自己的配置。
+命令行还提供 `wfp` 和 `paper-studio` 别名；`wfp-desktop` 与 `python wfp.py --general` 打开通用桌面程序；`python wfp.py` 默认打开论文首页。Windows 配置保存在 `%APPDATA%/Study-Tang/ThesisCraft/`，可在界面中导入自己的配置。
 
 ## 模板依据与使用边界
 

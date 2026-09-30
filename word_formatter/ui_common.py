@@ -70,6 +70,16 @@ def open_folder(path):
         subprocess.Popen(['open' if sys.platform == 'darwin' else 'xdg-open', path])
 
 
+def scroll_units(event):
+    """Tk uses small deltas on macOS, 120-unit ticks on Windows, buttons on X11."""
+    if getattr(event, 'num', None) in (4, 5):
+        return -1 if event.num == 4 else 1
+    delta = event.delta
+    if not delta:
+        return 0
+    return -int(delta) if sys.platform == 'darwin' else (-1 if delta > 0 else 1) * max(1, abs(int(delta / 120)))
+
+
 class OutputFolder(ttk.Frame):
     def __init__(self, parent, value='', source=None):
         super().__init__(parent)
