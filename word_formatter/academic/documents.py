@@ -9,6 +9,7 @@ from docx.text.paragraph import Paragraph
 from ..storage import save_document, ensure_distinct_paths
 from .structure import scan
 from .xmlutil import element, field
+from .content import body_text_blocks
 
 
 def landscape_tables(doc, template):
@@ -209,7 +210,7 @@ def inspect_pdf(path):
     )
 
 
-def add_glossary(doc, path, template):
+def add_glossary(doc, path, template, changes=None):
     import csv
     from .layout import apply_style
     from .xmlutil import set_child
@@ -224,6 +225,10 @@ def add_glossary(doc, path, template):
     for table in list(doc.tables):
         caption = table._tbl.tblPr.find(qn("w:tblCaption"))
         if caption is not None and caption.get(qn("w:val")) == "PaperStudioGlossary":
+            if changes is not None:
+                changes.extend(dict(index=-1, action="重建本工具生成的符号表条目",
+                                    content_before=text, content_after="")
+                               for text in body_text_blocks(table._tbl))
             table._tbl.getparent().remove(table._tbl)
     heading = next(
         (

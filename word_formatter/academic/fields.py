@@ -20,6 +20,7 @@ from .templates import STYLE_NAMES
 from .structure import MARKER, CAPTION
 from .layout import apply_style
 from ..ooxml import paragraph_runs, replace_text_nodes
+from .content import paragraph_text, content_change, replace_marker_text
 
 
 def substitute(paragraph, start, end, nodes):
@@ -120,6 +121,7 @@ def number_captions(doc, items, template, changes, warnings):
             if existing:
                 targets[key] = existing[0]
             continue
+        original_text = paragraph_text(p)
         is_equation = token == "eq"
         if not is_equation and not plain(p):
             warnings.append(
@@ -147,6 +149,8 @@ def number_captions(doc, items, template, changes, warnings):
                 field(p, f"REF {prior} \\h", "", numeric)
                 p.add_run(" " + caption.group(3))
                 apply_style(p, "caption_en", template)
+                changes.append(dict(index=item.index, action="英文题注共用原题注编号",
+                                    **content_change(original_text, " " + caption.group(3))))
                 continue
         counters[token] = counters.get(token, 0) + 1
         number = counters[token]
@@ -171,7 +175,9 @@ def number_captions(doc, items, template, changes, warnings):
             replace_text_nodes(list(paragraph_runs(p)), "")
         else:
             body = ""
+            equation_text = original_text
             if marker and plain(p):
+                equation_text = marker.group(3)
                 replace_text_nodes(list(paragraph_runs(p)), marker.group(3))
             # Inline formulas are not made into separately numbered display formulas.
             if (
@@ -230,6 +236,12 @@ def number_captions(doc, items, template, changes, warnings):
         bookmark(p, name, first_run._r, last_run)
         if body:
             p.add_run("　" + body)
+        if is_equation:
+            expected_text = ("\t" + equation_text + "\t" + config["equation_brackets"][0]
+                             + (config["separator"] if chapter_numbered else "")
+                             + config["equation_brackets"][1])
+        else:
+            expected_text = label + (config["separator"] if chapter_numbered else "") + ("　" + body if body else "")
         apply_style(p, item.kind, template)
         targets[key] = name
         # Explicit markers use their user key; stable generated bookmarks make Word REF editable.
@@ -239,6 +251,7 @@ def number_captions(doc, items, template, changes, warnings):
                 action="建立题注/公式编号与引用目标",
                 key=key,
                 bookmark=name,
+                **content_change(original_text, expected_text),
             )
         )
         if template["figures"]["keep_caption"]:
@@ -257,11 +270,12 @@ def has_field_in_paragraph(p, code):
     )
 
 
-def cross_references(doc, targets, warnings):
+def cross_references(doc, targets, warnings, changes=None):
     pattern = re.compile(r"\{\{ref:(?:(fig|table|eq):)?([\w.-]+)\}\}")
     names = {n.get(qn("w:name")) for n in doc.element.iter(qn("w:bookmarkStart"))}
     for index, p in enumerate(doc.paragraphs):
         for match in reversed(list(pattern.finditer(p.text))):
+            original_text = paragraph_text(p)
             token, key = match.groups()
             name = bookmark_name(token + ":" + key) if token else targets.get(key)
             if not name or name not in names:
@@ -282,6 +296,9 @@ def cross_references(doc, targets, warnings):
                         message="引用标记位于复杂段落，请通过插件插入。",
                     )
                 )
+            elif changes is not None:
+                changes.append(dict(index=index, action="替换交叉引用标记为域",
+                                    **content_change(original_text, replace_marker_text(original_text, match.group(), ""))))
 
 
 def add_contents(doc, template, changes):

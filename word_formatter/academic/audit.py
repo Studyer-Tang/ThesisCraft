@@ -9,6 +9,8 @@ import re
 from docx.oxml.ns import qn
 from .structure import scan
 from .templates import STYLE_NAMES, STYLE_LABELS
+from .content import body_text_blocks
+from .style_audit import EffectiveFormatting, text_runs, check_paragraph
 
 
 def inventory(doc):
@@ -54,11 +56,12 @@ def inventory(doc):
         n.get(qn("w:instr"), "") for n in doc.element.iter(qn("w:fldSimple"))
     ]
     objects["text_count"] = sum(len(n.text or "") for n in doc.element.iter(qn("w:t")))
+    objects["body_text"] = body_text_blocks(doc.element.body)
     objects["paragraphs"] = len(doc.paragraphs)
     return objects
 
 
-def compare_inventory(before, after):
+def compare_inventory(before, after, allowed_content_changes=()):
     losses = []
     for key in (
         "/word/media/",
@@ -73,12 +76,38 @@ def compare_inventory(before, after):
     for key in ("bookmarks", "field_codes", "simple_fields"):
         if Counter(before[key]) - Counter(after[key]):
             losses.append(key)
+    content_checked = "body_text" in before and "body_text" in after
+    missing_text = Counter()
+    accepted_changes = 0
+    if content_checked:
+        expected = Counter(before["body_text"])
+        # Only exact rewrites recorded at the mutation site can change the baseline.
+        # A changed character count or a blanket workflow allowance is insufficient.
+        for change in allowed_content_changes:
+            if "content_before" not in change or "content_after" not in change:
+                continue
+            old, new = change["content_before"], change["content_after"]
+            if old == new or not old or not expected[old]:
+                continue
+            expected[old] -= 1
+            if new:
+                expected[new] += 1
+            accepted_changes += 1
+        missing_text = expected - Counter(after["body_text"])
+        if missing_text:
+            losses.append("body_text")
     return dict(
         passed=not losses,
         lost_categories=losses,
         source_characters=before["text_count"],
         output_characters=after["text_count"],
-        note="比较图片/嵌入对象/自定义XML、公式、修订节点、书签和原有域；文字数量包含新增目录和编号，不代表视觉分页验收。",
+        content_checked=content_checked,
+        missing_body_blocks=sum(missing_text.values()),
+        allowed_body_changes=accepted_changes,
+        note="比较图片/嵌入对象/自定义XML、公式、修订节点、书签和原有域；"
+             + ("逐段保护正文、表格、链接和文本框的文字及重复次数，只允许明确记录的编号/标记/生成条目改写及新增段落。"
+                if content_checked else "旧清单未包含正文文字，未执行文字保护检查。")
+             + "域缓存、原生公式、删除修订、页眉页脚和注释不属于此文字比较；不验证段落顺序、字体实际渲染或视觉分页。",
     )
 
 
@@ -104,8 +133,11 @@ def audit(doc, template):
             )
     last_level = 0
     paragraphs = list(doc.paragraphs)
+    formatting = EffectiveFormatting(doc)
+    field_state = dict(depth=0, skipped=False)
     for item in items:
         p = paragraphs[item.index]
+        runs = list(text_runs(p, field_state))
         key = (
             item.kind
             if item.kind in STYLE_NAMES
@@ -141,24 +173,12 @@ def audit(doc, template):
                     item.index,
                     group="numbering",
                 )
-        if key and key in template["style_keys"] and item.text and "styles" in template["enabled"]:
+        has_inline_object = any(next(p._p.iter(qn(tag)), None) is not None
+                                for tag in ("m:oMath", "wp:inline", "w:object", "w:pict"))
+        if (key and key in template["style_keys"] and (item.text or has_inline_object)
+                and "styles" in template["enabled"]):
             spec = template["styles"][key]
-            style = p.style
-            run = next((r for r in p.runs if r.text.strip()), None)
-            if run is not None:
-                chain = [run.font]
-                seen = set()
-                while style is not None and style.style_id not in seen:
-                    seen.add(style.style_id)
-                    chain.append(style.font)
-                    style = style.base_style
-                size = next((f.size.pt for f in chain if f.size is not None), None)
-                if size is not None and abs(size - spec["size"]) > 0.1:
-                    issue(
-                        "font-size",
-                        f"字号 {size:g} 磅，模板要求 {spec['size']:g} 磅。",
-                        item.index,
-                    )
+            check_paragraph(p, spec, formatting, runs, issue, item.index)
             if p.style.name != STYLE_NAMES[key]:
                 issue("style", "建议应用样式：" + STYLE_NAMES[key], item.index)
         if "{{" in item.text or "【" in item.text:
@@ -182,6 +202,20 @@ def audit(doc, template):
                 group="references",
             )
     for n, section in enumerate(doc.sections):
+        if "pages" in template["enabled"] and template["page"]["paper_size"] != "preserve":
+            width, height = ((21, 29.7) if template["page"]["paper_size"] == "A4"
+                             else (21.59, 27.94))
+            from docx.enum.section import WD_ORIENT
+
+            if section.orientation == WD_ORIENT.LANDSCAPE and (
+                template["page"]["preserve_landscape"] or template["tables"]["landscape_wide"]
+            ):
+                width, height = height, width
+            if (section.page_width is None or section.page_height is None
+                    or abs(section.page_width.cm - width) > 0.03
+                    or abs(section.page_height.cm - height) > 0.03):
+                issue("paper-size", f"第 {n + 1} 节纸型/方向与模板 {template['page']['paper_size']} 不符。",
+                      group="pages")
         for key in ("top", "bottom", "left", "right"):
             actual = getattr(section, key + "_margin")
             if ("pages" in template["enabled"] and template["page"]["set_margins"]
@@ -191,6 +225,11 @@ def audit(doc, template):
                     f"第 {n + 1} 节{key}页边距为 {actual.cm:.2f}cm，要求 {template['page'][key]:g}cm。",
                     group="pages",
                 )
+    if "styles" in template["enabled"]:
+        issue("format-coverage", "格式检查逐个解析已识别正文段落及超链接文字的直接格式、字符/段落样式、文档默认值和可解析主题；"
+              "表格条件样式、页眉页脚、脚注尾注、文本框和修订内部格式需人工核对。"
+              "域缓存、原生数学、上下标及复杂文字专用格式保留，需人工核对。",
+              severity="info")
     names = {n.get(qn("w:name")) for n in doc.element.iter(qn("w:bookmarkStart"))}
     codes = [n.text or "" for n in doc.element.iter(qn("w:instrText"))] + [
         n.get(qn("w:instr"), "") for n in doc.element.iter(qn("w:fldSimple"))
@@ -304,7 +343,7 @@ def write_report(directory, report):
     integrity = report.get("integrity")
     integrity_text = (
         (
-            "图片、公式、嵌入对象及原有引用保护检查："
+            "正文文字、图片、公式、嵌入对象及原有引用保护检查："
             + ("通过" if integrity["passed"] else "未通过")
         )
         if integrity
@@ -341,7 +380,7 @@ def write_report(directory, report):
 <details><summary>规范来源与人工核对事项</summary><ul>{''.join('<li>' + esc(item) + '</li>' for item in report.get('manual_checks', []))}</ul>{''.join('<p>' + esc(url) + '</p>' for url in report.get('template_sources', []))}</details>
 <p>{result_link}<a class="button" href="{esc(source_link)}">打开原件 / 回退</a></p>
 <p class="status">错误 {counts["error"]} · 待确认 {counts["warning"]} · 提示 {counts["info"]}<br>原件始终保留。此报告检查结构与格式，最终分页请在 Word/WPS 或 PDF 预览中确认。</p>
-<p>{esc(integrity_text)}</p><p>{esc(office_text)}</p>{preview}
+<p>{esc(integrity_text)}</p><p>{esc(integrity.get('note', '') if integrity else '')}</p><p>{esc(office_text)}</p>{preview}
 <button onclick="filter('all')">全部</button><button onclick="filter('error')">只看错误</button><button onclick="filter('warning')">待确认</button>
 <table id="issues"><thead><tr><th style="width:90px">级别</th><th style="width:70px">段落</th><th>问题与建议</th></tr></thead><tbody>{rows}</tbody></table>
 <details><summary>排版前后变化（文字层面）</summary><table><tr><th>段落</th><th>操作</th><th>原内容</th><th>新内容</th></tr>{changes}</table></details>

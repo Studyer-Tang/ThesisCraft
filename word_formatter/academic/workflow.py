@@ -132,12 +132,12 @@ def run(
                 targets = number_captions(
                     doc, items, template, report["changes"], report["warnings"]
                 )
-                cross_references(doc, targets, report["warnings"])
+                cross_references(doc, targets, report["warnings"], report["changes"])
             if "tables" in groups:
                 if template["glossary_path"]:
                     from .documents import add_glossary
 
-                    count = add_glossary(doc, template["glossary_path"], template)
+                    count = add_glossary(doc, template["glossary_path"], template, report["changes"])
                     report["changes"].append(
                         dict(index=-1, action=f"生成 {count} 条符号/缩略语释义")
                     )
@@ -184,10 +184,10 @@ def run(
 
             normalize_order(doc)
             after = inventory(doc)
-            report["integrity"] = compare_inventory(before, after)
+            report["integrity"] = compare_inventory(before, after, report["changes"])
             if not report["integrity"]["passed"]:
                 raise RuntimeError(
-                    "对象完整性检查未通过，未发布排版副本："
+                    "文字/对象完整性检查未通过，未发布排版副本："
                     + ", ".join(report["integrity"]["lost_categories"])
                 )
             step("正在保存排版副本…")
@@ -223,11 +223,13 @@ def run(
                         if office.get("success"):
                             staged_document = Document(stage)
                             host_inventory = inventory(staged_document)
-                            checked = compare_inventory(before, host_inventory)
+                            checked = compare_inventory(after, host_inventory)
                             # Office legitimately rewrites XML; binary media loss is still unacceptable.
                             binaries_lost = [
                                 s for s in checked["lost_categories"] if s.startswith("/")
                             ]
+                            if "body_text" in checked["lost_categories"]:
+                                binaries_lost.append("正文文字")
                             # Office rewrites equation/revision XML, so byte hashes
                             # differ legitimately; disappearing objects do not.
                             for tag, label in (("m:oMath", "公式"),
@@ -249,9 +251,14 @@ def run(
                                 binaries_lost.append("文献管理器域")
                             if binaries_lost:
                                 raise RuntimeError(
-                                    "Office 更新后嵌入对象发生变化："
+                                    "Office 更新后文字或受保护对象发生变化："
                                     + ", ".join(binaries_lost)
                                 )
+                            report["office_integrity"] = dict(
+                                content_checked=checked["content_checked"],
+                                missing_body_blocks=checked["missing_body_blocks"],
+                                note=checked["note"],
+                            )
                             publish_file(stage, destination, overwrite=True)
                             if office.get("pdf"):
                                 pdf_path = destination.with_suffix(".pdf")

@@ -10,6 +10,7 @@ from docx.text.paragraph import Paragraph
 from .templates import STYLE_NAMES
 from .xmlutil import element, set_child, set_font, plain, copy_section_end, field
 from ..ooxml import paragraph_runs, replace_text_nodes, iter_tables
+from .content import paragraph_text, content_change
 
 ALIGNS = dict(
     left=WD_ALIGN_PARAGRAPH.LEFT,
@@ -259,10 +260,17 @@ def number_headings(doc, items, template, changes):
                 dict(index=item.index, action="保留复杂标题编号，需人工确认")
             )
             continue
+        original_text = paragraph_text(p)
+        expected_text = original_text
         if item.prefix:
             runs = list(paragraph_runs(p))
             old = "".join(r.text for r in runs)
-            replace_text_nodes(runs, old[len(item.prefix) :])
+            leading = len(original_text) - len(original_text.lstrip())
+            if not original_text[leading:].startswith(item.prefix):
+                raise RuntimeError("标题编号与原文不符，未放行文字改写。")
+            expected_text = original_text[:leading] + original_text[leading + len(item.prefix):]
+            # The same deterministic operation is performed on actual text nodes.
+            replace_text_nodes(runs, old[:leading] + old[leading + len(item.prefix):])
         appendix = item.kind == "appendix"
         p.style = STYLE_NAMES[item.kind]
         num = set_child(p._p.get_or_add_pPr(), "w:numPr")
@@ -277,6 +285,7 @@ def number_headings(doc, items, template, changes):
                 action="应用可更新的多级编号",
                 before=item.text,
                 after=p.text,
+                **content_change(original_text, expected_text),
             )
         )
 
