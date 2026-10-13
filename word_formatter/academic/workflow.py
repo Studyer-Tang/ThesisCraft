@@ -174,7 +174,7 @@ def run(
                     for i, p in enumerate(doc.paragraphs)
                     if p._p in kinds
                 }
-                paginate(doc, scan(doc, final_overrides), template, report["changes"])
+                paginate(doc, scan(doc, final_overrides, template["course"]), template, report["changes"])
             if "figures" in groups:
                 count = format_images(doc, template)
                 report["changes"].append(

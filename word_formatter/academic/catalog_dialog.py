@@ -7,10 +7,18 @@ import webbrowser
 from . import catalog
 
 
+def _public_links(profile):
+    """Community references may have provenance metadata without a public URL."""
+    return [
+        url for url in catalog.profile_template(profile)["sources"]
+        if isinstance(url, str) and url.startswith(("https://", "http://"))
+    ]
+
+
 class CatalogDialog(tk.Toplevel):
     def __init__(self, parent, on_apply, on_document):
         super().__init__(parent)
-        self.title("高校规范与 Word 模板")
+        self.title("高校规范与课程参考模板")
         self.geometry("980x680")
         self.minsize(780, 560)
         self.transient(parent)
@@ -20,7 +28,7 @@ class CatalogDialog(tk.Toplevel):
         frame = ttk.Frame(self, padding=16)
         frame.pack(fill="both", expand=True)
         ttk.Label(
-            frame, text="排版配置可离线使用；官方原件通过来源链接获取，或选择已下载的样稿。"
+            frame, text="排版配置可离线使用；公开规范提供来源链接，社区参考格式单独说明来历。"
         ).pack(anchor="w")
         filters = ttk.Frame(frame)
         filters.pack(fill="x", pady=10)
@@ -77,7 +85,7 @@ class CatalogDialog(tk.Toplevel):
         self.import_button = ttk.Button(actions, text="导入官方 DOCX…", command=self.import_original)
         self.import_button.pack(side="left", padx=8)
         self.link_button = ttk.Button(
-            actions, text="查看官方来源", command=self.open_source
+            actions, text="查看公开来源", command=self.open_source
         )
         self.link_button.pack(side="right")
         self.search()
@@ -107,7 +115,7 @@ class CatalogDialog(tk.Toplevel):
                 ),
             )
         self.count.configure(
-            text=f"找到 {len(self.rows)} 项 · 收录核对日期 2026-09-30 · 以学校最新通知为准"
+            text=f"找到 {len(self.rows)} 项 · 具体来源及核对日期见详情 · 以课程或学校要求为准"
         )
         if self.rows:
             self.tree.selection_set(next(iter(self.rows)))
@@ -130,12 +138,22 @@ class CatalogDialog(tk.Toplevel):
                 self.apply_button.configure(state="disabled")
             self.word_button.configure(text="新建可编辑 DOCX…")
             self.import_button.configure(state="normal" if p.get("word_source") else "disabled")
+            self.link_button.configure(state="normal" if _public_links(p) else "disabled")
             text = p["name"] + "\n\n" + t["scope"] + "\n\n需要核对：\n"
             text += "\n".join("• " + item for item in t["manual_checks"])
-            text += "\n\n原始资料：\n" + "\n".join(
-                f"• {s['title']}（{s['version']}）\n  {s.get('page') or s['url']}"
-                for s in catalog.sources(p)
-            )
+            records = []
+            for source in catalog.sources(p):
+                record = f"• {source['title']}（{source['version']}）"
+                if source.get("kind") == "user-provided":
+                    record += "\n  用户提供的社区参考资料；无已核验公开链接。"
+                    record += "\n  " + source["summary"]
+                    record += "\n  核对日期：" + source["retrieved"]
+                    record += "\n  SHA-256：" + source["sha256"]
+                    record += "\n  仅保存配置摘要与校验信息，原件未随包分发。"
+                else:
+                    record += "\n  " + (source.get("page") or source.get("url") or "无公开链接")
+                records.append(record)
+            text += "\n\n来源与来历：\n" + "\n".join(records)
             text += "\n\n新建 DOCX 为本软件生成的起草文件，不含官方封面。目录域请在 Word/WPS 中更新。原件未随包分发。"
         self.details.configure(state="normal")
         self.details.delete("1.0", "end")
@@ -185,7 +203,7 @@ class CatalogDialog(tk.Toplevel):
                 catalog.export_bundle(p, path, overwrite=True)
                 messagebox.showinfo(
                     "已保存",
-                    "已导出可导入排版设置和官方来源记录，不含第三方原件。\n" + path,
+                    "已导出可导入排版设置和来源记录，不含第三方原件。\n" + path,
                     parent=self,
                 )
             except Exception as exc:
@@ -193,4 +211,6 @@ class CatalogDialog(tk.Toplevel):
 
     def open_source(self):
         if p := self.selected():
-            webbrowser.open(catalog.profile_template(p)["sources"][0])
+            links = _public_links(p)
+            if links:
+                webbrowser.open(links[0])

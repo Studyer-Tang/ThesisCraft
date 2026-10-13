@@ -67,6 +67,19 @@ class FigureTests(unittest.TestCase):
         self.assertAlmostEqual(shape.width / shape.height, 2, places=4)
         self.assertEqual([PNG], [p.blob for p in self.doc.part.package.parts if '/media/' in str(p.partname)])
 
+    def test_caption_above_picture_stays_with_picture_and_reserves_height(self):
+        unrelated = self.doc.add_paragraph('正文说明')
+        caption = self.doc.add_paragraph('图 1 上置图题', 'PS caption_figure')
+        blank = self.doc.add_paragraph()
+        p = self.doc.add_paragraph()
+        tall = picture(p, 10, 50)
+        format_images(self.doc, self.template)
+        self.assertTrue(caption.paragraph_format.keep_with_next)
+        self.assertTrue(blank.paragraph_format.keep_with_next)
+        self.assertFalse(bool(unrelated.paragraph_format.keep_with_next))
+        section = self.doc.sections[0]
+        self.assertLess(tall.height, section.page_height - section.top_margin - section.bottom_margin - Pt(48))
+
     def test_side_by_side_images_fit_together_and_second_pass_is_stable(self):
         p = self.doc.add_paragraph()
         a, b = picture(p, 10, 5), picture(p, 10, 5)

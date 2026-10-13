@@ -29,6 +29,7 @@ PRESETS = {
     "博士通用": "doctor",
     "北京大学硕士（研究生指南）": "pku-master",
     "北京大学博士（研究生指南）": "pku-doctor",
+    "北京大学思政课课程论文（课程参考格式）": "pku-marxism-course",
 }
 CHOICES = {
     "paper_size": {"A4": "A4", "Letter": "Letter", "保留原纸型": "preserve"},
@@ -56,6 +57,7 @@ CHOICES = {
     "number_format": {
         "1, 2, 3": "decimal",
         "①②③": "decimalEnclosedCircle",
+        "①②③（中文圈码）": "decimalEnclosedCircleChinese",
         "i, ii, iii": "lowerRoman",
         "I, II, III": "upperRoman",
         "a, b, c": "lowerLetter",
@@ -123,15 +125,20 @@ LABELS = {
     "superscript": "数字引用使用上标",
     "csl_path": "自定义CSL路径（空白用内置）",
     "number_format": "脚注序号",
+    "start": "脚注起始编号",
+    "keep_together": "保持脚注整段同页",
     "restart": "脚注重新编号",
     "title": "中文题目",
-    "title_en": "英文题目",
+    "title_en": "副标题 / 英文题目",
     "author": "姓名",
     "student_id": "学号",
-    "supervisor": "导师",
+    "supervisor": "导师 / 授课教师",
     "date": "完成年月",
     "keywords": "中文关键词",
     "keywords_en": "英文关键词",
+    "compact_front_matter": "课程题目、署名与摘要同页起草",
+    "heading_subtitle_separator": "一级标题副标题分隔符（留空禁用）",
+    "heading_subtitle_size": "一级标题副标题字号（磅）",
 }
 
 
@@ -356,7 +363,8 @@ class AcademicWindow:
                 ("references", "参考文献"),
             ],
         )
-        self.settings_tab("5 封面摘要", [("metadata", "填写后用于新建论文骨架")])
+        self.settings_tab("5 封面摘要", [("metadata", "填写后用于新建论文骨架"),
+                                       ("course", "课程论文结构与一级标题副标题")])
         structure = self.tab("6 结构与文献")
         buttons = ttk.Frame(structure)
         buttons.pack(fill="x")
@@ -854,7 +862,8 @@ class AcademicWindow:
             self.structure_source = self.source.get()
 
             self.blocks = scan(
-                Document(self.source.get()), self.template["structure_overrides"]
+                Document(self.source.get()), self.template["structure_overrides"],
+                self.template["course"]
             )
             self.tree.delete(*self.tree.get_children())
             for block in self.blocks:

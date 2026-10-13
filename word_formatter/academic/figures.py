@@ -51,10 +51,10 @@ def _bounds(section, node):
     return max(Pt(1), width), max(Pt(1), height)
 
 
-def _captions(paragraph):
+def _captions(paragraph, before=False):
     """Recognize only adjacent figure captions; do not join unrelated body text."""
     found, pending = [], []
-    node = paragraph._p.getnext()
+    node = paragraph._p.getprevious() if before else paragraph._p.getnext()
     while node is not None and node.tag == qn('w:p'):
         p = Paragraph(node, paragraph._parent)
         text = p.text.strip()
@@ -69,8 +69,8 @@ def _captions(paragraph):
             pending.append(p)
         else:
             break
-        node = node.getnext()
-    return found
+        node = node.getprevious() if before else node.getnext()
+    return list(reversed(found)) if before else found
 
 
 def format_images(doc, template):
@@ -103,8 +103,9 @@ def format_images(doc, template):
             for tag in ('m:oMath', 'w:object', 'wp:anchor', 'w:fldChar', 'w:instrText', 'w:br')
         )
         captions = _captions(p) if standalone and config['keep_caption'] else []
+        captions_above = _captions(p, before=True) if standalone and config['keep_caption'] else []
         reserve = Pt(config['before_pt'] + config['after_pt'] + 12)
-        for caption in captions:
+        for caption in captions_above + captions:
             key = 'caption_en' if caption.style.name == 'PS caption_en' else 'caption_figure'
             style = template['styles'][key]
             # Allow at least two caption lines, plus longer caption wrapping.
@@ -138,6 +139,8 @@ def format_images(doc, template):
                         del ind.attrib[name]
             fmt.space_before, fmt.space_after = Pt(config['before_pt']), Pt(config['after_pt'])
             fmt.keep_together = True
+            for caption in captions_above:
+                caption.paragraph_format.keep_with_next = True
             if captions:
                 fmt.keep_with_next = True
                 for caption in captions[:-1]:

@@ -9,7 +9,7 @@ from ..storage import user_config_path
 
 STYLE_LABELS = {
     "title": "论文题目",
-    "subtitle": "英文题目",
+    "subtitle": "副标题 / 英文题目",
     "h1": "章标题",
     "h2": "二级标题",
     "h3": "三级标题",
@@ -184,7 +184,10 @@ def base_template(degree="master"):
         references=dict(
             style="gb7714-numeric", hanging_cm=0.75, superscript=False, csl_path=""
         ),
-        notes=dict(number_format="decimal", restart="continuous"),
+        notes=dict(number_format="decimal", restart="continuous", start=1,
+                   keep_together=False),
+        course=dict(compact_front_matter=False, heading_subtitle_separator="",
+                    heading_subtitle_size=12.0),
         metadata=dict(
             title="",
             title_en="",
@@ -320,11 +323,20 @@ def validate_template(data):
     if result["notes"]["number_format"] not in (
         "decimal",
         "decimalEnclosedCircle",
+        "decimalEnclosedCircleChinese",
         "lowerRoman",
         "upperRoman",
         "lowerLetter",
     ) or result["notes"]["restart"] not in ("continuous", "eachPage", "eachSect"):
         raise ValueError("脚注编号或重新编号方式不正确。")
+    if (not isinstance(result["notes"]["start"], int)
+            or not 1 <= result["notes"]["start"] <= 32767):
+        raise ValueError("脚注起始编号须为 1–32767 的整数。")
+    course = result["course"]
+    if not 5 <= course["heading_subtitle_size"] <= 96:
+        raise ValueError("一级标题副标题字号须为 5–96 磅。")
+    if len(course["heading_subtitle_separator"]) > 8:
+        raise ValueError("一级标题副标题分隔符最多为 8 个字符；留空则不拆分。")
     if not 0 <= result["page"]["header_line_pt"] <= 6:
         raise ValueError("页眉线宽应为 0–6 磅。")
     if (

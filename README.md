@@ -27,15 +27,17 @@
 
 ## 高校规范与 Word 模板
 
-首页点击 **高校模板库**：搜索学校 → 查看适用院系和版本 → **使用排版设置**。全部条目可新建起草 DOCX；官方原件通过来源链接自行下载。可导入本地官方 DOCX，或导出排版配置与来源记录。
+首页点击 **高校模板库**：搜索学校 → 查看适用范围和版本 → **使用排版设置**。全部条目可新建起草 DOCX；公开规范通过来源链接自行获取。可导入已登记的本地官方 DOCX，或导出排版配置与来源记录。社区参考格式单独说明来历，没有公开链接时禁用来源按钮。
 
-首批 **11 所高校、20 个条目、14 项官方来源记录**（不随包分发许可未确认的原件），优先覆盖北大、清华、上交、复旦，另有 MIT、Stanford、Oxford、Cambridge。支持课程、本科、硕士、博士；各校覆盖类型不同，只有封面的资料不自动改正文。来源、具体覆盖及操作见 [高校模板库](docs/UNIVERSITY-TEMPLATES.md)。
+目前 **11 所高校、21 个条目**，保留 **14 项公开来源记录与1项社区参考资料摘要**（不随包分发许可未确认的原件），优先覆盖北大、清华、上交、复旦，另有 MIT、Stanford、Oxford、Cambridge。支持课程、本科、硕士、博士；各校覆盖类型不同，只有封面的资料不自动改正文。来源、具体覆盖及操作见 [高校模板库](docs/UNIVERSITY-TEMPLATES.md)。
+
+新增 **北京大学思政课课程论文社区参考格式**（`pku-marxism-course`），可搜索“思政”或“马原”。它依据用户提供的两页资料，支持主副标题混合字号、摘要和关键词标签、中文分级标题及每页重编号的原生脚注；原资料未注明学校和年份，不代表北大全校现行标准。未明示的页边距等设置是可编辑默认值。[要求与使用方式](docs/PKU-MARXISM-COURSE.md)
 
 ## 已有功能
 
 | 范围 | 功能 |
 | --- | --- |
-| 学校模板 | 11 所高校的规范配置、官方来源链接与本地 Word 样稿导入；通用预设、JSON 导入导出和 DOCX 样式读取 |
+| 学校模板 | 11 所高校的规范与社区课程参考配置、公开来源链接与本地 Word 样稿导入；通用预设、JSON 导入导出和 DOCX 样式读取 |
 | 字体与编号 | 独立设置中西文字体、字号、行距；数字/中文/英文章号，多级标题，附录字母或数字，题注分隔符和公式括号，编号字体 |
 | 页面结构 | A4/Letter、保留原分节模式、前置页与正文分节、罗马/阿拉伯页码、页眉、目录、图表目录、脚注与尾注样式 |
 | 图表公式 | SEQ 自动编号、REF 交叉引用、三线表、按行数续表、宽表横页、图片尺寸检查 |
@@ -75,6 +77,8 @@ thesiscraft thesis check -i thesis.docx --template pku-master
 thesiscraft thesis format -i thesis.docx --set styles.body.size=12 --host word --pdf
 # 导出可编辑模板
 thesiscraft thesis template --template doctor -o my-template.json
+# 新建思政课课程论文起草文件
+thesiscraft thesis new --template pku-marxism-course -o course-draft.docx
 # 通用模式：单文件或目录批处理
 thesiscraft format -i report.docx
 thesiscraft format -i ./documents -o ./formatted
@@ -84,7 +88,7 @@ thesiscraft format -i ./documents -o ./formatted
 
 ## 模板依据与使用边界
 
-- 北大预设参考公开的 **2014 年研究生书写指南及 2024 年博士模板**，不代表 2026 年院系要求或学校认证。北大本科使用通用预设，再按院系要求调整。[依据与细节](docs/THESIS-GUIDE.md)
+- 北大研究生预设参考公开的 **2014 年研究生书写指南及 2024 年博士模板**，不代表 2026 年院系要求或学校认证。北大本科毕业论文使用通用预设，再按院系要求调整；思政课社区参考格式另有明确适用范围。[研究生依据与细节](docs/THESIS-GUIDE.md) · [课程参考格式](docs/PKU-MARXISM-COURSE.md)
 - 2014 指南引用 GB/T 7714-2005；内置国标 CSL 为 **2015 版**。请按实际要求选用或导入 CSL。
 - 封面、签名和声明需按学校要求提供；软件不会生成真实签名。文献元数据须准确完整，Zotero/EndNote 引用继续由原管理器维护。
 - 文本框、复杂浮动对象、特殊 MathType 文档需人工核对；纵向合并表格不自动拆分续表。Markdown 为标记清理，不是完整保真渲染。
