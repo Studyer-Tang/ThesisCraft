@@ -50,8 +50,9 @@ class Block:
         return asdict(self)
 
 
-def scan(doc, overrides=None):
+def scan(doc, overrides=None, course=None):
     overrides = overrides or {}
+    compact_course = bool(course and course.get("compact_front_matter"))
     region = "front"
     items = []
     first_text = True
@@ -63,6 +64,11 @@ def scan(doc, overrides=None):
         if compact in SECTION_NAMES:
             region = SECTION_NAMES[compact]
             kind = region + "_heading"
+        elif (compact_course and region == "bibliography"
+              and not re.match(r"^(?:Heading|标题)\s*[1-4]$", style, re.I)
+              and style != "PS front_heading"
+              and not re.match(r"^(附录|Appendix)\s*", text, re.I)):
+            kind = "bibliography"
         elif re.match(
             r"^(附录\s*[A-Z一二三四五六七八九十\d]|Appendix\s+[A-Z\d])", text, re.I
         ):
@@ -90,6 +96,26 @@ def scan(doc, overrides=None):
             kind, region = "h" + style[-1], "body"
             match = DECIMAL.match(text) or DECIMAL_CJK.match(text)
             prefix = match.group() if match else ""
+        elif (compact_course and len(text) < 100
+              and not re.search(r"[。！？；]$", text)
+              and not style.lower().startswith(("list", "列表"))
+              and re.match(r"^[一二三四五六七八九十百]+、\s*\S", text)):
+            kind, region = "h1", "body"
+        elif (compact_course and len(text) < 100
+              and not re.search(r"[。！？；]$", text)
+              and not style.lower().startswith(("list", "列表"))
+              and re.match(r"^（[一二三四五六七八九十百]+）\s*\S", text)):
+            kind, region = "h2", "body"
+        elif (compact_course and len(text) < 100
+              and not re.search(r"[。！？；]$", text)
+              and not style.lower().startswith(("list", "列表"))
+              and re.match(r"^\d+[.．]\s*\S", text)):
+            kind, region = "h3", "body"
+        elif (compact_course and len(text) < 100
+              and not re.search(r"[。！？；]$", text)
+              and not style.lower().startswith(("list", "列表"))
+              and re.match(r"^（\d+）\s*\S", text)):
+            kind, region = "h4", "body"
         elif style == "PS appendix":
             kind, region = "appendix", "appendix"
         elif ((DECIMAL.match(text) or DECIMAL_CJK.match(text))
@@ -111,8 +137,19 @@ def scan(doc, overrides=None):
             kind = "equation" if not text.strip() else "body"
         elif re.match(r"^(关键词|关键字|key\s*words)\s*[:：]", text, re.I):
             kind = "keywords"
-        elif re.match(r"^(?:注|资料来源|说明|Notes?)\s*[:：]", text, re.I):
+        elif re.match(r"^(?:注|来源|资料来源|说明|Notes?)\s*[:：]", text, re.I):
             kind = "note"
+        elif compact_course and re.match(r"^摘要\s*[:：]", text):
+            kind, region = "abstract", "abstract"
+        elif compact_course and style in ("PS subtitle", "Subtitle", "副标题"):
+            kind = "subtitle"
+        elif compact_course and (style == "PS cover_info"
+                                or (region == "front" and re.match(r"^(姓名|学号|院系|班级|授课教师)\s*[:：]", text))):
+            kind = "cover_info"
+        elif compact_course and style == "PS abstract":
+            kind, region = "abstract", "abstract"
+        elif compact_course and style == "PS front_heading":
+            kind = "front_heading"
         elif compact in (
             "目录",
             "contents",

@@ -1,13 +1,13 @@
 # 高校规范库
 
-收录核对日期：2026-09-30。首批 11 所高校、20 个条目；保留 14 项官方来源记录。4.2.1 起不再随包分发许可未确认的原件和网页全文快照。北大、清华、上交、复旦优先；海外覆盖 MIT、Stanford、Oxford、Cambridge。所列年份是规范版本或来源页发布信息，不将旧指南自动改称“2026 版”。
+公开规范首批核对日期：2026-09-30；社区课程参考资料核对日期：2026-10-13。目前 11 所高校、21 个条目，保留14项公开来源记录和1项用户提供资料的摘要与校验信息。4.2.1 起不再随包分发许可未确认的原件和网页全文快照。北大、清华、上交、复旦优先；海外覆盖 MIT、Stanford、Oxford、Cambridge。所列年份是规范版本或来源页发布信息，不将核对年份当成规范发布日期。
 
 ## 桌面使用
 
-1. 首页点击“高校模板库”，搜索学校、英文缩写或院系，按课程/本科/硕士/博士筛选。
+1. 首页点击“高校模板库”，搜索学校、英文缩写、院系或课程关键词，按课程/本科/硕士/博士筛选。
 2. 阅读自动覆盖范围和人工核对事项。“使用排版设置”立即载入已确认规则，再检查当前 DOCX 并生成排版副本。
 3. 全部条目可新建起草 DOCX，不能替代正式封面。有官方 DOCX 的条目可从官网自行下载，再“导入官方 DOCX”校验并原样复制。
-4. “导出配置与来源”保存 ZIP，含 `template.json`、`sources.json` 和权利说明，不含原件。旧式 DOC 需在 Word/WPS 另存为 DOCX 后进入排版流程。
+4. “导出配置与来源”保存 ZIP，含 `template.json`、`sources.json` 和权利说明，不含原件。社区参考资料显示来历及哈希，没有公开链接时禁用来源按钮，也不提供官方 DOCX 导入。旧式 DOC 需在 Word/WPS 另存为 DOCX 后进入排版流程。
 
 原文未量化的边距（如复旦）保留原稿。部分规范仅应用正文及已核对样式；高级设置 → 字体与段落可勾选“排版时应用当前样式”。海外骨架采用英文，课程骨架不插入中文学位论文专用声明。目录使用 Word 原生域，需在 Word/WPS 中更新。字体需在本机可用，分页以实际提交软件的打印预览为准。
 
@@ -28,6 +28,7 @@
 | `seu-bachelor-2025` | 东南大学 | 本科 | 2025-03 | 生成 / 导入本地 DOCX |
 | `sysu-mpa-course` | 中山大学 / MPA | 课程论文 | 2025发布 | 生成 / 导入本地 DOCX |
 | `sbs-course` | 上海商学院 / 研究生 | 课程论文 | 2025发布 | 生成起草 DOCX |
+| `pku-marxism-course` | 北京大学思政课情境 / 社区参考 | 课程论文 | 社区参考格式 v1 | 生成起草 DOCX |
 | `mit-bachelor` | MIT 麻省理工学院 | 本科 | 2026网页快照 | 生成起草 DOCX |
 | `mit-master` | MIT 麻省理工学院 | 硕士 | 2026网页快照 | 生成起草 DOCX |
 | `mit-doctor` | MIT 麻省理工学院 | 博士 | 2026网页快照 | 生成起草 DOCX |
@@ -59,6 +60,12 @@
 
 每份文件的 SHA-256、字节数、下载 URL 和收录日期保存在 [index.json](../word_formatter/academic/catalog_data/index.json)。摘要对应此前核对版本；这些元数据不意味着当前捆绑了原件。网页来源不视为校方提供的 Word 模板。所有人工检查事项亦随 JSON 模板导出，并写入检查报告。
 
+## 社区课程参考资料
+
+`pku-marxism-course` 依据用户提供的《思政课课程论文格式.pdf》，共2页，核对日期为2026-10-13。原文未注明学校、适用年份或发布日期；北京大学是本次使用情境。该条目适用于采用这一规范的思政课课程论文，不是北大全校、毕业论文或期刊投稿的统一标准。
+
+来源记录标记为 `kind: user-provided`、`distribution: metadata-only`，公开 URL 为空；只保存文件名、来历摘要、字节数和 SHA-256，不包含来源 PDF、个人论文、示例作者和文献。题目、分级标题、脚注与图表的明确要求，以及纸型、页边距等可编辑默认值，见[思政课课程论文参考格式](PKU-MARXISM-COURSE.md)。
+
 ## 命令行
 
 ```sh
@@ -67,6 +74,11 @@ thesiscraft thesis format -i paper.docx --template tsinghua-master-2025
 thesiscraft thesis new --template sjtu-master --original downloaded-school.docx -o sjtu-draft.docx
 thesiscraft thesis new --template stanford-doctor -o draft.docx
 thesiscraft thesis template-bundle --template fudan-master-2026 -o fudan-sources.zip
+# 搜索、使用或导出社区课程参考格式
+thesiscraft thesis templates --search 马原 --category course
+thesiscraft thesis new --template pku-marxism-course -o course-draft.docx
+thesiscraft thesis format -i course.docx --template pku-marxism-course
+thesiscraft thesis template-bundle --template pku-marxism-course -o course-settings.zip
 ```
 
 CLI 新建与导出默认拒绝覆盖已有文件。界面使用系统保存对话框确认目标；排版流程仍生成独立副本。
@@ -74,6 +86,8 @@ CLI 新建与导出默认拒绝覆盖已有文件。界面使用系统保存对�
 ## 维护
 
 数据与实现分开：`catalog_data/index.json` 保存来源及相对通用模板的参数差异，`catalog.py` 负责搜索、校验和原子导出。新增规范需确认官方域名、文件格式、版本、适用学位/院系和具体规则定位；不抓取学生论文来替代校规。下载后记录原始文件 SHA-256，将未覆盖项目写入 `manual_checks`，仅启用证据支持的排版范围。网页更新不能仅按抓取年份覆盖旧规则。
+
+社区参考资料另行标记，不冒充公开校规：记录提供方式、未核验事项与适用情境，使用 `metadata-only` 保存规则摘要和哈希；没有公开 URL 时不生成来源链接。示例中的个人信息、文献、论题和段落索引不进入内置模板，未明示参数写为可编辑默认值。
 
 测试验证离线配置、用户本地 Word 样稿校验与原样复制、生成骨架、Letter 纸型、未选择样式/页眉分节保留，以及空搜索和 GUI 应用；冻结发行包再运行校规库自检，确认不依赖网络且不捆绑原件。
 

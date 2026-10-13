@@ -112,7 +112,7 @@ def compare_inventory(before, after, allowed_content_changes=()):
 
 
 def audit(doc, template):
-    items = scan(doc, template["structure_overrides"])
+    items = scan(doc, template["structure_overrides"], template["course"])
     findings = []
 
     def issue(code, message, index=-1, severity="warning", group="styles"):
@@ -178,7 +178,10 @@ def audit(doc, template):
         if (key and key in template["style_keys"] and (item.text or has_inline_object)
                 and "styles" in template["enabled"]):
             spec = template["styles"][key]
-            check_paragraph(p, spec, formatting, runs, issue, item.index)
+            from .course import heading_run_sizes
+
+            run_sizes = heading_run_sizes(p, template) if key == "h1" else None
+            check_paragraph(p, spec, formatting, runs, issue, item.index, run_sizes)
             if p.style.name != STYLE_NAMES[key]:
                 issue("style", "建议应用样式：" + STYLE_NAMES[key], item.index)
         if "{{" in item.text or "【" in item.text:

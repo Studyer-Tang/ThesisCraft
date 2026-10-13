@@ -176,10 +176,13 @@ def text_runs(paragraph, state):
         yield node, text
 
 
-def check_paragraph(paragraph, spec, resolver, runs, issue, index):
+def check_paragraph(paragraph, spec, resolver, runs, issue, index, run_sizes=None):
     mismatches = {}
     unresolved = set()
+    expected_sizes = set()
     for run, text in runs:
+        sizes = (run_sizes or {}).get(run, [spec["size"]])
+        expected_sizes.update(sizes)
         chain = resolver.run_properties(run, paragraph)
         slots, unsupported = _scripts(text)
         complex_text = ((unsupported and not slots)
@@ -198,7 +201,7 @@ def check_paragraph(paragraph, spec, resolver, runs, issue, index):
                 except ValueError:
                     unresolved.add("无法解析的字号")
                 else:
-                    if abs(pt - spec["size"]) > 0.1:
+                    if any(abs(pt - size) > 0.1 for size in sizes):
                         mismatches.setdefault("font-size", set()).add(f"{pt:g} 磅")
         if math or alignment in {"superscript", "subscript"} or complex_text:
             unresolved.add("上下标、数学或复杂文字的专用格式")
@@ -213,7 +216,7 @@ def check_paragraph(paragraph, spec, resolver, runs, issue, index):
                 mismatches.setdefault(code, set()).add(actual)
     for code, values in mismatches.items():
         label, expected = {
-            "font-size": ("文本字号", f"{spec['size']:g} 磅"),
+            "font-size": ("文本字号", " / ".join(f"{size:g}" for size in sorted(expected_sizes)) + " 磅"),
             "font-eastasia": ("中日韩文字体", spec["font"]),
             "font-latin": ("西文/数字字体", spec["latin"]),
         }[code]

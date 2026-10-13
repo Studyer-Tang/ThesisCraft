@@ -102,6 +102,13 @@ def apply_style(paragraph, key, template):
         ):
             ind.attrib.pop(qn("w:" + name), None)
     # Update ordinary text even next to fields, but never a manager field's cached result.
+    preserve_heading_size = False
+    if key == 'h1' and template['document_type'] == 'course':
+        from .course import subtitle_boundary
+
+        separator = template['course']['heading_subtitle_separator']
+        preserve_heading_size = bool(separator and separator in paragraph.text
+                                     and subtitle_boundary(paragraph, template) is None)
     depth = 0
     for run in paragraph.runs:
         flags = list(run._r.iter(qn("w:fldChar")))
@@ -109,15 +116,32 @@ def apply_style(paragraph, key, template):
         if (
             not depth
             and run.text
-            and all(child.tag in (qn("w:rPr"), qn("w:t")) for child in run._r)
+            and all(child.tag in (
+                (qn("w:rPr"), qn("w:t"), qn("w:footnoteReference"), qn("w:endnoteReference"))
+                if template['document_type'] == 'course' and key in ('h1', 'abstract', 'keywords')
+                else (qn("w:rPr"), qn("w:t"))
+            ) for child in run._r)
         ):
             original_bold = run.bold
-            set_font(run, spec)
+            run_spec = spec
+            if preserve_heading_size and run.font.size is not None:
+                run_spec = dict(spec, size=run.font.size.pt)
+            set_font(run, run_spec)
             if template.get("cleanup", {}).get("bold"):
                 run.font.cs_bold = spec["bold"]
-            if key in ("body", "abstract", "abstract_en") and original_bold:
+            if key in ("body", "abstract", "abstract_en", "keywords") and original_bold:
                 run.bold = True
         depth = max(0, depth - sum(n.get(qn("w:fldCharType")) == "end" for n in flags))
+    if key == "h1":
+        from .course import format_heading_subtitle
+
+        format_heading_subtitle(paragraph, template)
+    elif (key in ("abstract", "keywords")
+          and template["document_type"] == "course"
+          and template["course"]["compact_front_matter"]):
+        from .course import format_inline_label
+
+        format_inline_label(paragraph, key)
     if key in ("h1", "h2", "h3", "h4", "front_heading", "appendix"):
         fmt.keep_with_next = True
     if key == "bibliography":
@@ -466,9 +490,33 @@ def paginate(doc, items, template, changes):
     )
 
 
+def _keep_table_caption(table, doc):
+    from .structure import CAPTION
+
+    pending = []
+    node = table._tbl.getprevious()
+    while node is not None and node.tag == qn('w:p'):
+        if any(next(node.iter(qn(tag)), None) is not None
+               for tag in ('w:sectPr', 'w:br', 'w:drawing', 'w:object', 'w:pict')):
+            break
+        p = Paragraph(node, doc._body)
+        text = p.text.strip()
+        match = CAPTION.match(text)
+        if p.style.name == STYLE_NAMES['caption_table'] or (
+                match and match.group(1).casefold() in ('表', 'table')):
+            for paragraph in [p, *pending]:
+                paragraph.paragraph_format.keep_with_next = True
+            break
+        if text or len(pending) >= 2:
+            break
+        pending.append(p)
+        node = node.getprevious()
+
+
 def format_tables(doc, template):
     config = template["tables"]
     for table in iter_tables(doc):
+        _keep_table_caption(table, doc)
         if config["three_line"]:
             borders = set_child(table._tbl.tblPr, "w:tblBorders")
             for side in ("top", "bottom", "left", "right", "insideH", "insideV"):
@@ -522,12 +570,27 @@ def format_images(doc, template):
 def format_notes(doc, template):
     if "footnote" not in template["style_keys"] and "endnote" not in template["style_keys"]:
         return
-    props = doc.settings.element.find(qn("w:footnotePr"))
-    if props is None:
-        props = element("w:footnotePr")
-        doc.settings.element.append(props)
-    set_child(props, "w:numFmt", val=template["notes"]["number_format"])
-    set_child(props, "w:numRestart", val=template["notes"]["restart"])
+    if "footnote" in template["style_keys"]:
+        props = doc.settings.element.find(qn("w:footnotePr"))
+        if props is None:
+            props = element("w:footnotePr")
+            doc.settings.element.append(props)
+        # Section-level properties override settings.xml. Update both so a
+        # pre-existing section cannot silently keep continuous numbering.
+        for owner in (props, *(section._sectPr for section in doc.sections)):
+            if owner is not props:
+                owner = owner.find(qn("w:footnotePr"))
+                if owner is None:
+                    continue
+            set_child(owner, "w:numFmt", val=template["notes"]["number_format"])
+            set_child(owner, "w:numStart", val=template["notes"]["start"])
+            set_child(owner, "w:numRestart", val=template["notes"]["restart"])
+        if template["notes"]["keep_together"]:
+            # Keep the anchor's paragraph intact as well. Otherwise a renderer
+            # can defer a kept footnote while its anchor remains on the prior page.
+            for node in doc.element.body.iter(qn("w:p")):
+                if next(node.iter(qn("w:footnoteReference")), None) is not None:
+                    Paragraph(node, doc._body).paragraph_format.keep_together = True
     for part in doc.part.package.parts:
         key = (
             "footnote"
@@ -548,7 +611,10 @@ def format_notes(doc, template):
             if int(note.get(qn("w:id"), "-1")) <= 0:
                 continue
             for node in note.iter(qn("w:p")):
-                apply_style(Paragraph(node, doc._body), key, template)
+                paragraph = Paragraph(node, doc._body)
+                apply_style(paragraph, key, template)
+                if template["notes"]["keep_together"]:
+                    paragraph.paragraph_format.keep_together = True
             for r in note.iter(qn("w:r")):
                 if r.find(qn("w:t")) is None:
                     continue
@@ -580,6 +646,13 @@ def create_skeleton(template, destination):
     setup_styles(doc, template, initialize=True)
     for section in doc.sections:
         page_geometry(section, template)
+    if template["document_type"] == "course" and template["course"]["compact_front_matter"]:
+        from .course import compact_skeleton
+
+        compact_skeleton(doc, template)
+        format_notes(doc, template)
+        save_document(doc, destination)
+        return destination
     if template["language"] == "en" or template["document_type"] == "course":
         _short_skeleton(doc, template)
         save_document(doc, destination)

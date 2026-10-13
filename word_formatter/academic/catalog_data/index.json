@@ -211,6 +211,23 @@
       "sha256": "5404fe91ba7d4d7daaef3485566870b379bfb71d87a2dd8e4bd49be9359ee547",
       "distribution": "link-only",
       "permission": "未确认再分发许可；仅提供官方来源，原件由用户自行获取。"
+    },
+    "pku-sizheng-user-provided": {
+      "id": "pku-sizheng-user-provided",
+      "title": "思政课课程论文格式规范（用户提供参考资料）",
+      "version": "原文件未注明学校、适用年份或发布日期",
+      "kind": "user-provided",
+      "distribution": "metadata-only",
+      "url": null,
+      "resolved_url": null,
+      "page": null,
+      "retrieved": "2026-10-13",
+      "file": "思政课课程论文格式.pdf",
+      "pages": 2,
+      "bytes": 92961,
+      "sha256": "92d7d6acc638b6e92d73cd22292b0a84f4885f822abcce4721e6963da86afd7f",
+      "summary": "由用户提供的两页课程格式资料。正文未注明学校、适用年份或发布日期；北京大学是本次使用情境。模板仅归纳明确格式要求，并补足可编辑默认值，不代表校方认证。",
+      "permission": "仅保存格式摘要与文件校验信息；不分发原PDF、示例作者、示例文献或个人论文。"
     }
   },
   "profiles": [
@@ -3343,6 +3360,388 @@
           "styles",
           "pages"
         ]
+      }
+    },
+    {
+      "id": "pku-marxism-course",
+      "name": "北京大学 · 思政课 · 课程论文 · 社区参考格式",
+      "school": "北京大学",
+      "department": "思政课（采用所提供规范的课程）",
+      "category": "course",
+      "version": "社区参考格式 v1",
+      "keywords": "北京大学 北大 PKU 思政 马原 马克思主义基本原理 community course",
+      "coverage": "用户提供的课程格式参考：题目与署名、摘要和关键词、中文分级标题、每页重编号的原生脚注、图表字体。纸型、页边距等未明示项目使用可编辑默认值。",
+      "source_ids": [
+        "pku-sizheng-user-provided"
+      ],
+      "word_source": null,
+      "template": {
+        "name": "北京大学 · 思政课 · 课程论文 · 社区参考格式",
+        "school": "北京大学",
+        "department": "",
+        "year": "",
+        "degree": "bachelor",
+        "language": "zh",
+        "document_type": "course",
+        "catalog_id": "pku-marxism-course",
+        "template_version": "community-1.0",
+        "sources": [],
+        "scope": "依据用户提供的《思政课课程论文格式规范》，适用于本次北京大学思政课情境及采用同一规范的课程论文。原资料未注明学校、适用年份或发布日期；这是社区参考配置，不是北大全校、毕业论文或期刊投稿的统一标准。",
+        "manual_checks": [
+          "来源为用户提供的两页格式资料，未核验公开出处；教师另有要求时应覆盖本配置。",
+          "题目与署名段前段后“0.5”的单位未注明；本模板分别使用8磅、6磅的可编辑默认值。",
+          "摘要和关键词只将标签及中文冒号加粗，是本模板的解释；原资料未提供完整摘要实样。",
+          "一级标题主标题14磅、附带副标题12磅；首个中文冒号为可配置分隔默认，置空可禁用，无副标题时整段14磅。",
+          "A4、四边2.54厘米、英文/数字Times New Roman、正文首行空两字、两端对齐及页码均为可编辑默认，非原资料明确要求。",
+          "图表题目和数据字体来自原资料；题注位置、居中、表格线条和图片宽度属于可编辑默认。",
+          "模板保留原有正文、脚注、来源链接和图表，不生成引用信息、事实数据或身份信息；分页须在实际提交软件中核对。"
+        ],
+        "style_keys": [
+          "title",
+          "subtitle",
+          "cover_info",
+          "abstract",
+          "keywords",
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "body",
+          "footnote",
+          "caption_figure",
+          "caption_table",
+          "table",
+          "table_header",
+          "note",
+          "bibliography",
+          "front_heading"
+        ],
+        "styles": {
+          "title": {
+            "font": "SimHei",
+            "latin": "Times New Roman",
+            "size": 16,
+            "bold": false,
+            "align": "center",
+            "spacing": 1.2,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 8,
+            "after": 8,
+            "color": "000000"
+          },
+          "subtitle": {
+            "font": "SimHei",
+            "latin": "Times New Roman",
+            "size": 15,
+            "bold": true,
+            "align": "center",
+            "spacing": 1.2,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 0,
+            "after": 0,
+            "color": "000000"
+          },
+          "cover_info": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": false,
+            "align": "center",
+            "spacing": 1.5,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 6,
+            "after": 6,
+            "color": "000000"
+          },
+          "abstract": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": false,
+            "align": "justify",
+            "spacing": 1.5,
+            "spacing_unit": "multiple",
+            "indent": 2,
+            "before": 0,
+            "after": 0,
+            "color": "000000"
+          },
+          "keywords": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": false,
+            "align": "justify",
+            "spacing": 1.5,
+            "spacing_unit": "multiple",
+            "indent": 2,
+            "before": 0,
+            "after": 0,
+            "color": "000000"
+          },
+          "h1": {
+            "font": "SimHei",
+            "latin": "Times New Roman",
+            "size": 14,
+            "bold": true,
+            "align": "center",
+            "spacing": 1.5,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 0,
+            "after": 0,
+            "color": "000000"
+          },
+          "h2": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": true,
+            "align": "left",
+            "spacing": 1.5,
+            "spacing_unit": "multiple",
+            "indent": 2,
+            "before": 5,
+            "after": 0,
+            "color": "000000"
+          },
+          "h3": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": false,
+            "align": "left",
+            "spacing": 1.5,
+            "spacing_unit": "multiple",
+            "indent": 2,
+            "before": 5,
+            "after": 0,
+            "color": "000000"
+          },
+          "h4": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": false,
+            "align": "left",
+            "spacing": 1.5,
+            "spacing_unit": "multiple",
+            "indent": 2,
+            "before": 5,
+            "after": 0,
+            "color": "000000"
+          },
+          "body": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": false,
+            "align": "justify",
+            "spacing": 1.5,
+            "spacing_unit": "multiple",
+            "indent": 2,
+            "before": 0,
+            "after": 0,
+            "color": "000000"
+          },
+          "footnote": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 9,
+            "bold": false,
+            "align": "justify",
+            "spacing": 1,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 0,
+            "after": 0,
+            "color": "000000"
+          },
+          "caption_figure": {
+            "font": "SimHei",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": true,
+            "align": "center",
+            "spacing": 1.2,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 6,
+            "after": 3,
+            "color": "000000"
+          },
+          "caption_table": {
+            "font": "SimHei",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": true,
+            "align": "center",
+            "spacing": 1.2,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 6,
+            "after": 3,
+            "color": "000000"
+          },
+          "table": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 10.5,
+            "bold": false,
+            "align": "left",
+            "spacing": 1,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 3,
+            "after": 3,
+            "color": "000000"
+          },
+          "table_header": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 10.5,
+            "bold": false,
+            "align": "left",
+            "spacing": 1,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 3,
+            "after": 3,
+            "color": "000000"
+          },
+          "note": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 10.5,
+            "bold": false,
+            "align": "justify",
+            "spacing": 1.2,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 0,
+            "after": 0,
+            "color": "000000"
+          },
+          "bibliography": {
+            "font": "SimSun",
+            "latin": "Times New Roman",
+            "size": 12,
+            "bold": false,
+            "align": "justify",
+            "spacing": 1.2,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 0,
+            "after": 3,
+            "color": "000000"
+          },
+          "front_heading": {
+            "font": "SimHei",
+            "latin": "Times New Roman",
+            "size": 14,
+            "bold": true,
+            "align": "center",
+            "spacing": 1.5,
+            "spacing_unit": "multiple",
+            "indent": 0,
+            "before": 8,
+            "after": 6,
+            "color": "000000"
+          }
+        },
+        "cleanup": {
+          "bold": false,
+          "italic": false,
+          "underline": false
+        },
+        "page": {
+          "paper_size": "A4",
+          "layout_only": true,
+          "set_margins": true,
+          "top": 2.54,
+          "bottom": 2.54,
+          "left": 2.54,
+          "right": 2.54,
+          "gutter": 0,
+          "header_distance": 1.27,
+          "footer_distance": 1.27,
+          "front_number": "decimal",
+          "body_number": "decimal",
+          "number_position": "center",
+          "odd_even": false,
+          "chapter_recto": false,
+          "chapter_header": false,
+          "header_text": "",
+          "preserve_landscape": true,
+          "mirror_margins": false,
+          "header_line_pt": 0
+        },
+        "course": {
+          "compact_front_matter": true,
+          "heading_subtitle_separator": "：",
+          "heading_subtitle_size": 12
+        },
+        "notes": {
+          "number_format": "decimalEnclosedCircleChinese",
+          "restart": "eachPage",
+          "start": 1,
+          "keep_together": true
+        },
+        "numbering": {
+          "scheme": "none",
+          "by_chapter": false
+        },
+        "tables": {
+          "three_line": false,
+          "repeat_header": true,
+          "prevent_row_split": true,
+          "rows_per_part": 0
+        },
+        "figures": {
+          "max_width_cm": 15.2,
+          "max_height_cm": 0,
+          "min_dpi": 150,
+          "keep_caption": true,
+          "center": true,
+          "before_pt": 0,
+          "after_pt": 0
+        },
+        "contents": {
+          "toc": false,
+          "figures": false,
+          "tables": false
+        },
+        "references": {
+          "hanging_cm": 0.8466666666666667,
+          "superscript": false
+        },
+        "metadata": {
+          "title": "",
+          "title_en": "",
+          "author": "",
+          "student_id": "",
+          "supervisor": "",
+          "date": "",
+          "keywords": "",
+          "keywords_en": ""
+        },
+        "required_sections": [
+          "abstract",
+          "bibliography"
+        ],
+        "enabled": [
+          "styles",
+          "pages",
+          "tables",
+          "figures"
+        ],
+        "structure_overrides": {},
+        "reference_library": "",
+        "front_matter_path": "",
+        "glossary_path": ""
       }
     }
   ]

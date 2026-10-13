@@ -1,6 +1,7 @@
 """Real-document coverage for source-backed presets, export and partial formatting."""
 
 import hashlib
+import io
 import json
 import os
 from pathlib import Path
@@ -10,6 +11,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import zipfile
+from contextlib import redirect_stdout
 
 from docx import Document
 from docx.enum.section import WD_ORIENT
@@ -38,9 +40,21 @@ class CatalogTests(unittest.TestCase):
             with self.subTest(profile=profile["id"]):
                 template = load_template(profile["id"])
                 self.assertEqual(template["catalog_id"], profile["id"])
-                self.assertTrue(template["sources"])
                 self.assertTrue(template["manual_checks"])
-                self.assertTrue(all(s["distribution"] == "link-only" for s in catalog.sources(profile)))
+                records = catalog.sources(profile)
+                self.assertTrue(records)
+                public = [s for s in records if s.get("kind") != "user-provided"]
+                self.assertEqual(bool(template["sources"]), bool(public))
+                for source in records:
+                    if source.get("kind") == "user-provided":
+                        self.assertEqual(source["distribution"], "metadata-only")
+                        self.assertIsNone(source.get("url"))
+                        self.assertIsNone(source.get("page"))
+                        self.assertTrue(source["summary"])
+                        self.assertRegex(source["sha256"], r"^[0-9a-f]{64}$")
+                    else:
+                        self.assertEqual(source["distribution"], "link-only")
+                        self.assertTrue(source["url"].startswith("https://"))
                 copy = catalog.new_document(profile, self.root / (profile["id"] + ".docx"))
                 self.assertTrue(Document(copy).paragraphs)
 
@@ -66,6 +80,68 @@ class CatalogTests(unittest.TestCase):
                 self.assertTrue(source["url"].startswith("https://"))
             self.assertFalse(any(name.startswith("sources/") for name in bundle.namelist()))
             self.assertIn("NOTICE.md", bundle.namelist())
+
+    def test_community_course_is_searchable_without_public_or_private_paths(self):
+        identifier = "pku-marxism-course"
+        for query in ("北京大学 思政", "马原", "PKU community"):
+            with self.subTest(query=query):
+                self.assertIn(identifier, [p["id"] for p in catalog.profiles(query, "course")])
+        profile = catalog.get_profile(identifier)
+        template = load_template(identifier)
+        self.assertIsNone(profile["word_source"])
+        self.assertEqual(template["document_type"], "course")
+        self.assertEqual(template["sources"], [])
+        self.assertEqual(template["structure_overrides"], {})
+        self.assertTrue(all(not value for value in template["metadata"].values()))
+        self.assertEqual(template["cleanup"], dict(bold=False, italic=False, underline=False))
+        self.assertEqual(template["enabled"], ["styles", "pages", "tables", "figures"])
+        self.assertEqual(load_template("master")["name"], "硕士通用")
+        source, = catalog.sources(profile)
+        self.assertEqual(source["kind"], "user-provided")
+        self.assertEqual(source["distribution"], "metadata-only")
+        self.assertEqual(source["file"], Path(source["file"]).name)
+        self.assertNotIn("/", source["file"])
+        self.assertNotIn("\\", source["file"])
+        self.assertIsNone(source["resolved_url"])
+        data = json.dumps(profile, ensure_ascii=False) + json.dumps(source, ensure_ascii=False)
+        for private in ("/Users/", "file://"):
+            self.assertNotIn(private, data)
+
+    def test_community_course_skeleton_bundle_and_cli_roundtrip(self):
+        from word_formatter.cli import main
+
+        identifier = "pku-marxism-course"
+        profile = catalog.get_profile(identifier)
+        template = load_template(identifier)
+        output = catalog.new_document(profile, self.root / "课程起草.docx")
+        document = Document(output)
+        self.assertTrue(document.paragraphs)
+        text = "\n".join(p.text for p in document.paragraphs)
+        for thesis_only in ("英文摘要", "原创性声明", "学术成果"):
+            self.assertNotIn(thesis_only, text)
+        self.assertFalse(any("TOC" in (n.text or "") for n in document.element.xpath("//w:instrText")))
+        archive = catalog.export_bundle(profile, self.root / "课程格式.zip")
+        with zipfile.ZipFile(archive) as bundle:
+            self.assertEqual(set(bundle.namelist()), {"template.json", "sources.json", "NOTICE.md"})
+            self.assertEqual(validate_template(json.loads(bundle.read("template.json"))), template)
+            self.assertEqual(json.loads(bundle.read("sources.json")), catalog.sources(profile))
+            self.assertFalse(any(n.endswith((".pdf", ".docx", ".doc")) for n in bundle.namelist()))
+
+        stream = io.StringIO()
+        with redirect_stdout(stream):
+            self.assertEqual(main(["thesis", "templates", "--search", "马原", "--category", "course"]), 0)
+        self.assertEqual([p["id"] for p in json.loads(stream.getvalue())], [identifier])
+        generated = self.root / "cli-course.docx"
+        exported = self.root / "cli-course.json"
+        packaged = self.root / "cli-course.zip"
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(main(["thesis", "new", "--template", identifier, "-o", str(generated)]), 0)
+            self.assertEqual(main(["thesis", "template", "--template", identifier, "-o", str(exported)]), 0)
+            self.assertEqual(main(["thesis", "template-bundle", "--template", identifier, "-o", str(packaged)]), 0)
+        self.assertTrue(Document(generated).paragraphs)
+        self.assertEqual(load_template(exported), template)
+        with zipfile.ZipFile(packaged) as bundle:
+            self.assertEqual(validate_template(json.loads(bundle.read("template.json"))), template)
 
     def test_local_original_requires_matching_hash_and_never_overwrites_source(self):
         original = self.root / "school.docx"
@@ -198,11 +274,33 @@ class CatalogWindowTests(unittest.TestCase):
                 dialog = next(
                     w for w in root.winfo_children() if isinstance(w, CatalogDialog)
                 )
+                dialog.query.set("pku-marxism-course")
+                self.assertEqual(len(dialog.rows), 1)
+                self.assertIn("disabled", dialog.link_button.state())
+                self.assertIn("disabled", dialog.import_button.state())
+                self.assertNotIn("disabled", dialog.word_button.state())
+                self.assertNotIn("disabled", dialog.bundle_button.state())
+                details = dialog.details.get("1.0", "end")
+                self.assertIn("用户提供", details)
+                self.assertIn("社区参考", details)
+                self.assertIn("SHA-256", details)
+                self.assertNotIn("None", details)
+                with patch("word_formatter.academic.catalog_dialog.webbrowser.open") as browser:
+                    dialog.open_source()
+                    browser.assert_not_called()
+                dialog.apply()
+                self.assertEqual(app.source.get(), "my paper.docx")
+                self.assertEqual(app.collect()["catalog_id"], "pku-marxism-course")
+                app.open_catalog()
+                dialog = next(
+                    w for w in root.winfo_children() if isinstance(w, CatalogDialog)
+                )
                 dialog.query.set("no-result-xyz")
                 self.assertIsNone(dialog.selected())
                 self.assertIn("disabled", dialog.apply_button.state())
                 dialog.query.set("Fudan")
                 self.assertEqual(len(dialog.rows), 2)
+                self.assertNotIn("disabled", dialog.link_button.state())
                 dialog.apply()
                 self.assertEqual(app.source.get(), "my paper.docx")
                 self.assertEqual(app.collect()["style_keys"], ["body"])
