@@ -13,6 +13,7 @@ from .xmlutil import (
     bookmark_name,
     plain,
     has_field,
+    field_instructions,
     set_font,
     set_child,
 )
@@ -265,9 +266,8 @@ def number_captions(doc, items, template, changes, warnings):
 
 
 def has_field_in_paragraph(p, code):
-    return any(code in (n.text or "") for n in p._p.iter(qn("w:instrText"))) or any(
-        code in n.get(qn("w:instr"), "") for n in p._p.iter(qn("w:fldSimple"))
-    )
+    return any(code.casefold() in instruction.casefold()
+               for instruction in field_instructions(p._p))
 
 
 def cross_references(doc, targets, warnings, changes=None):

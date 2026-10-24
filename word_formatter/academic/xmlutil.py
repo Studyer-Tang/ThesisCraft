@@ -119,12 +119,37 @@ def insert_after(anchor, text="", style=None):
     return paragraph
 
 
+def field_instructions(root):
+    """Read complete fields without changing runs, cached results or source XML.
+
+    Complex instructions may span runs and paragraphs. Keep each field separate;
+    a nested instruction is represented by {} without adding token separators.
+    Its code is never concatenated with the parent's literal tokens, and nested
+    instructions are yielded separately.
+    This reads field syntax; it does not evaluate dynamic field arguments.
+    """
+    stack = []
+    for node in root.iter():
+        if node.tag == qn("w:fldSimple"):
+            if stack and stack[-1]["code"]:
+                stack[-1]["pieces"].append("{}")
+            yield node.get(qn("w:instr"), "")
+        elif node.tag == qn("w:fldChar"):
+            kind = node.get(qn("w:fldCharType"))
+            if kind == "begin":
+                if stack and stack[-1]["code"]:
+                    stack[-1]["pieces"].append("{}")
+                stack.append(dict(pieces=[], code=True))
+            elif kind == "separate" and stack:
+                stack[-1]["code"] = False
+            elif kind == "end" and stack:
+                yield "".join(stack.pop()["pieces"])
+        elif node.tag == qn("w:instrText") and stack and stack[-1]["code"]:
+            stack[-1]["pieces"].append(node.text or "")
+
+
 def has_field(doc, word):
-    return any(
-        word in (n.text or "") for n in doc.element.iter(qn("w:instrText"))
-    ) or any(
-        word in n.get(qn("w:instr"), "") for n in doc.element.iter(qn("w:fldSimple"))
-    )
+    return any(word.casefold() in code.casefold() for code in field_instructions(doc.element))
 
 
 def copy_section_end(doc, before, settings=None):

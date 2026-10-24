@@ -1,5 +1,6 @@
 """Shared thesis workflow for desktop, CLI and Office plugins."""
 
+from collections import Counter
 from datetime import datetime
 import hashlib
 from pathlib import Path
@@ -239,15 +240,13 @@ def run(
                                     binaries_lost.append(label)
                             if set(before["bookmarks"]) - set(host_inventory["bookmarks"]):
                                 binaries_lost.append("原有书签")
-                            original_manager_fields = [
+                            original_manager_fields = Counter(
                                 c.strip()
-                                for c in before["field_codes"]
-                                if "ADDIN" in c.upper()
-                            ]
-                            if any(
-                                c not in {v.strip() for v in host_inventory["field_codes"]}
-                                for c in original_manager_fields
-                            ):
+                                for c in before["field_instructions"]
+                                if re.match(r"\s*ADDIN\b", c, re.I)
+                            )
+                            updated_fields = Counter(c.strip() for c in host_inventory["field_instructions"])
+                            if original_manager_fields - updated_fields:
                                 binaries_lost.append("文献管理器域")
                             if binaries_lost:
                                 raise RuntimeError(

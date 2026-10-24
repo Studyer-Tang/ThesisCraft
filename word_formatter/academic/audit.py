@@ -11,6 +11,7 @@ from .structure import scan
 from .templates import STYLE_NAMES, STYLE_LABELS
 from .content import body_text_blocks
 from .style_audit import EffectiveFormatting, text_runs, check_paragraph
+from .xmlutil import field_instructions
 
 
 def inventory(doc):
@@ -55,6 +56,7 @@ def inventory(doc):
     objects["simple_fields"] = [
         n.get(qn("w:instr"), "") for n in doc.element.iter(qn("w:fldSimple"))
     ]
+    objects["field_instructions"] = list(field_instructions(doc.element))
     objects["text_count"] = sum(len(n.text or "") for n in doc.element.iter(qn("w:t")))
     objects["body_text"] = body_text_blocks(doc.element.body)
     objects["paragraphs"] = len(doc.paragraphs)
@@ -231,15 +233,18 @@ def audit(doc, template):
               "域缓存、原生数学、上下标及复杂文字专用格式保留，需人工核对。",
               severity="info")
     names = {n.get(qn("w:name")) for n in doc.element.iter(qn("w:bookmarkStart"))}
-    codes = [n.text or "" for n in doc.element.iter(qn("w:instrText"))] + [
-        n.get(qn("w:instr"), "") for n in doc.element.iter(qn("w:fldSimple"))
-    ]
+    codes = list(field_instructions(doc.element))
     for code in codes:
-        match = re.match(r'\s*(?:REF|PAGEREF)\s+"?([^\s"\\]+)', code)
-        if match and match.group(1) not in names:
+        match = re.match(r'\s*(?:REF|PAGEREF)\s+(?:"([^"]*)"|([^\s\\]+))', code, re.I)
+        if not match:
+            continue
+        target = match.group(1) if match.group(1) is not None else match.group(2)
+        # Read the entire argument before deciding whether it is static. A
+        # prefix followed by a nested field is not a shorter bookmark name.
+        if target and not any(char in target for char in "{}") and target not in names:
             issue(
                 "broken-bookmark",
-                "找不到书签：" + match.group(1),
+                "找不到书签：" + target,
                 severity="error",
                 group="references",
             )
